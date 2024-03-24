@@ -8,6 +8,12 @@ import type {PropsWithChildren} from 'react';
 import { Image, Text, View } from 'react-native';
 
 import { IMAGENAME } from './assets/images';
+import configureStore from './store/store';
+import watcherSaga from './store/sagas/data-summary';
+import { Provider } from 'react-redux';
+
+const store = configureStore();
+store.runSaga(watcherSaga);
 
 type Props = PropsWithChildren<{
   title: string;
@@ -42,16 +48,18 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home" screenOptions={customHeaderDesign}>
-        <Stack.Screen 
-          name="Home" 
-          component={HomeScreen}
-          options={{
-            headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
-          }} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home" screenOptions={customHeaderDesign}>
+          <Stack.Screen 
+            name="Home" 
+            component={HomeScreen}
+            options={{
+              headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+            }} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 
