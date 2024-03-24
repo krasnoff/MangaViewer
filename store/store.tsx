@@ -6,7 +6,7 @@ import SimpleSearchReducer from './reducers/simpleSearch';
 const initialiseSagaMiddleware = createSagaMiddleware();
 
 const rootReducer = combineReducers({
-  SimpleSearchSummery: SimpleSearchReducer,
+  SimpleSearchResponse: SimpleSearchReducer,
 });
   
 const configureStore = () => {

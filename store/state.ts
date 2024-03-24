@@ -1,4 +1,4 @@
-const initialState: any = {
+const initialState = {
     simpleSearchResponse: {
         error: null,
         result: []
