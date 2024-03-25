@@ -22,11 +22,11 @@ type Props = PropsWithChildren<{
 function LogoTitle(props: Props) {
   return (
     <View style={{flexDirection: 'row', justifyContent:'center'}}>
+      <Image source={ IMAGENAME } style={{width: 30, height: 25, paddingRight: 20}} />
       <Text style={{ 
         fontFamily: 'Bangers-Regular', 
         fontSize: 20,
       }}>{props.title}</Text>
-      <Image source={ IMAGENAME } style={{width: 30, height: 25, paddingRight: 20}} />
     </View>
   );
 }

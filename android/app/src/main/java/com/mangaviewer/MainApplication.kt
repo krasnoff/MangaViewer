@@ -12,6 +12,8 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.flipper.ReactNativeFlipper
 import com.facebook.soloader.SoLoader
 
+import com.facebook.react.modules.i18nmanager.I18nUtil
+
 class MainApplication : Application(), ReactApplication {
 
   override val reactNativeHost: ReactNativeHost =
@@ -41,5 +43,9 @@ class MainApplication : Application(), ReactApplication {
       load()
     }
     ReactNativeFlipper.initializeFlipper(this, reactNativeHost.reactInstanceManager)
+
+    val sharedI18nUtilInstance = I18nUtil.getInstance()
+    sharedI18nUtilInstance.forceRTL(this, false)
+    sharedI18nUtilInstance.allowRTL(this, false)
   }
 }
