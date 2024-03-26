@@ -7,7 +7,7 @@ import { HomeScreen } from './pages/home-screen/home-screen';
 import type {PropsWithChildren} from 'react';
 import { Image, Text, View } from 'react-native';
 
-import { IMAGENAME } from './assets/images';
+import { ANIME_STUB_IMAGE } from './assets/images';
 import configureStore from './store/store';
 import watcherSaga from './store/sagas/data-summary';
 import { Provider } from 'react-redux';
@@ -22,7 +22,7 @@ type Props = PropsWithChildren<{
 function LogoTitle(props: Props) {
   return (
     <View style={{flexDirection: 'row', justifyContent:'center'}}>
-      <Image source={ IMAGENAME } style={{width: 30, height: 25, paddingRight: 20}} />
+      <Image source={ ANIME_STUB_IMAGE } style={{width: 30, height: 25, paddingRight: 20}} />
       <Text style={{ 
         fontFamily: 'Bangers-Regular', 
         fontSize: 20,
