@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSimpleSearch } from "../../store/actions/simpleSearch";
 import { useEffect, useState } from "react";
 import { BACKGROUND_IMAGE } from "../../assets/images";
-import { SearchResults } from "../../types/search-results";
+import { Daum } from "../../types/search-results";
 
 export function HomeScreen() {
   const dispatch = useDispatch();
@@ -12,6 +12,7 @@ export function HomeScreen() {
   
   const [status, setStatus] = useState<number>(0);
   const [networkError, setNetworkError] = useState<string>('');
+  const [articleData, setArticleData] = useState<Daum[]>([]);
 
   useEffect(() => {
     dispatch(getSimpleSearch()); 
@@ -21,7 +22,13 @@ export function HomeScreen() {
     setNetworkError('');
     
     if (data.simpleSearchResponse.status === 200) {
-      const resData: SearchResults = data.simpleSearchResponse.data;
+      if (data.simpleSearchResponse.data.result === 'ok') {
+        const resData: Daum[] = data.simpleSearchResponse.data.data;
+        setArticleData(resData);
+      } else {
+        setArticleData([]);
+      }
+      
     }
 
     setStatus(data.simpleSearchResponse.status);
@@ -46,6 +53,7 @@ export function HomeScreen() {
       <View style={styles.view}>
         {status === 503 ? <Text style={styles.text}>Main server is down for maintanence.{'\n'}Please try again later.</Text> : null}
         {networkError !== '' ? <Text style={styles.text}>{networkError}</Text> : null}
+        {networkError === '' && status === 200 && articleData.length === 0 ? <Text style={styles.text}>No stories for this search</Text> : null}
         <Button onPress={() => buttonPressHandler()} title="Press Me"></Button>
       </View>
     </ImageBackground>
