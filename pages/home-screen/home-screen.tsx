@@ -8,15 +8,17 @@ import { SearchResults } from "../../types/search-results";
 export function HomeScreen() {
   const dispatch = useDispatch();
   const data = useSelector(state => (state as unknown as any).SimpleSearchResponse);
+  const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
   
   const [status, setStatus] = useState<number>(0);
+  const [networkError, setNetworkError] = useState<string>('');
 
   useEffect(() => {
     dispatch(getSimpleSearch()); 
   }, [dispatch]);
 
   useEffect(() => {
-    console.log('useSelector output result with data...', data);
+    setNetworkError('');
     
     if (data.simpleSearchResponse.status === 200) {
       const resData: SearchResults = data.simpleSearchResponse.data;
@@ -24,6 +26,16 @@ export function HomeScreen() {
 
     setStatus(data.simpleSearchResponse.status);
   }, [data]);
+
+  useEffect(() => {
+    console.log('useSelector error...', errorData.error);
+    if (errorData.error) {
+      if (errorData.error.message === 'Network Error') {
+        setNetworkError('There has been a network problem' + '\n' + 'Please try again later');
+      }
+    }
+    
+  }, [errorData]);
 
   const buttonPressHandler = () => {
     dispatch(getSimpleSearch()); 
@@ -33,7 +45,7 @@ export function HomeScreen() {
     <ImageBackground source={BACKGROUND_IMAGE} resizeMode="cover" style={styles.image}>
       <View style={styles.view}>
         {status === 503 ? <Text style={styles.text}>Main server is down for maintanence.{'\n'}Please try again later.</Text> : null}
-        
+        {networkError !== '' ? <Text style={styles.text}>{networkError}</Text> : null}
         <Button onPress={() => buttonPressHandler()} title="Press Me"></Button>
       </View>
     </ImageBackground>
@@ -53,6 +65,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Bangers-Regular', 
-    fontSize: 20
+    fontSize: 20,
+    textAlign: 'center'
   }
 });
