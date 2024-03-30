@@ -12,6 +12,7 @@ export interface SearchResults {
     type: string
     attributes: Attributes
     relationships: Relationship[]
+    coverImgURL: string
   }
   
   export interface Attributes {
