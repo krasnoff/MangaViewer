@@ -4,6 +4,7 @@ import { getSimpleSearch } from "../../store/actions/simpleSearch";
 import { useEffect, useState } from "react";
 import { BACKGROUND_IMAGE } from "../../assets/images";
 import { Daum } from "../../types/search-results";
+import Loader from "../../components/loader";
 
 export function HomeScreen() {
   const dispatch = useDispatch();
@@ -14,7 +15,10 @@ export function HomeScreen() {
   const [networkError, setNetworkError] = useState<string>('');
   const [articleData, setArticleData] = useState<Daum[]>([]);
 
+  const [showLoader, setShowLoader] = useState<boolean>(false);
+
   useEffect(() => {
+    setShowLoader(true);
     dispatch(getSimpleSearch()); 
   }, [dispatch]);
 
@@ -32,11 +36,12 @@ export function HomeScreen() {
     }
 
     setStatus(data.simpleSearchResponse.status);
+    setShowLoader(false);
   }, [data]);
 
   useEffect(() => {
-    console.log('useSelector error...', errorData.error);
     if (errorData.error) {
+      console.log('useSelector error...', errorData.error);
       if (errorData.error.message === 'Network Error') {
         setNetworkError('There has been a network problem' + '\n' + 'Please try again later');
       }
@@ -45,6 +50,7 @@ export function HomeScreen() {
   }, [errorData]);
 
   const buttonPressHandler = () => {
+    setShowLoader(true);
     dispatch(getSimpleSearch()); 
   }
 
@@ -56,6 +62,9 @@ export function HomeScreen() {
         {networkError === '' && status === 200 && articleData.length === 0 ? <Text style={styles.text}>No stories for this search</Text> : null}
         <Button onPress={() => buttonPressHandler()} title="Press Me"></Button>
       </View>
+      {showLoader ?
+        <Loader></Loader>
+      : null}
     </ImageBackground>
   );
 }
