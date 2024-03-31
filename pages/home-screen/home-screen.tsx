@@ -1,4 +1,4 @@
-import { Button, Image, ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
+import { GestureResponderEvent, ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getSimpleSearch } from "../../store/actions/simpleSearch";
 import { useEffect, useState } from "react";
@@ -45,7 +45,6 @@ export function HomeScreen() {
 
   useEffect(() => {
     if (errorData.error) {
-      console.log('useSelector error...', errorData.error);
       if (errorData.error.message === 'Network Error') {
         setNetworkError('There has been a network problem' + '\n' + 'Please try again later');
       }
@@ -60,6 +59,10 @@ export function HomeScreen() {
       dispatch(getSimpleSearch()); 
     }
   };
+
+  const itemPressHandler = (item: GestureResponderEvent) => {
+    console.log('item has been pressed:', item);
+  }
 
   return (
     <SafeAreaView style={{
@@ -79,13 +82,15 @@ export function HomeScreen() {
           {networkError === '' && status === 200 && articleData.length > 0 ? 
             <ScrollView contentContainerStyle={stylesSCrollView.scrollViewContent} onScroll={handleScroll} scrollEventThrottle={16}>
             {articleData.map(item => (
-              <View key={item.id} style={stylesSCrollView.itemContainer}>
-                <CustomSizeImage source={{ uri: item.coverImgURL }} />
-                <View style={stylesSCrollView.itemTextContainer}>
-                  <Text style={stylesSCrollView.itemTitle}>{item.attributes.title.en}</Text>
-                  <Text style={stylesSCrollView.itemDescription} numberOfLines={10}>{item.attributes.description.en}</Text>
+              <TouchableOpacity onPress={(item) => itemPressHandler(item)} style={stylesSCrollView.touchableContainer}>
+                <View key={item.id} style={stylesSCrollView.itemContainer}>
+                  <CustomSizeImage source={{ uri: item.coverImgURL }} />
+                  <View style={stylesSCrollView.itemTextContainer}>
+                    <Text style={stylesSCrollView.itemTitle}>{item.attributes.title.en}</Text>
+                    <Text style={stylesSCrollView.itemDescription} numberOfLines={10}>{item.attributes.description.en}</Text>
+                  </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
             </ScrollView>
           : null}
@@ -121,6 +126,9 @@ const stylesSCrollView = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 10,
     width: '100%'
+  },
+  touchableContainer: {
+    width: '100%',
   },
   itemContainer: {
     flexDirection: 'row',
