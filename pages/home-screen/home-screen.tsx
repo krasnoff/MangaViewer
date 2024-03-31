@@ -53,10 +53,13 @@ export function HomeScreen() {
     
   }, [errorData]);
 
-  // const buttonPressHandler = () => {
-  //   setShowLoader(true);
-  //   dispatch(getSimpleSearch()); 
-  // }
+  const handleScroll = (event: { nativeEvent: { contentOffset: { y: any; }; }; }) => {
+    const { y } = event.nativeEvent.contentOffset;
+    if (y === 0) {
+      setShowLoader(true);
+      dispatch(getSimpleSearch()); 
+    }
+  };
 
   return (
     <SafeAreaView style={{
@@ -74,7 +77,7 @@ export function HomeScreen() {
           {networkError !== '' ? <Text style={styles.text}>{networkError}</Text> : null}
           {networkError === '' && status === 200 && articleData.length === 0 ? <Text style={styles.text}>No stories for this search</Text> : null}
           {networkError === '' && status === 200 && articleData.length > 0 ? 
-            <ScrollView contentContainerStyle={stylesSCrollView.scrollViewContent}>
+            <ScrollView contentContainerStyle={stylesSCrollView.scrollViewContent} onScroll={handleScroll} scrollEventThrottle={16}>
             {articleData.map(item => (
               <View key={item.id} style={stylesSCrollView.itemContainer}>
                 <CustomSizeImage source={{ uri: item.coverImgURL }} />
@@ -86,7 +89,6 @@ export function HomeScreen() {
             ))}
             </ScrollView>
           : null}
-          {/* <Button onPress={() => buttonPressHandler()} title="Press Me"></Button> */}
         </View>
         {showLoader ?
           <Loader></Loader>
