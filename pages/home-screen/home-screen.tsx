@@ -1,4 +1,4 @@
-import { Button, Image, ImageBackground, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Button, Image, ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getSimpleSearch } from "../../store/actions/simpleSearch";
 import { useEffect, useState } from "react";
@@ -59,30 +59,40 @@ export function HomeScreen() {
   // }
 
   return (
-    <ImageBackground source={BACKGROUND_IMAGE} resizeMode="cover" style={styles.image}>
-      <View style={styles.view}>
-        {status === 503 ? <Text style={styles.text}>Main server is down for maintanence.{'\n'}Please try again later.</Text> : null}
-        {networkError !== '' ? <Text style={styles.text}>{networkError}</Text> : null}
-        {networkError === '' && status === 200 && articleData.length === 0 ? <Text style={styles.text}>No stories for this search</Text> : null}
-        {networkError === '' && status === 200 && articleData.length > 0 ? 
-          <ScrollView contentContainerStyle={stylesSCrollView.scrollViewContent}>
-          {articleData.map(item => (
-            <View key={item.id} style={stylesSCrollView.itemContainer}>
-              <CustomSizeImage source={{ uri: item.coverImgURL }} />
-              <View style={stylesSCrollView.itemTextContainer}>
-                <Text style={stylesSCrollView.itemTitle}>{item.attributes.title.en}</Text>
-                <Text style={stylesSCrollView.itemDescription} numberOfLines={10}>{item.attributes.description.en}</Text>
+    <SafeAreaView style={{
+      flex: 1,
+    }}>
+      <ImageBackground source={BACKGROUND_IMAGE} resizeMode="cover" style={styles.image}>
+        <StatusBar
+          //barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          //backgroundColor={backgroundStyle.backgroundColor}
+          backgroundColor='#FFFF00'
+          barStyle="dark-content"
+        />
+        <View style={styles.view}>
+          {status === 503 ? <Text style={styles.text}>Main server is down for maintanence.{'\n'}Please try again later.</Text> : null}
+          {networkError !== '' ? <Text style={styles.text}>{networkError}</Text> : null}
+          {networkError === '' && status === 200 && articleData.length === 0 ? <Text style={styles.text}>No stories for this search</Text> : null}
+          {networkError === '' && status === 200 && articleData.length > 0 ? 
+            <ScrollView contentContainerStyle={stylesSCrollView.scrollViewContent}>
+            {articleData.map(item => (
+              <View key={item.id} style={stylesSCrollView.itemContainer}>
+                <CustomSizeImage source={{ uri: item.coverImgURL }} />
+                <View style={stylesSCrollView.itemTextContainer}>
+                  <Text style={stylesSCrollView.itemTitle}>{item.attributes.title.en}</Text>
+                  <Text style={stylesSCrollView.itemDescription} numberOfLines={10}>{item.attributes.description.en}</Text>
+                </View>
               </View>
-            </View>
-          ))}
-          </ScrollView>
+            ))}
+            </ScrollView>
+          : null}
+          {/* <Button onPress={() => buttonPressHandler()} title="Press Me"></Button> */}
+        </View>
+        {showLoader ?
+          <Loader></Loader>
         : null}
-        {/* <Button onPress={() => buttonPressHandler()} title="Press Me"></Button> */}
-      </View>
-      {showLoader ?
-        <Loader></Loader>
-      : null}
-    </ImageBackground>
+      </ImageBackground>
+    </SafeAreaView>
   );
 }
 
