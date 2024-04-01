@@ -7,6 +7,7 @@ import { Daum } from "../../types/search-results";
 import Loader from "../../components/loader";
 import { useUtilData } from "../../hooks/useParseData";
 import CustomSizeImage from "../../components/customSizeImage";
+import Icon from "../../assets/icons/icon";
 
 export function HomeScreen() {
   const dispatch = useDispatch();
@@ -82,15 +83,20 @@ export function HomeScreen() {
           {networkError === '' && status === 200 && articleData.length > 0 ? 
             <ScrollView contentContainerStyle={stylesSCrollView.scrollViewContent} onScroll={handleScroll} scrollEventThrottle={16}>
             {articleData.map(item => (
-              <TouchableOpacity onPress={(item) => itemPressHandler(item)} style={stylesSCrollView.touchableContainer}>
-                <View key={item.id} style={stylesSCrollView.itemContainer}>
+              <View key={item.id} style={stylesSCrollView.itemContainer}>
+                <View style={stylesSCrollView.mainView}>
                   <CustomSizeImage source={{ uri: item.coverImgURL }} />
                   <View style={stylesSCrollView.itemTextContainer}>
                     <Text style={stylesSCrollView.itemTitle}>{item.attributes.title.en}</Text>
                     <Text style={stylesSCrollView.itemDescription} numberOfLines={10}>{item.attributes.description.en}</Text>
                   </View>
                 </View>
-              </TouchableOpacity>
+                <View style={stylesSCrollView.forwardIcon}>
+                  <TouchableOpacity onPress={(item) => itemPressHandler(item)}>
+                    <Icon name="Forward" height="30" width="30" />
+                  </TouchableOpacity>
+                </View>
+              </View>
             ))}
             </ScrollView>
           : null}
@@ -127,11 +133,8 @@ const stylesSCrollView = StyleSheet.create({
     paddingHorizontal: 10,
     width: '100%'
   },
-  touchableContainer: {
-    width: '100%',
-  },
   itemContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     marginBottom: 20,
     backgroundColor: '#fff',
     borderRadius: 8,
@@ -146,9 +149,15 @@ const stylesSCrollView = StyleSheet.create({
     width: '100%',
     minHeight: 165
   },
+  mainView: {
+    flexDirection: 'row',
+    width: '100%',
+    minHeight: 165
+  },
   itemTextContainer: {
     flex: 1,
     padding: 10,
+    width: '100%',
   },
   itemTitle: {
     fontSize: 18,
@@ -158,4 +167,12 @@ const stylesSCrollView = StyleSheet.create({
   itemDescription: {
     fontSize: 16,
   },
+  forwardIcon: {
+    flexDirection: 'row',
+    justifyContent: "flex-end",
+    alignItems: 'center',
+    width: '100%',
+    paddingRight: 8,
+    paddingBottom: 8
+  }
 });
