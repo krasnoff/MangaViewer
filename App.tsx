@@ -11,6 +11,7 @@ import { ANIME_STUB_IMAGE } from './assets/images';
 import configureStore from './store/store';
 import watcherSaga from './store/sagas/data-summary';
 import { Provider } from 'react-redux';
+import ItemScreen from './pages/item-screen/item-screen';
 
 const store = configureStore();
 store.runSaga(watcherSaga);
@@ -36,7 +37,7 @@ const customHeaderDesign: NativeStackNavigationOptions = {
   headerStyle: {
     backgroundColor: '#FFFF00',
   },
-  headerTintColor: '#fff',
+  headerTintColor: '#000000',
   headerTitleStyle: {
     color: '#000000'
   },
@@ -56,7 +57,13 @@ function App() {
             component={HomeScreen}
             options={{
               headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
-            }} />
+          }} />
+          <Stack.Screen 
+            name="Item" 
+            component={ItemScreen}
+            options={{
+              headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+          }} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

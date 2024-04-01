@@ -9,7 +9,7 @@ import { useUtilData } from "../../hooks/useParseData";
 import CustomSizeImage from "../../components/customSizeImage";
 import Icon from "../../assets/icons/icon";
 
-export function HomeScreen() {
+export function HomeScreen({ navigation }: any) {
   const dispatch = useDispatch();
   const data = useSelector(state => (state as unknown as any).SimpleSearchResponse);
   const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
@@ -61,10 +61,6 @@ export function HomeScreen() {
     }
   };
 
-  const itemPressHandler = (item: GestureResponderEvent) => {
-    console.log('item has been pressed:', item);
-  }
-
   return (
     <SafeAreaView style={{
       flex: 1,
@@ -92,7 +88,11 @@ export function HomeScreen() {
                   </View>
                 </View>
                 <View style={stylesSCrollView.forwardIcon}>
-                  <TouchableOpacity onPress={(item) => itemPressHandler(item)}>
+                  <TouchableOpacity onPress={() => {
+                    navigation.navigate('Item', {
+                      itemId: item,
+                    });
+                  }}>
                     <Icon name="Forward" height="30" width="30" />
                   </TouchableOpacity>
                 </View>
