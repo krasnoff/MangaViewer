@@ -1,4 +1,4 @@
-import { ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button, ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getSimpleSearch } from "../../store/actions/simpleSearch";
 import { useEffect, useState } from "react";
@@ -18,14 +18,14 @@ export function HomeScreen({ navigation }: any) {
   const [networkError, setNetworkError] = useState<string>('');
   const [articleData, setArticleData] = useState<Daum[]>([]);
 
-  const [showLoader, setShowLoader] = useState<boolean>(false);
+  const [showLoader, setShowLoader] = useState<boolean>(true);
 
   const {parseIncomingData} = useUtilData()
 
   useEffect(() => {
-    setShowLoader(true);
+    //setShowLoader(true);
     dispatch(getSimpleSearch()); 
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     setNetworkError('');
@@ -61,6 +61,10 @@ export function HomeScreen({ navigation }: any) {
     }
   };
 
+  // const onPressLearnMore = () => {
+  //   dispatch(getSimpleSearch()); 
+  // }
+
   return (
     <SafeAreaView style={{
       flex: 1,
@@ -72,6 +76,7 @@ export function HomeScreen({ navigation }: any) {
           backgroundColor='#FFFF00'
           barStyle="dark-content"
         />
+        {/* <Button title='load data' onPress={onPressLearnMore}></Button> */}
         <View style={styles.view}>
           {status === 503 ? <Text style={styles.text}>Main server is down for maintanence.{'\n'}Please try again later.</Text> : null}
           {networkError !== '' ? <Text style={styles.text}>{networkError}</Text> : null}
@@ -98,9 +103,11 @@ export function HomeScreen({ navigation }: any) {
                 </View>
               </View>
             ))}
+            
             </ScrollView>
           : null}
         </View>
+        
         {showLoader ?
           <Loader></Loader>
         : null}

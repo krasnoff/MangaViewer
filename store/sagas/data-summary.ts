@@ -1,11 +1,10 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { API_ERRORED, GET_SIMPLE_SEARCH } from "../action-type";
+import { API_ERRORED, GET_FEED, GET_SIMPLE_SEARCH } from "../action-type";
 import axios from "axios";
 
 export default function* watcherSaga() {
     yield takeEvery(GET_SIMPLE_SEARCH, workerSaga);
-    // yield takeEvery(GET_QOUTE_SUMMERY_DATA, workerSaga);
-    // yield takeEvery(GET_CHART_DATA, workerSaga);
+    yield takeEvery(GET_FEED, workerSaga);
 }
 
 /**

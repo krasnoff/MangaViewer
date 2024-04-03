@@ -5,6 +5,10 @@ const initialState = {
     simpleSearchResponse: {
         error: null,
         result: []
+    },
+    feedResponse: {
+        error: null,
+        result: []
     }
 };
 

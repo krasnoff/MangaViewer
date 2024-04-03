@@ -3,14 +3,39 @@ import { ImageBackground, ScrollView, StyleSheet, Text, View } from "react-nativ
 import { BACKGROUND_IMAGE } from '../../assets/images';
 import { Daum } from '../../types/search-results';
 import CustomSizeImage from '../../components/customSizeImage';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFeed } from '../../store/actions/feed';
 
 function ItemScreen({ route, navigation }: any): JSX.Element {
+    const dispatch = useDispatch();
+    const data = useSelector(state => (state as unknown as any).FeedResponse);
+    const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
+
     const { itemId } = route.params;
     const [item, setItem] = useState<Daum>();
 
     useEffect(() => {
       setItem(itemId);
     }, []);
+
+    useEffect(() => {
+      if (item) {
+        dispatch(getFeed(item.id));
+      }
+    }, [item]);
+
+    useEffect(() => {
+      console.log('article data loaded', data)
+    }, [data]);
+
+    useEffect(() => {
+      if (errorData.error) {
+        if (errorData.error.message === 'Network Error') {
+          //setNetworkError('There has been a network problem' + '\n' + 'Please try again later');
+        }
+      }
+      
+    }, [errorData]);
 
     return (
       <ImageBackground source={BACKGROUND_IMAGE} resizeMode="cover" style={styles.image}>

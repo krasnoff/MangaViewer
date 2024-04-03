@@ -2,4 +2,8 @@ export const GET_SIMPLE_SEARCH = "GET_SIMPLE_SEARCH";
 export const PARSE_SIMPLE_SEARCH = "PARSE_SIMPLE_SEARCH";
 export const GET_SIMPLE_SEARCH_LOADED = "GET_SIMPLE_SEARCH_LOADED";
 
+export const GET_FEED = "GET_FEED";
+export const FEED_PARSE = "FEED_PARSE";
+export const FEED_LOADED = "FEED_LOADED";
+
 export const API_ERRORED = "API_ERRORED";
