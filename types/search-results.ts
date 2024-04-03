@@ -36,6 +36,8 @@ export interface SearchResults {
     version: number
     availableTranslatedLanguages: string[]
     latestUploadedChapter: string
+    translatedLanguage?: string
+    chapter?: string
   }
   
   export interface Title {

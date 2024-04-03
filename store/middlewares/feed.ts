@@ -1,5 +1,6 @@
 import { Middleware } from 'redux';
 import { FEED_LOADED, FEED_PARSE } from '../action-type';
+import { Daum } from '../../types/search-results';
 
 const feedMiddleware: Middleware = store => next => (action: any) => {
   switch (action.type) {
@@ -19,6 +20,17 @@ const feedMiddleware: Middleware = store => next => (action: any) => {
 const parseData = (data: any): any => {
   // Example: Parsing JSON data
   try {
+    let feedArray = data.data.data as Daum[];
+    feedArray = feedArray.filter(el => el.attributes.translatedLanguage === 'en');
+    feedArray = feedArray.sort((a, b) => {
+      if (a.attributes.chapter && b.attributes.chapter) {
+        return +b.attributes.chapter - +a.attributes.chapter
+      }     
+      
+      return 0;
+    })
+    
+    data.data.data = feedArray;
     return data;
   } catch (error) {
     console.error('Error parsing data:', error);
