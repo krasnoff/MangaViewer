@@ -17,6 +17,8 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
 
     const [activeIndex, setActiveIndex] = useState<number>(-1);
 
+    const [networkError, setNetworkError] = useState<string>('');
+
     useEffect(() => {
       setItem(itemId);
     }, []);
@@ -37,7 +39,7 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
     useEffect(() => {
       if (errorData.error) {
         if (errorData.error.message === 'Network Error') {
-          //setNetworkError('There has been a network problem' + '\n' + 'Please try again later');
+          setNetworkError('There has been a network problem' + '\n' + 'Please try again later');
         }
       }
       
@@ -57,12 +59,19 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
 
     return (
       <ImageBackground source={BACKGROUND_IMAGE} resizeMode="cover" style={styles.image}>
+        {networkError !== '' ? <Text style={styles.text}>{networkError}</Text> : null}
+        {networkError === '' ? 
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <View style={ styles.itemContainer }>
             <Text style={styles.text}>{item?.attributes.title.en}</Text>
             <View style={styles.row1}>
               <View>{item ? <CustomSizeImage source={{ uri: item?.coverImgURL }} /> : null }</View>
-              <View style={styles.subtites}><Text style={styles?.itemDescription}>sdfsdf</Text></View>
+              <View style={styles.subtites}>
+                <Text style={[styles.itemTitle, styles.marginBottomNone]}>Authur</Text>
+                <Text style={[styles.itemDescription, styles.marginBottom5]}>{item?.relationships.find(el => el.type === 'author')?.attributes?.name}</Text>
+                <Text style={[styles.itemTitle, styles.marginBottomNone]}>Artist</Text>
+                <Text style={[styles.itemDescription, styles.marginBottom5]}>{item?.relationships.find(el => el.type === 'artist')?.attributes?.name}</Text>
+              </View>
             </View>
             <View style={styles.row2}>
               <Text style={styles?.itemDescription}>{item?.attributes.description.en}</Text>
@@ -81,7 +90,8 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
               ))}
             </View>
           </View>
-        </ScrollView>
+        </ScrollView> : 
+        null}
       </ImageBackground>
     );
 }
@@ -145,6 +155,12 @@ const styles = StyleSheet.create({
   subtites: {
     paddingTop: 5,
     paddingLeft: 10
+  },
+  marginBottomNone: {
+    marginBottom: 0
+  },
+  marginBottom5: {
+    marginBottom: 5
   }
 });
 
