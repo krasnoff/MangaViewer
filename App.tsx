@@ -12,6 +12,7 @@ import configureStore from './store/store';
 import watcherSaga from './store/sagas/data-summary';
 import { Provider } from 'react-redux';
 import ItemScreen from './pages/item-screen/item-screen';
+import PagesScreen from './pages/pages-screen/pages-screen';
 
 const store = configureStore();
 store.runSaga(watcherSaga);
@@ -61,6 +62,12 @@ function App() {
           <Stack.Screen 
             name="Item" 
             component={ItemScreen}
+            options={{
+              headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+          }} />
+          <Stack.Screen 
+            name="Pages" 
+            component={PagesScreen}
             options={{
               headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
           }} />

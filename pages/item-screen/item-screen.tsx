@@ -53,8 +53,11 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
       setActiveIndex(-1)
     }
 
-    const chapterPressHandler = (item: Daum, index: number) => {
+    const chapterPressHandler = (item: Daum) => {
       console.log('chapterPressHandler', item);
+      navigation.navigate('Pages', {
+        itemId: item,
+      });
     }
 
     return (
@@ -84,7 +87,7 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
                   key={el.id}
                   onPressIn={() => chapterPressInHandler(el, index)}  
                   onPressOut={() => chapterPressOutHandler()}
-                  onPress={() => chapterPressHandler(el, index)}>
+                  onPress={() => chapterPressHandler(el)}>
                   <Text style={[styles?.itemDescription, {color: activeIndex === index ? 'red': 'black'}]}>Chapter {el.attributes.chapter}</Text>
                 </Pressable>
               ))}
