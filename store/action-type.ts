@@ -6,4 +6,7 @@ export const GET_FEED = "GET_FEED";
 export const FEED_PARSE = "FEED_PARSE";
 export const FEED_LOADED = "FEED_LOADED";
 
+export const GET_CHAPTERS = "GET_CHAPTERS";
+export const CHAPTERS_LOADED = "CHAPTERS_LOADED";
+
 export const API_ERRORED = "API_ERRORED";

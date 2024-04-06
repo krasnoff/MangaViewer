@@ -54,7 +54,7 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
     }
 
     const chapterPressHandler = (item: Daum) => {
-      console.log('chapterPressHandler', item);
+      // console.log('chapterPressHandler', item);
       navigation.navigate('Pages', {
         itemId: item,
       });

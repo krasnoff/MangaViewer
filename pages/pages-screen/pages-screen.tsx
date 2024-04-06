@@ -1,10 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { ImageBackground, StyleSheet, Text } from "react-native";
 import { BACKGROUND_IMAGE } from '../../assets/images';
+import { Daum } from '../../types/search-results';
+import { getChapters } from '../../store/actions/chapters';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 function PagesScreen({ route, navigation }: any): JSX.Element {
     const [networkError, setNetworkError] = useState<string>('');
+    const dispatch = useDispatch();
+    const data = useSelector(state => (state as unknown as any).ChaptersResponse);
+    const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
+    const [item, setItem] = useState<Daum>();
+
+    const { itemId } = route.params;
+
+    useEffect(() => {
+      setItem(itemId);
+    }, []);
+
+    useEffect(() => {
+      if (item) {
+        dispatch(getChapters(item.id));
+      }
+    }, [item]);
+
+    useEffect(() => {
+      if (data) {
+        console.log('data retreived', data);      
+      }
+    }, [data]);
 
     return (
       <ImageBackground source={BACKGROUND_IMAGE} resizeMode="cover" style={styles.image}>

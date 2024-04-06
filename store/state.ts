@@ -9,6 +9,10 @@ const initialState = {
     feedResponse: {
         error: null,
         result: []
+    },
+    chaptersResponse: {
+        error: null,
+        result: []
     }
 };
 
