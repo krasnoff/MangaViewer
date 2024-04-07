@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, StyleSheet, Text } from "react-native";
+import { Dimensions, ImageBackground, StyleSheet, Text, View } from "react-native";
 import { BACKGROUND_IMAGE } from '../../assets/images';
 import { Daum } from '../../types/search-results';
 import { getChapters } from '../../store/actions/chapters';
 import { useDispatch, useSelector } from 'react-redux';
+import Carousel from 'react-native-reanimated-carousel';
 
 
 function PagesScreen({ route, navigation }: any): JSX.Element {
@@ -14,6 +15,8 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
     const [item, setItem] = useState<Daum>();
 
     const { itemId } = route.params;
+
+    const width = Dimensions.get('window').width;
 
     useEffect(() => {
       setItem(itemId);
@@ -35,7 +38,33 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
       <ImageBackground source={BACKGROUND_IMAGE} resizeMode="cover" style={styles.image}>
         {networkError !== '' ? <Text style={styles.text}>{networkError}</Text> : null}
         {networkError === '' ? 
-        (<Text style={styles.text}>pages screen</Text>) 
+        (
+          <View style={{ flex: 1 }}>
+            <Carousel
+                loop
+                width={width}
+                height={width / 2}
+                autoPlay={false}
+                data={[...new Array(6).keys()]}
+                scrollAnimationDuration={1000}
+                onSnapToItem={(index) => console.log('current index:', index)}
+                renderItem={({ index }) => (
+                    <View
+                        style={{
+                            flex: 1,
+                            borderWidth: 1,
+                            justifyContent: 'center',
+                            backgroundColor: '#FFFFFF'
+                        }}
+                    >
+                        <Text style={{ textAlign: 'center', fontSize: 30 }}>
+                            {index}
+                        </Text>
+                    </View>
+                )}
+            />
+          </View>
+        ) 
         : null}
       </ImageBackground>
     );
