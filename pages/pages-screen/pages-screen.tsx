@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, ImageBackground, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, ImageBackground, StyleSheet, Text, View } from "react-native";
 import { BACKGROUND_IMAGE } from '../../assets/images';
 import { Daum } from '../../types/search-results';
 import { getChapters } from '../../store/actions/chapters';
 import { useDispatch, useSelector } from 'react-redux';
 import Carousel from 'react-native-reanimated-carousel';
+import { ChapterObj } from '../../types/chapters';
 
 
 function PagesScreen({ route, navigation }: any): JSX.Element {
@@ -14,9 +15,14 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
     const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
     const [item, setItem] = useState<Daum>();
 
+    const [baseUrl, setBaseUrl] = useState<string>('');
+    const [hash, setHash] = useState<string>('');
+    const [dataSaver, setDataSaver] = useState<string[]>([]);
+
     const { itemId } = route.params;
 
     const width = Dimensions.get('window').width;
+    const height = Dimensions.get('window').height;
 
     useEffect(() => {
       setItem(itemId);
@@ -29,8 +35,11 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
     }, [item]);
 
     useEffect(() => {
-      if (data) {
-        console.log('data retreived', data);      
+      if (data && data.chaptersResponse && data.chaptersResponse.data) {
+        const pagesList: ChapterObj = data.chaptersResponse.data;
+        setBaseUrl(pagesList.baseUrl);
+        setHash(pagesList.chapter.hash);
+        setDataSaver(pagesList.chapter.dataSaver);
       }
     }, [data]);
 
@@ -43,9 +52,9 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
             <Carousel
                 loop
                 width={width}
-                height={width / 2}
+                height={height}
                 autoPlay={false}
-                data={[...new Array(6).keys()]}
+                data={[...new Array(dataSaver?.length | 0).keys()]}
                 scrollAnimationDuration={1000}
                 onSnapToItem={(index) => console.log('current index:', index)}
                 renderItem={({ index }) => (
@@ -57,9 +66,10 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
                             backgroundColor: '#FFFFFF'
                         }}
                     >
-                        <Text style={{ textAlign: 'center', fontSize: 30 }}>
-                            {index}
-                        </Text>
+                        <Image src={`${baseUrl}/data-saver/${hash}/${dataSaver[index]}`} style={{
+                          width: '100%',
+                          height: '100%'
+                        }}></Image>
                     </View>
                 )}
             />
