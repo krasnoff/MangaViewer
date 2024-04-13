@@ -6,6 +6,7 @@ import { getChapters } from '../../store/actions/chapters';
 import { useDispatch, useSelector } from 'react-redux';
 import Carousel from 'react-native-reanimated-carousel';
 import { ChapterObj } from '../../types/chapters';
+import CustomSizePage from '../../components/customSizePage';
 
 
 function PagesScreen({ route, navigation }: any): JSX.Element {
@@ -66,10 +67,7 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
                             backgroundColor: '#FFFFFF'
                         }}
                     >
-                        <Image src={`${baseUrl}/data-saver/${hash}/${dataSaver[index]}`} style={{
-                          width: '100%',
-                          height: '100%'
-                        }}></Image>
+                        <CustomSizePage uri={`${baseUrl}/data-saver/${hash}/${dataSaver[index]}`}></CustomSizePage>
                     </View>
                 )}
             />
