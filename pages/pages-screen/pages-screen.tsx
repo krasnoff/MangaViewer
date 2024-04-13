@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Carousel from 'react-native-reanimated-carousel';
 import { ChapterObj } from '../../types/chapters';
 import CustomSizePage from '../../components/customSizePage';
+import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 
 function PagesScreen({ route, navigation }: any): JSX.Element {
@@ -19,11 +20,14 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
     const [baseUrl, setBaseUrl] = useState<string>('');
     const [hash, setHash] = useState<string>('');
     const [dataSaver, setDataSaver] = useState<string[]>([]);
+    const [resizedDataSaver, setResizedDataSaver] = useState<string[]>([]);
 
     const { itemId } = route.params;
 
     const width = Dimensions.get('window').width;
-    const height = Dimensions.get('window').height;
+    const height = Dimensions.get('window').height; 
+
+    const resizedDataSaverArr: string[] = [];
 
     useEffect(() => {
       setItem(itemId);
@@ -41,8 +45,35 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
         setBaseUrl(pagesList.baseUrl);
         setHash(pagesList.chapter.hash);
         setDataSaver(pagesList.chapter.dataSaver);
+        // pagesList.chapter.dataSaver.forEach(el => {
+        //   createResizedImage(`${baseUrl}/data-saver/${hash}/${el}`);
+        // });
       }
     }, [data]);
+
+    const createResizedImage = (path: string) => {
+      return ImageResizer.createResizedImage(
+        path,
+        width,
+        height,
+        'JPEG',
+        50,
+        0,
+        undefined
+      )
+        .then((response) => {
+          // response.uri is the URI of the new image that can now be displayed, uploaded...
+          // response.path is the path of the new image
+          // response.name is the name of the new image with the extension
+          // response.size is the size of the new image
+          resizedDataSaverArr.push(response.uri);
+          setResizedDataSaver(resizedDataSaverArr);
+        })
+        .catch((err) => {
+          // Oops, something went wrong. Check that the filename is correct and
+          // inspect err to get more details.
+        });
+    }
 
     return (
       <ImageBackground source={BACKGROUND_IMAGE} resizeMode="cover" style={styles.image}>
@@ -67,7 +98,9 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
                             backgroundColor: '#FFFFFF'
                         }}
                     >
+                        {/* <Image src={`${baseUrl}/data-saver/${hash}/${dataSaver[index]}`}></Image> */}
                         <CustomSizePage uri={`${baseUrl}/data-saver/${hash}/${dataSaver[index]}`}></CustomSizePage>
+                        {/* <CustomSizePage uri={resizedDataSaver[index]}></CustomSizePage> */}
                     </View>
                 )}
             />
