@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import { Dimensions, Image, StyleSheet, View } from "react-native";
+import { Dimensions, Image as RNImage, StyleSheet, View } from "react-native";
+import { Image } from 'react-native-compressor';
 
 interface Props {
-    uri: string
+    uri: string,
+    pageIndex: number,
+    currentIndex: number
 }
 
 export default function CustomSizePage(props: Props) {
     const [imageWidth, setImageWidth] = useState(0);
     const [imageHeight, setImageHeight] = useState(0);
-
+    
     useEffect(() => {
         getImageSize(props.uri);
     }, []);
@@ -41,7 +44,7 @@ export default function CustomSizePage(props: Props) {
 
     const getImageSizePromise = (uri: any): Promise<{width: number, height: number}> => {
         return new Promise((resolve, reject) => {
-            Image.getSize(uri, (width, height) => {
+            RNImage.getSize(uri, (width, height) => {
               // If successful, resolve the promise with the dimensions
               resolve({ width, height });
             }, (error) => {
@@ -52,8 +55,8 @@ export default function CustomSizePage(props: Props) {
     }
 
     return (
-        <View style={{width: imageWidth, height: imageHeight}}>
-          <Image
+        <View style={{width: imageWidth, height: imageHeight, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+          <RNImage
             source={{uri: props.uri}}
             style={ styles.image } />
         </View>

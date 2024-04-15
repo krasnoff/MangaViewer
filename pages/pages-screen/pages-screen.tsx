@@ -20,6 +20,7 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
     const [baseUrl, setBaseUrl] = useState<string>('');
     const [hash, setHash] = useState<string>('');
     const [dataSaver, setDataSaver] = useState<string[]>([]);
+    const [currentIndex, setCurrentIndex] = useState<number>(-1);
     
     const { itemId } = route.params;
 
@@ -58,17 +59,22 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
                 autoPlay={false}
                 data={[...new Array(dataSaver?.length | 0).keys()]}
                 scrollAnimationDuration={1000}
-                onSnapToItem={(index) => console.log('current index:', index)}
+                onSnapToItem={(index) => {
+                  console.log('current index:', index);
+                  setCurrentIndex(index);
+                }}
                 renderItem={({ index }) => (
                     <View
                         style={{
                             flex: 1,
-                            borderWidth: 1,
-                            justifyContent: 'center',
-                            backgroundColor: '#FFFFFF'
+                            borderWidth: 0,
+                            backgroundColor: '#FFFFFF',
+                            margin: 0,
+                            justifyContent: 'flex-start', 
+                            alignItems: 'flex-start'
                         }}
                     >
-                        <CustomSizePage uri={`${baseUrl}/data-saver/${hash}/${dataSaver[index]}`}></CustomSizePage>
+                        <CustomSizePage uri={`${baseUrl}/data-saver/${hash}/${dataSaver[index]}`} pageIndex={index} currentIndex={currentIndex}></CustomSizePage>
                     </View>
                 )}
             />
