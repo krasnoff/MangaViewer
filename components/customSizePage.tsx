@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Dimensions, Image as RNImage, StyleSheet, View } from "react-native";
-import { Image } from 'react-native-compressor';
+import { ActivityIndicator, Dimensions, Image as RNImage, StyleSheet, View } from "react-native";
+import { Image } from '@rneui/themed';
 
 interface Props {
     uri: string,
@@ -56,9 +56,10 @@ export default function CustomSizePage(props: Props) {
 
     return (
         <View style={{width: imageWidth, height: imageHeight, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-          <RNImage
+          <Image
             source={{uri: props.uri}}
-            style={ styles.image } />
+            containerStyle={ styles.image } 
+            PlaceholderContent={<ActivityIndicator />}/>
         </View>
     );
 }
