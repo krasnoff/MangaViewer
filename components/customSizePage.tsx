@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, Image as RNImage, StyleSheet, View } from "react-native";
+import { ActivityIndicator, DimensionValue, Dimensions, Image as RNImage, StyleSheet, View } from "react-native";
 import { Image } from '@rneui/themed';
 
 interface Props {
@@ -9,8 +9,8 @@ interface Props {
 }
 
 export default function CustomSizePage(props: Props) {
-    const [imageWidth, setImageWidth] = useState(0);
-    const [imageHeight, setImageHeight] = useState(0);
+    const [imageWidth, setImageWidth] = useState<DimensionValue>('100%');
+    const [imageHeight, setImageHeight] = useState<DimensionValue>('100%');
     
     useEffect(() => {
         getImageSize(props.uri);

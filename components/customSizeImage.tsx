@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { Image } from '@rneui/themed';
 
 export default function CustomSizeImage(props: any) {
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
+  const [width, setWidth] = useState(100);
+  const [height, setHeight] = useState(100);
 
   useEffect(() => {
     Image.getSize(props.source.uri, (w, h) => {
@@ -16,7 +17,8 @@ export default function CustomSizeImage(props: any) {
     <View style={{width: width, height: height, marginRight: 10}}>
       <Image
         source={props.source}
-        style={ styles.thumbnail } />
+        style={ styles.thumbnail }
+        PlaceholderContent={<ActivityIndicator />} />
     </View>
   );
 }

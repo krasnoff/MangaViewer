@@ -43,8 +43,14 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
         setBaseUrl(pagesList.baseUrl);
         setHash(pagesList.chapter.hash);
         setDataSaver(pagesList.chapter.dataSaver);
+        setCurrentIndex(0);
       }
     }, [data]);
+
+    const snapToItemHandler = (index: number) => {
+      console.log('current index:', index);
+      setCurrentIndex(index);
+    }
 
     return (
       <ImageBackground source={BACKGROUND_IMAGE} resizeMode="cover" style={styles.image}>
@@ -57,12 +63,9 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
                 width={width}
                 height={height}
                 autoPlay={false}
-                data={[...new Array(dataSaver?.length | 0).keys()]}
+                data={[...new Array(dataSaver.length | 0).keys()]}
                 scrollAnimationDuration={1000}
-                onSnapToItem={(index) => {
-                  console.log('current index:', index);
-                  setCurrentIndex(index);
-                }}
+                onSnapToItem={(index) => snapToItemHandler(index)}
                 renderItem={({ index }) => (
                     <View
                         style={{
@@ -71,19 +74,41 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
                             backgroundColor: '#FFFFFF',
                             margin: 0,
                             justifyContent: 'flex-start', 
-                            alignItems: 'flex-start'
+                            alignItems: 'center'
                         }}
                     >
                         <CustomSizePage uri={`${baseUrl}/data-saver/${hash}/${dataSaver[index]}`} pageIndex={index} currentIndex={currentIndex}></CustomSizePage>
                     </View>
                 )}
             />
+            <View style={footerStyles.view}><Text style={footerStyles.text}>Page {currentIndex + 1} from {dataSaver.length}</Text></View>
           </View>
         ) 
         : null}
       </ImageBackground>
     );
 }
+
+const footerStyles = StyleSheet.create({
+  view: {
+    position: 'absolute', 
+    left: 0, 
+    right: 0, 
+    bottom: 10,
+    backgroundColor: 'black',
+    opacity: 0.7,
+    paddingBottom: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 50,
+    borderRadius: 15
+  },
+  text: {
+    fontSize: 20,
+    color: '#FFFFFF',
+    fontWeight: 'bold'
+  }
+});
 
 const styles = StyleSheet.create({
   image: {
