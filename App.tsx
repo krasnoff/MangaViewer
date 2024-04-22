@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { NativeStackNavigationOptions, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from './pages/home-screen/home-screen';
 import type {PropsWithChildren} from 'react';
-import { Image, Text, View } from 'react-native';
+import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
 
 import { ANIME_STUB_IMAGE } from './assets/images';
 import configureStore from './store/store';
@@ -13,6 +13,7 @@ import watcherSaga from './store/sagas/data-summary';
 import { Provider } from 'react-redux';
 import ItemScreen from './pages/item-screen/item-screen';
 import PagesScreen from './pages/pages-screen/pages-screen';
+import Icon from './assets/icons/icon';
 
 const store = configureStore();
 store.runSaga(watcherSaga);
@@ -30,6 +31,14 @@ function LogoTitle(props: Props) {
         fontSize: 28,
       }}>{props.title}</Text>
     </View>
+  );
+}
+
+function MenuButton() {
+  return (
+    <TouchableOpacity onPress={() => { console.log('Button pressed') }}>
+      <Icon name="Menu" height="35" width="35" fill="#000000" />
+    </TouchableOpacity>
   );
 }
 
@@ -58,18 +67,21 @@ function App() {
             component={HomeScreen}
             options={{
               headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+              headerRight: (() => <MenuButton />)
           }} />
           <Stack.Screen 
             name="Item" 
             component={ItemScreen}
             options={{
               headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+              headerRight: (() => <MenuButton />)
           }} />
           <Stack.Screen 
             name="Pages" 
             component={PagesScreen}
             options={{
               headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+              headerRight: (() => <MenuButton />)
           }} />
         </Stack.Navigator>
       </NavigationContainer>
