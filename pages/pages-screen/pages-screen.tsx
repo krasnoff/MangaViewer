@@ -56,7 +56,7 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
 
     const fadeOut = () => {
       Animated.timing(fadeAnim, {
-        toValue: 1,
+        toValue: 0.7,
         duration: 3000,
         useNativeDriver: true,
       }).start(() => {
