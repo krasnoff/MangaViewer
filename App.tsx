@@ -4,8 +4,8 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { NativeStackNavigationOptions, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from './pages/home-screen/home-screen';
-import type {PropsWithChildren} from 'react';
-import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
+import {useCallback, useMemo, useRef, type PropsWithChildren} from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { ANIME_STUB_IMAGE } from './assets/images';
 import configureStore from './store/store';
@@ -14,6 +14,9 @@ import { Provider } from 'react-redux';
 import ItemScreen from './pages/item-screen/item-screen';
 import PagesScreen from './pages/pages-screen/pages-screen';
 import Icon from './assets/icons/icon';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 
 const store = configureStore();
 store.runSaga(watcherSaga);
@@ -34,13 +37,23 @@ function LogoTitle(props: Props) {
   );
 }
 
-function MenuButton() {
+interface MenuProps {
+  bottomSheetRef: React.RefObject<BottomSheetMethods>
+}
+
+function MenuButton(props: MenuProps) {
+  const menuButtonHandler = (bottomSheetRef: React.RefObject<BottomSheetMethods>) => {
+    bottomSheetRef.current!.expand();
+  }
+
   return (
-    <TouchableOpacity onPress={() => { console.log('Button pressed') }}>
+    <TouchableOpacity onPress={() => menuButtonHandler(props.bottomSheetRef) }>
       <Icon name="Menu" height="35" width="35" fill="#000000" />
     </TouchableOpacity>
   );
 }
+
+
 
 const customHeaderDesign: NativeStackNavigationOptions = {
   // title: 'כותרת לדוגמה',
@@ -57,36 +70,70 @@ const customHeaderDesign: NativeStackNavigationOptions = {
 
 const Stack = createNativeStackNavigator();
 
-function App() {
+const App = () => {
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+    if (index === 0) {
+      bottomSheetRef.current!.close();
+    }
+  }, []);
+
+  const snapPoints = useMemo(() => [1, '50%'], []);
+
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home" screenOptions={customHeaderDesign}>
-          <Stack.Screen 
-            name="Home" 
-            component={HomeScreen}
-            options={{
-              headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
-              headerRight: (() => <MenuButton />)
-          }} />
-          <Stack.Screen 
-            name="Item" 
-            component={ItemScreen}
-            options={{
-              headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
-              headerRight: (() => <MenuButton />)
-          }} />
-          <Stack.Screen 
-            name="Pages" 
-            component={PagesScreen}
-            options={{
-              headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
-              headerRight: (() => <MenuButton />)
-          }} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Home" screenOptions={customHeaderDesign}>
+            <Stack.Screen 
+              name="Home" 
+              component={HomeScreen}
+              options={{
+                headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+                headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
+            }} />
+            <Stack.Screen 
+              name="Item" 
+              component={ItemScreen}
+              options={{
+                headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+                headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
+            }} />
+            <Stack.Screen 
+              name="Pages" 
+              component={PagesScreen}
+              options={{
+                headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+                headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
+            }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <BottomSheet
+          ref={bottomSheetRef}
+          onChange={handleSheetChanges}
+          snapPoints={snapPoints}
+          index={-1}
+        >
+          <BottomSheetView style={styles.contentContainer}>
+            <Text>Awesome 🎉</Text>
+          </BottomSheetView>
+        </BottomSheet>
+      </GestureHandlerRootView>
     </Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 24,
+    backgroundColor: 'grey',
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+});
 
 export default App;
