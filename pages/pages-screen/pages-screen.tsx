@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Dimensions, ImageBackground, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, Dimensions, ImageBackground, StyleSheet, Text, View } from "react-native";
 import { BACKGROUND_IMAGE } from '../../assets/images';
 import { Daum } from '../../types/search-results';
 import { getChapters } from '../../store/actions/chapters';
@@ -27,8 +27,11 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
     const width = Dimensions.get('window').width;
     const height = Dimensions.get('window').height; 
 
+    const fadeAnim = useRef(new Animated.Value(0.7)).current;
+
     useEffect(() => {
       setItem(itemId);
+      fadeOut();
     }, []);
 
     useEffect(() => {
@@ -48,9 +51,22 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
     }, [data]);
 
     const snapToItemHandler = (index: number) => {
-      console.log('current index:', index);
       setCurrentIndex(index);
     }
+
+    const fadeOut = () => {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 3000,
+        useNativeDriver: true,
+      }).start(() => {
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }).start();
+      });
+    };
 
     return (
       <ImageBackground source={BACKGROUND_IMAGE} resizeMode="cover" style={styles.image}>
@@ -58,6 +74,7 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
         {networkError === '' ? 
         (
           <View style={{ flex: 1 }}>
+            <Animated.View style={[motificationStyles.view, topStyles.view, { opacity: fadeAnim }]}><Text style={[motificationStyles.text, topStyles.text]}>Swipe right in order to see the next page.</Text></Animated.View>
             <Carousel
                 loop
                 width={width}
@@ -81,7 +98,7 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
                     </View>
                 )}
             />
-            <View style={footerStyles.view}><Text style={footerStyles.text}>Page {currentIndex + 1} from {dataSaver.length}</Text></View>
+            <View style={[motificationStyles.view, bottomStyles.view]}><Text style={motificationStyles.text}>Page {currentIndex + 1} from {dataSaver.length}</Text></View>
           </View>
         ) 
         : null}
@@ -89,12 +106,27 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
     );
 }
 
-const footerStyles = StyleSheet.create({
+const topStyles = StyleSheet.create({
+  view: {
+    top: 20,
+    zIndex: 100
+  },
+  text: {
+    textAlign: 'center'
+  }
+})
+
+const bottomStyles = StyleSheet.create({
+  view: {
+    bottom: 10
+  }
+})
+
+const motificationStyles = StyleSheet.create({
   view: {
     position: 'absolute', 
     left: 0, 
     right: 0, 
-    bottom: 10,
     backgroundColor: 'black',
     opacity: 0.7,
     paddingBottom: 4,
