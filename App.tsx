@@ -14,7 +14,7 @@ import { Provider } from 'react-redux';
 import ItemScreen from './pages/item-screen/item-screen';
 import PagesScreen from './pages/pages-screen/pages-screen';
 import Icon from './assets/icons/icon';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 
@@ -82,6 +82,17 @@ const App = () => {
 
   const snapPoints = useMemo(() => [1, '50%'], []);
 
+  const renderBackdrop = useCallback(
+		(props: any) => (
+			<BottomSheetBackdrop
+				{...props}
+				disappearsOnIndex={0}
+				appearsOnIndex={1}
+			/>
+		),
+		[]
+	);
+
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
@@ -114,7 +125,9 @@ const App = () => {
           ref={bottomSheetRef}
           onChange={handleSheetChanges}
           snapPoints={snapPoints}
+          backdropComponent={renderBackdrop}
           index={-1}
+          style={styles.shadow}
         >
           <BottomSheetView style={styles.contentContainer}>
             <Text>Awesome 🎉</Text>
@@ -126,6 +139,16 @@ const App = () => {
 }
 
 const styles = StyleSheet.create({
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
   container: {
     padding: 24,
     backgroundColor: 'grey',
