@@ -76,12 +76,14 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
           <View style={{ flex: 1 }}>
             <Animated.View style={[motificationStyles.view, topStyles.view, { opacity: fadeAnim }]}><Text style={[motificationStyles.text, topStyles.text]}>Swipe right in order to see the next page.</Text></Animated.View>
             <Carousel
-                loop
+                loop={false}
                 width={width}
                 height={height}
                 autoPlay={false}
                 data={[...new Array(dataSaver.length | 0).keys()]}
                 scrollAnimationDuration={1000}
+                windowSize={3}
+                autoFillData={false}
                 onSnapToItem={(index) => snapToItemHandler(index)}
                 renderItem={({ index }) => (
                     <View
