@@ -17,6 +17,11 @@ import Icon from './assets/icons/icon';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import BulletedList from './components/bulletedList ';
+import CreditsScreen from './pages/credits-screen/credits-screen';
+import AboutScreen from './pages/about-screen/about-screen';
+import { BottomSheetItemObj } from './types/bottom-sheet-item-types';
+
 
 const store = configureStore();
 store.runSaga(watcherSaga);
@@ -73,6 +78,7 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
+
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
     if (index === 0) {
@@ -92,6 +98,18 @@ const App = () => {
 		),
 		[]
 	);
+
+  const bottomSheetItems: BottomSheetItemObj[] = [{
+    title: 'Credits',
+    url: 'Credits'
+  }, {
+    title: 'About',
+    url: 'About'
+  }];
+
+  const closeBottomSheetHandler = () => {
+    bottomSheetRef.current!.close();
+  }
 
   return (
     <Provider store={store}>
@@ -119,20 +137,35 @@ const App = () => {
                 headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
                 headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
             }} />
+            <Stack.Screen 
+              name="Credits" 
+              component={CreditsScreen}
+              options={{
+                headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+                headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
+            }} />
+            <Stack.Screen 
+              name="About" 
+              component={AboutScreen}
+              options={{
+                headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+                headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
+            }} />
           </Stack.Navigator>
+          <BottomSheet
+            ref={bottomSheetRef}
+            onChange={handleSheetChanges}
+            snapPoints={snapPoints}
+            backdropComponent={renderBackdrop}
+            index={-1}
+            style={styles.shadow}
+          >
+            <BottomSheetView style={styles.contentContainer}>
+              <Text>Awesome 🎉</Text>
+              <BulletedList items={bottomSheetItems} closeBottomSheetHandler={() => closeBottomSheetHandler()}></BulletedList>
+            </BottomSheetView>
+          </BottomSheet>
         </NavigationContainer>
-        <BottomSheet
-          ref={bottomSheetRef}
-          onChange={handleSheetChanges}
-          snapPoints={snapPoints}
-          backdropComponent={renderBackdrop}
-          index={-1}
-          style={styles.shadow}
-        >
-          <BottomSheetView style={styles.contentContainer}>
-            <Text>Awesome 🎉</Text>
-          </BottomSheetView>
-        </BottomSheet>
       </GestureHandlerRootView>
     </Provider>
   );
