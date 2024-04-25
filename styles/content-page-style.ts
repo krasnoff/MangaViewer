@@ -8,6 +8,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         textDecorationLine: 'underline'
+    },
+    marginTop: {
+        marginTop: 20
+    },
+    pressableMarginTop: {
+        marginTop: 5
     }
 });
 
