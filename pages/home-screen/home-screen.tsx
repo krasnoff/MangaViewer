@@ -9,7 +9,7 @@ import { useUtilData } from "../../hooks/useParseData";
 import CustomSizeImage from "../../components/customSizeImage";
 import Icon from "../../assets/icons/icon";
 
-export function HomeScreen({ navigation }: any) {
+export function HomeScreen({ route, navigation }: any) {
   const dispatch = useDispatch();
   const data = useSelector(state => (state as unknown as any).SimpleSearchResponse);
   const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
