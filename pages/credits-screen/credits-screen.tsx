@@ -35,18 +35,19 @@ function CreditsScreen({ route, navigation }: any): JSX.Element {
                 </Pressable>
                 <Text style={[styles.subTitle, styles.marginTop]}>Credits for the app logo:</Text>
                 <Text style={styles.text}>
-                    This logo was originally created by 
+                    This logo that appears on the header and on the app icon was originally designed by
                     <Text 
                         onPressIn={() => chapterPressInHandler('Kasuga')}
                         onPressOut={() => chapterPressOutHandler()}
                         onPress={() => chapterPressHandler('https://meta.wikimedia.org/wiki/User:Kasuga~metawiki')}
                         style={[styles.text, styles.pressableMarginTop, {color: activeIndex === 'Kasuga' ? 'red': 'blue'}]}> Kasuga. </Text>
-                    This logo is distributed under a 
+                    The logo graphic file of the header and the app icon files are distributed under
                     <Text 
                         onPressIn={() => chapterPressInHandler('cc')}  
                         onPressOut={() => chapterPressOutHandler()}
                         onPress={() => chapterPressHandler('https://creativecommons.org/licenses/by-sa/3.0/deed.en')}
-                        style={[styles.text, styles.pressableMarginTop, {color: activeIndex === 'cc' ? 'red': 'blue'}]}> Creative Commons license.</Text>
+                        style={[styles.text, styles.pressableMarginTop, {color: activeIndex === 'cc' ? 'red': 'blue'}]}> Creative Commons license </Text>
+                        (CC BY-SA 3.0 DEED)
                 </Text>
                 <Text style={[styles.subTitle, styles.marginTop]}>Application header credit for special fonts</Text>
                 <Text style={styles.text}>
