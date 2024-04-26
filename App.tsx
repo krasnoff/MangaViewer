@@ -4,8 +4,8 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { NativeStackNavigationOptions, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from './pages/home-screen/home-screen';
-import {useCallback, useMemo, useRef, type PropsWithChildren} from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {useCallback, useMemo, useRef, useState, type PropsWithChildren} from 'react';
+import { Button, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { ANIME_STUB_IMAGE } from './assets/images';
 import configureStore from './store/store';
@@ -77,7 +77,7 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-
+  const [inputText, setInputText] = useState<string>('');
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
@@ -110,6 +110,15 @@ const App = () => {
   const closeBottomSheetHandler = () => {
     bottomSheetRef.current!.close();
   }
+
+  const searchHandler = () => {
+    console.log('on submit');
+    bottomSheetRef.current!.close();
+  }
+
+  const handleInputChange = (text: string) => {
+    setInputText(text);
+  };
 
   return (
     <Provider store={store}>
@@ -161,7 +170,17 @@ const App = () => {
             style={styles.shadow}
           >
             <BottomSheetView style={styles.contentContainer}>
-              <Text>Awesome 🎉</Text>
+              <View style={styles.formContainer}>
+                <TextInput
+                  style={styles.input}
+                  value={inputText}
+                  onChangeText={handleInputChange}
+                  placeholder="Search..."
+                />
+                <TouchableOpacity style={styles.button} onPress={() => searchHandler()}>
+                  <Icon name="Search" height="30" width="30" fill="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
               <BulletedList items={bottomSheetItems} closeBottomSheetHandler={() => closeBottomSheetHandler()}></BulletedList>
             </BottomSheetView>
           </BottomSheet>
@@ -190,6 +209,29 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  formContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 10,
+    marginTop: 50,
+  },
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'gray',
+    paddingHorizontal: 10,
+    marginRight: 10,
+    borderRadius: 5,
+  },
+  button: {
+    width: 50,
+    height: 50,
+    borderRadius: 30,
+    backgroundColor: 'blue',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 export default App;
