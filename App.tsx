@@ -1,11 +1,11 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { NativeStackNavigationOptions, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from './pages/home-screen/home-screen';
-import {useCallback, useMemo, useRef, useState, type PropsWithChildren} from 'react';
-import { Button, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useCallback, useMemo, useRef, useState, type PropsWithChildren } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { ANIME_STUB_IMAGE } from './assets/images';
 import configureStore from './store/store';
@@ -22,6 +22,7 @@ import CreditsScreen from './pages/credits-screen/credits-screen';
 import AboutScreen from './pages/about-screen/about-screen';
 import { BottomSheetItemObj } from './types/bottom-sheet-item-types';
 import SearchForm from './components/searchForm';
+import { ThemeContext } from './contexts/themeContext';
 
 
 const store = configureStore();
@@ -59,8 +60,6 @@ function MenuButton(props: MenuProps) {
   );
 }
 
-
-
 const customHeaderDesign: NativeStackNavigationOptions = {
   // title: 'כותרת לדוגמה',
   headerStyle: {
@@ -78,9 +77,9 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const [searchWord, setSearchWord] = useState<string>('');
 
   const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
     if (index === 0) {
       bottomSheetRef.current!.close();
     }
@@ -111,62 +110,76 @@ const App = () => {
     bottomSheetRef.current!.close();
   }
 
+  const searchHandler = (searchWord: string) => {
+    setSearchWord(searchWord);
+    
+    setTimeout(() => {
+      handleClosePress();
+    }, 500)
+  }
+
+  const handleClosePress = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, []);
+
   return (
     <Provider store={store}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Home" screenOptions={customHeaderDesign}>
-            <Stack.Screen 
-              name="Home" 
-              component={HomeScreen}
-              options={{
-                headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
-                headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
-            }} />
-            <Stack.Screen 
-              name="Item" 
-              component={ItemScreen}
-              options={{
-                headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
-                headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
-            }} />
-            <Stack.Screen 
-              name="Pages" 
-              component={PagesScreen}
-              options={{
-                headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
-                headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
-            }} />
-            <Stack.Screen 
-              name="Credits" 
-              component={CreditsScreen}
-              options={{
-                headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
-                headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
-            }} />
-            <Stack.Screen 
-              name="About" 
-              component={AboutScreen}
-              options={{
-                headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
-                headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
-            }} />
-          </Stack.Navigator>
-          <BottomSheet
-            ref={bottomSheetRef}
-            onChange={handleSheetChanges}
-            snapPoints={snapPoints}
-            backdropComponent={renderBackdrop}
-            index={-1}
-            style={styles.shadow}
-          >
-            <BottomSheetView style={styles.contentContainer}>
-              <SearchForm />
-              <BulletedList items={bottomSheetItems} closeBottomSheetHandler={() => closeBottomSheetHandler()}></BulletedList>
-            </BottomSheetView>
-          </BottomSheet>
-        </NavigationContainer>
-      </GestureHandlerRootView>
+      <ThemeContext.Provider value={searchWord}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Home" screenOptions={customHeaderDesign}>
+              <Stack.Screen 
+                name="Home" 
+                component={HomeScreen}
+                options={{
+                  headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+                  headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
+              }} />
+              <Stack.Screen 
+                name="Item" 
+                component={ItemScreen}
+                options={{
+                  headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+                  headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
+              }} />
+              <Stack.Screen 
+                name="Pages" 
+                component={PagesScreen}
+                options={{
+                  headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+                  headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
+              }} />
+              <Stack.Screen 
+                name="Credits" 
+                component={CreditsScreen}
+                options={{
+                  headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+                  headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
+              }} />
+              <Stack.Screen 
+                name="About" 
+                component={AboutScreen}
+                options={{
+                  headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+                  headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
+              }} />
+            </Stack.Navigator>
+            <BottomSheet
+              ref={bottomSheetRef}
+              onChange={handleSheetChanges}
+              snapPoints={snapPoints}
+              backdropComponent={renderBackdrop}
+              index={-1}
+              style={styles.shadow}
+            >
+              <BottomSheetView style={styles.contentContainer}>
+                <SearchForm searchHandler={(searchWord: string) => searchHandler(searchWord)} />
+                <BulletedList items={bottomSheetItems} closeBottomSheetHandler={() => closeBottomSheetHandler()}></BulletedList>
+              </BottomSheetView>
+            </BottomSheet>
+          </NavigationContainer>
+        </GestureHandlerRootView>
+      </ThemeContext.Provider>
     </Provider>
   );
 }

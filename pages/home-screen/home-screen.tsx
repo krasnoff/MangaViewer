@@ -1,31 +1,38 @@
-import { Button, ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getSimpleSearch } from "../../store/actions/simpleSearch";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BACKGROUND_IMAGE } from "../../assets/images";
 import { Daum } from "../../types/search-results";
 import Loader from "../../components/loader";
 import { useUtilData } from "../../hooks/useParseData";
 import CustomSizeImage from "../../components/customSizeImage";
 import Icon from "../../assets/icons/icon";
+import { ThemeContext } from "../../contexts/themeContext";
 
 export function HomeScreen({ route, navigation }: any) {
   const dispatch = useDispatch();
   const data = useSelector(state => (state as unknown as any).SimpleSearchResponse);
   const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
-  
+    
   const [status, setStatus] = useState<number>(0);
   const [networkError, setNetworkError] = useState<string>('');
   const [articleData, setArticleData] = useState<Daum[]>([]);
 
   const [showLoader, setShowLoader] = useState<boolean>(true);
 
-  const {parseIncomingData} = useUtilData()
+  const {parseIncomingData} = useUtilData();
+  const theme = useContext(ThemeContext);
 
   useEffect(() => {
     //setShowLoader(true);
+    console.log('initial load');
     dispatch(getSimpleSearch()); 
   }, []);
+
+  useEffect(() => {
+    console.log('ThemeContext', theme);
+  }, [theme]);
 
   useEffect(() => {
     setNetworkError('');

@@ -1,15 +1,20 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from "../assets/icons/icon";
 
-const SearchForm = () => {
+interface Props {
+    searchHandler: (searchWord: string) => void
+}
+
+const SearchForm = (prop: Props) => {
     const [inputText, setInputText] = useState<string>('');
     const navigation = useNavigation();
+    const textInputRef = useRef<TextInput>(null);
     
     const searchHandler = () => {
-        console.log('on submit');
-        // bottomSheetRef.current!.close();
+        textInputRef.current?.blur();
+        prop.searchHandler(inputText);
         navigation.navigate('Home' as never);
     }
     
@@ -24,6 +29,7 @@ const SearchForm = () => {
                 value={inputText}
                 onChangeText={handleInputChange}
                 placeholder="Search..."
+                ref={textInputRef}
             />
             <TouchableOpacity style={styles.button} onPress={() => searchHandler()}>
                 <Icon name="Search" height="30" width="30" fill="#FFFFFF" />
