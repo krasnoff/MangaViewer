@@ -25,13 +25,8 @@ export function HomeScreen({ route, navigation }: any) {
   const theme = useContext(ThemeContext);
 
   useEffect(() => {
-    //setShowLoader(true);
-    console.log('initial load');
-    dispatch(getSimpleSearch()); 
-  }, []);
-
-  useEffect(() => {
     console.log('ThemeContext', theme);
+    dispatch(getSimpleSearch(theme)); 
   }, [theme]);
 
   useEffect(() => {
@@ -62,15 +57,11 @@ export function HomeScreen({ route, navigation }: any) {
 
   const handleScroll = (event: { nativeEvent: { contentOffset: { y: any; }; }; }) => {
     const { y } = event.nativeEvent.contentOffset;
-    if (y === 0) {
+    if (y === 0 && theme === '' && theme.length > 0) {
       setShowLoader(true);
       dispatch(getSimpleSearch()); 
     }
   };
-
-  // const onPressLearnMore = () => {
-  //   dispatch(getSimpleSearch()); 
-  // }
 
   return (
     <SafeAreaView style={{
