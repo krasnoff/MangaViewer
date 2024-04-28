@@ -106,7 +106,6 @@ export function HomeScreen({ route, navigation }: any) {
                     <CustomSizeImage source={{ uri: item.coverImgURL }} />
                     <TouchableOpacity onPress={() => toggleFavoritesHandler(item)} style={styles.favorite}>
                       <Icon name={item.isFavorite == true ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={item.isFavorite == true ? '#00FF00' : '#FF0000'} />
-                      <Text>isFavorite: {item.isFavorite}</Text>
                     </TouchableOpacity>
                   </View>
                   <View style={stylesSCrollView.itemTextContainer}>
