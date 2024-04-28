@@ -12,7 +12,8 @@ export interface SearchResults {
     type: string
     attributes: Attributes
     relationships: Relationship[]
-    coverImgURL: string
+    coverImgURL: string,
+    isFavorite?: boolean
   }
   
   export interface Attributes {

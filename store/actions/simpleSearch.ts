@@ -1,4 +1,4 @@
-import { GET_SIMPLE_SEARCH, GET_SIMPLE_SEARCH_LOADED } from "../action-type";
+import { GET_SIMPLE_SEARCH, PARSE_SIMPLE_SEARCH } from "../action-type";
 
 interface Params {
     "includes[]": string[];
@@ -16,5 +16,5 @@ export function getSimpleSearch(searchWord?: string) {
         params = {...params, title: searchWord}
     }
     
-    return { type: GET_SIMPLE_SEARCH, url: '/manga', target: GET_SIMPLE_SEARCH_LOADED, params: params };
+    return { type: GET_SIMPLE_SEARCH, url: '/manga', target: PARSE_SIMPLE_SEARCH, params: params };
 }

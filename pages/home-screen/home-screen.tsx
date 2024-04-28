@@ -1,4 +1,4 @@
-import { ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getSimpleSearch } from "../../store/actions/simpleSearch";
 import { useContext, useEffect, useState } from "react";
@@ -63,6 +63,24 @@ export function HomeScreen({ route, navigation }: any) {
     }
   };
 
+  const toggleFavoritesHandler = (item: Daum) => {
+    const prevArticleData = JSON.parse(JSON.stringify(articleData)) as Daum[];
+    const chosenManga = prevArticleData.find(el => el.id === item.id);
+    if (chosenManga) {
+      
+      if (chosenManga.isFavorite === true) {
+        chosenManga.isFavorite = false;
+        ToastAndroid.show('This manga has been removed from your favorites', ToastAndroid.SHORT);
+      } else {
+        chosenManga.isFavorite = true;
+        ToastAndroid.show('This manga has been added to your favorites', ToastAndroid.SHORT);
+      }
+    }
+
+    setArticleData(prevArticleData);
+    // console.log('add to favorites on function...', prevArticleData);
+  }
+
   return (
     <SafeAreaView style={{
       flex: 1,
@@ -84,7 +102,13 @@ export function HomeScreen({ route, navigation }: any) {
             {articleData.map(item => (
               <View key={item.id} style={stylesSCrollView.itemContainer}>
                 <View style={stylesSCrollView.mainView}>
-                  <CustomSizeImage source={{ uri: item.coverImgURL }} />
+                  <View>
+                    <CustomSizeImage source={{ uri: item.coverImgURL }} />
+                    <TouchableOpacity onPress={() => toggleFavoritesHandler(item)} style={styles.favorite}>
+                      <Icon name={item.isFavorite == true ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={item.isFavorite == true ? '#00FF00' : '#FF0000'} />
+                      <Text>isFavorite: {item.isFavorite}</Text>
+                    </TouchableOpacity>
+                  </View>
                   <View style={stylesSCrollView.itemTextContainer}>
                     <Text style={stylesSCrollView.itemTitle}>{item.attributes.title.en}</Text>
                     <Text style={stylesSCrollView.itemDescription} numberOfLines={10}>{item.attributes.description.en}</Text>
@@ -129,6 +153,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Bangers-Regular', 
     fontSize: 20,
     textAlign: 'center'
+  },
+  favorite: {
+    paddingLeft: 10,
+    paddingTop: 15
   }
 });
 

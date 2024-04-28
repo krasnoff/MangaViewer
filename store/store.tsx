@@ -5,6 +5,7 @@ import ErrorSummeryReducer from './reducers/errorSummary';
 import feedMiddleware from './middlewares/feed';
 import FeedReducer from './reducers/feed';
 import ChaptersReducer from './reducers/chapters';
+import simpleSearchMiddleware from './middlewares/simpleSearch';
 
 //const storeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const initialiseSagaMiddleware = createSagaMiddleware();
@@ -19,7 +20,7 @@ const rootReducer = combineReducers({
 const configureStore = () => {
     return { ...createStore(
       rootReducer,
-      applyMiddleware(initialiseSagaMiddleware, feedMiddleware)), 
+      applyMiddleware(initialiseSagaMiddleware, feedMiddleware, simpleSearchMiddleware)), 
       runSaga: initialiseSagaMiddleware.run
     }
 }
