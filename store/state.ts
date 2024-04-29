@@ -13,7 +13,8 @@ const initialState = {
     chaptersResponse: {
         error: null,
         result: []
-    }
+    },
+    favoriteMangas: []
 };
 
 export default initialState;

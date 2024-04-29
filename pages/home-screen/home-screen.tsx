@@ -9,12 +9,15 @@ import { useUtilData } from "../../hooks/useParseData";
 import CustomSizeImage from "../../components/customSizeImage";
 import Icon from "../../assets/icons/icon";
 import { ThemeContext } from "../../contexts/themeContext";
+import { mangaToFavorites } from "../../store/actions/favorite-mangas";
+import { ActionTypes } from "../../enums/action-types";
 
 export function HomeScreen({ route, navigation }: any) {
   const dispatch = useDispatch();
   const data = useSelector(state => (state as unknown as any).SimpleSearchResponse);
   const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
-    
+  const favorateMangaData = useSelector(state => (state as unknown as any).AddFavorateMangaResponse);
+      
   const [status, setStatus] = useState<number>(0);
   const [networkError, setNetworkError] = useState<string>('');
   const [articleData, setArticleData] = useState<Daum[]>([]);
@@ -55,6 +58,10 @@ export function HomeScreen({ route, navigation }: any) {
     
   }, [errorData]);
 
+  useEffect(() => {
+    console.log('favorateMangaData', favorateMangaData)    
+  }, [favorateMangaData]);
+
   const handleScroll = (event: { nativeEvent: { contentOffset: { y: any; }; }; }) => {
     const { y } = event.nativeEvent.contentOffset;
     if (y === 0 && theme === '' && theme.length > 0) {
@@ -70,9 +77,11 @@ export function HomeScreen({ route, navigation }: any) {
       
       if (chosenManga.isFavorite === true) {
         chosenManga.isFavorite = false;
+        dispatch(mangaToFavorites(item, ActionTypes.REMOVE)); 
         ToastAndroid.show('This manga has been removed from your favorites', ToastAndroid.SHORT);
       } else {
         chosenManga.isFavorite = true;
+        dispatch(mangaToFavorites(item, ActionTypes.ADD)); 
         ToastAndroid.show('This manga has been added to your favorites', ToastAndroid.SHORT);
       }
     }
