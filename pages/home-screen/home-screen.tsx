@@ -11,12 +11,13 @@ import Icon from "../../assets/icons/icon";
 import { ThemeContext } from "../../contexts/themeContext";
 import { mangaToFavorites } from "../../store/actions/favorite-mangas";
 import { ActionTypes } from "../../enums/action-types";
+import { useStorage } from "../../hooks/useStorage";
 
 export function HomeScreen({ route, navigation }: any) {
   const dispatch = useDispatch();
   const data = useSelector(state => (state as unknown as any).SimpleSearchResponse);
   const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
-  const favorateMangaData = useSelector(state => (state as unknown as any).AddFavorateMangaResponse);
+  const favorateMangaData = useSelector(state => (state as unknown as any).FavorateMangaResponse);
       
   const [status, setStatus] = useState<number>(0);
   const [networkError, setNetworkError] = useState<string>('');
@@ -27,8 +28,10 @@ export function HomeScreen({ route, navigation }: any) {
   const {parseIncomingData} = useUtilData();
   const theme = useContext(ThemeContext);
 
+  const {storeData, loadData} = useStorage();
+
   useEffect(() => {
-    console.log('ThemeContext', theme);
+    setShowLoader(true);
     dispatch(getSimpleSearch(theme)); 
   }, [theme]);
 
@@ -59,16 +62,23 @@ export function HomeScreen({ route, navigation }: any) {
   }, [errorData]);
 
   useEffect(() => {
-    console.log('favorateMangaData', favorateMangaData)    
+    //console.log('favorateMangaData', favorateMangaData);
+    storeData('favorateMangaData', favorateMangaData.favoriteMangas).then(res => {
+      console.log('success')
+    }).catch(err => {
+      // any exception including data not found
+      // goes to catch()
+      console.warn(err.message);
+      switch (err.name) {
+        case 'NotFoundError':
+          console.log('NotFoundError')
+          break;
+        case 'ExpiredError':
+          console.log('NotFoundError')
+          break;
+      }
+    });;
   }, [favorateMangaData]);
-
-  const handleScroll = (event: { nativeEvent: { contentOffset: { y: any; }; }; }) => {
-    const { y } = event.nativeEvent.contentOffset;
-    if (y === 0 && theme === '' && theme.length > 0) {
-      setShowLoader(true);
-      dispatch(getSimpleSearch()); 
-    }
-  };
 
   const toggleFavoritesHandler = (item: Daum) => {
     const prevArticleData = JSON.parse(JSON.stringify(articleData)) as Daum[];
@@ -81,7 +91,7 @@ export function HomeScreen({ route, navigation }: any) {
         ToastAndroid.show('This manga has been removed from your favorites', ToastAndroid.SHORT);
       } else {
         chosenManga.isFavorite = true;
-        dispatch(mangaToFavorites(item, ActionTypes.ADD)); 
+        dispatch(mangaToFavorites(item, ActionTypes.ADD));
         ToastAndroid.show('This manga has been added to your favorites', ToastAndroid.SHORT);
       }
     }
@@ -107,7 +117,7 @@ export function HomeScreen({ route, navigation }: any) {
           {networkError !== '' ? <Text style={styles.text}>{networkError}</Text> : null}
           {networkError === '' && status === 200 && articleData.length === 0 ? <Text style={styles.text}>No stories for this search</Text> : null}
           {networkError === '' && status === 200 && articleData.length > 0 ? 
-            <ScrollView contentContainerStyle={stylesSCrollView.scrollViewContent} onScroll={handleScroll} scrollEventThrottle={16}>
+            <ScrollView contentContainerStyle={stylesSCrollView.scrollViewContent}>
             {articleData.map(item => (
               <View key={item.id} style={stylesSCrollView.itemContainer}>
                 <View style={stylesSCrollView.mainView}>

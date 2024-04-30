@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   FeedResponse: FeedReducer,
   ErrorResponse: ErrorSummeryReducer,
   ChaptersResponse: ChaptersReducer,
-  AddFavorateMangaResponse: mangaToFavoritesReducer
+  FavorateMangaResponse: mangaToFavoritesReducer
 });
   
 const configureStore = () => {
