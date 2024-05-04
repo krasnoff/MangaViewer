@@ -4,7 +4,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { NativeStackNavigationOptions, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from './pages/home-screen/home-screen';
-import { useCallback, useMemo, useRef, useState, type PropsWithChildren } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type PropsWithChildren } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { ANIME_STUB_IMAGE } from './assets/images';
@@ -23,6 +23,7 @@ import AboutScreen from './pages/about-screen/about-screen';
 import { BottomSheetItemObj } from './types/bottom-sheet-item-types';
 import SearchForm from './components/searchForm';
 import { ThemeContext } from './contexts/themeContext';
+import { SingletonHooksContainer } from 'react-singleton-hook';
 
 
 const store = configureStore();
@@ -78,7 +79,7 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [searchWord, setSearchWord] = useState<string>('');
-
+  
   const handleSheetChanges = useCallback((index: number) => {
     if (index === 0) {
       bottomSheetRef.current!.close();
@@ -104,6 +105,9 @@ const App = () => {
   }, {
     title: 'About',
     url: 'About'
+  }, {
+    title: 'Get Persistent Storage',
+    url: 'Get Persistent Storage'
   }];
 
   const closeBottomSheetHandler = () => {
@@ -124,6 +128,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
+      <SingletonHooksContainer/>
       <ThemeContext.Provider value={searchWord}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <NavigationContainer>

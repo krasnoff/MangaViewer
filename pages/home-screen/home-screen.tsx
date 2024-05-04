@@ -1,7 +1,7 @@
 import { ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getSimpleSearch } from "../../store/actions/simpleSearch";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { BACKGROUND_IMAGE } from "../../assets/images";
 import { Daum } from "../../types/search-results";
 import Loader from "../../components/loader";
@@ -29,6 +29,7 @@ export function HomeScreen({ route, navigation }: any) {
   const theme = useContext(ThemeContext);
 
   const {storeData, loadData} = useStorage();
+  const isInitialRender = useRef(true);
 
   useEffect(() => {
     setShowLoader(true);
@@ -48,6 +49,7 @@ export function HomeScreen({ route, navigation }: any) {
       
     }
 
+    //console.log('data.simpleSearchResponse', data.simpleSearchResponse)
     setStatus(data.simpleSearchResponse.status);
     setShowLoader(false);
   }, [data]);
@@ -62,9 +64,21 @@ export function HomeScreen({ route, navigation }: any) {
   }, [errorData]);
 
   useEffect(() => {
-    //console.log('favorateMangaData', favorateMangaData);
+    loadData('favorateMangaData').then(data => {
+      const d = data != null ? JSON.parse(data) : null;
+      console.log('favorateMangaData on initial', d);
+    });
+  }, []);
+
+  useEffect(() => {
+    // Skip the effect on initial render
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+
     storeData('favorateMangaData', favorateMangaData.favoriteMangas).then(res => {
-      console.log('success')
+      console.log('success', favorateMangaData.favoriteMangas)
     }).catch(err => {
       // any exception including data not found
       // goes to catch()
@@ -77,8 +91,9 @@ export function HomeScreen({ route, navigation }: any) {
           console.log('NotFoundError')
           break;
       }
-    });;
-  }, [favorateMangaData]);
+    });
+    
+  }, [favorateMangaData.favoriteMangas]);
 
   const toggleFavoritesHandler = (item: Daum) => {
     const prevArticleData = JSON.parse(JSON.stringify(articleData)) as Daum[];
@@ -113,6 +128,7 @@ export function HomeScreen({ route, navigation }: any) {
         />
         {/* <Button title='load data' onPress={onPressLearnMore}></Button> */}
         <View style={styles.view}>
+          {status === 500 ? <Text style={styles.text}>There is a malfunction in the main server{'\n'}Please try again later.</Text> : null}
           {status === 503 ? <Text style={styles.text}>Main server is down for maintanence.{'\n'}Please try again later.</Text> : null}
           {networkError !== '' ? <Text style={styles.text}>{networkError}</Text> : null}
           {networkError === '' && status === 200 && articleData.length === 0 ? <Text style={styles.text}>No stories for this search</Text> : null}

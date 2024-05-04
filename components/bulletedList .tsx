@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { BottomSheetItemObj } from '../types/bottom-sheet-item-types';
+import { useStorage } from '../hooks/useStorage';
 
 const Bullet = () => {
   return (
@@ -19,6 +20,7 @@ interface Props {
 const BulletedList = (props: Props) => {
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const navigation = useNavigation();
+  const {storeData, loadData} = useStorage();
 
   const chapterPressInHandler = (index: number) => {
     setActiveIndex(index)
@@ -33,8 +35,16 @@ const BulletedList = (props: Props) => {
     // navigation.navigate('Pages', {
     //   itemId: item,
     // });
-    props.closeBottomSheetHandler();
-    navigation.navigate(url)
+    if (url !== 'Get Persistent Storage') {
+      props.closeBottomSheetHandler();
+      navigation.navigate(url)
+    } else {
+      loadData('favorateMangaData').then(data => {
+        const d = data != null ? JSON.parse(data) : null;
+        console.log('favorateMangaData', d);
+      });
+    }
+    
   }
 
   return (
