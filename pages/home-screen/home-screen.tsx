@@ -31,11 +31,13 @@ export function HomeScreen({ route, navigation }: any) {
   const {storeData, loadData} = useStorage();
   const isInitialRender = useRef(true);
 
+  // start fetch initial call to manga group items
   useEffect(() => {
     setShowLoader(true);
     dispatch(getSimpleSearch(theme)); 
   }, [theme]);
 
+  // recieves initial call of manga groups from mangadex server
   useEffect(() => {
     setNetworkError('');
     
@@ -54,6 +56,7 @@ export function HomeScreen({ route, navigation }: any) {
     setShowLoader(false);
   }, [data]);
 
+  // handle errors from API
   useEffect(() => {
     if (errorData.error) {
       if (errorData.error.message === 'Network Error') {
@@ -63,6 +66,7 @@ export function HomeScreen({ route, navigation }: any) {
     
   }, [errorData]);
 
+  // start fetch favorite manga list from presistant / local storage on startup
   useEffect(() => {
     loadData('favorateMangaData').then(data => {
       const d = data != null ? JSON.parse(data) : null;
@@ -70,6 +74,7 @@ export function HomeScreen({ route, navigation }: any) {
     });
   }, []);
 
+  // here we save to presistant / local when user adds or removes an item from the favorite list
   useEffect(() => {
     // Skip the effect on initial render
     if (isInitialRender.current) {
@@ -95,6 +100,7 @@ export function HomeScreen({ route, navigation }: any) {
     
   }, [favorateMangaData.favoriteMangas]);
 
+  // user sets or remove favorites
   const toggleFavoritesHandler = (item: Daum) => {
     const prevArticleData = JSON.parse(JSON.stringify(articleData)) as Daum[];
     const chosenManga = prevArticleData.find(el => el.id === item.id);
@@ -112,7 +118,6 @@ export function HomeScreen({ route, navigation }: any) {
     }
 
     setArticleData(prevArticleData);
-    // console.log('add to favorites on function...', prevArticleData);
   }
 
   return (
