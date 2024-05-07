@@ -22,6 +22,8 @@ export function HomeScreen({ route, navigation }: any) {
   const [status, setStatus] = useState<number>(-1);
   const [networkError, setNetworkError] = useState<string>('');
   const [articleData, setArticleData] = useState<Daum[]>([]);
+  const [favoriteArticleData, setFavoriteArticleData] = useState<Daum[]>([]);
+  const [markedArticleData, setMarkedArticleData] = useState<Daum[]>([]);
 
   const [showLoader, setShowLoader] = useState<boolean>(true);
 
@@ -71,9 +73,28 @@ export function HomeScreen({ route, navigation }: any) {
   useEffect(() => {
     loadData('favorateMangaData').then(data => {
       const d = data != null ? JSON.parse(data) : null;
-      console.log('favorateMangaData on initial', d);
+      //console.log('favorateMangaData on initial', d.length);
+      setFavoriteArticleData(d);
     });
   }, []);
+
+  // activates when you have both favorite data and data from API
+  useEffect(() => {
+    const prevArticleData = JSON.parse(JSON.stringify(articleData)) as Daum[]
+    const listFavoriteIds = favoriteArticleData.map(el => el.id);
+
+    prevArticleData.forEach(element => {
+      const isFavorite = listFavoriteIds.find(el => el === element.id);
+      if (isFavorite) {
+        element.isFavorite = true;
+      }
+    });
+
+    setMarkedArticleData(prevArticleData);
+
+    // console.log('now we have all data', listFavoriteIds);
+    
+  }, [articleData, favoriteArticleData]);
 
   // here we save to presistant / local when user adds or removes an item from the favorite list
   useEffect(() => {
@@ -84,7 +105,7 @@ export function HomeScreen({ route, navigation }: any) {
     }
 
     storeData('favorateMangaData', favorateMangaData.favoriteMangas).then(res => {
-      console.log('success', favorateMangaData.favoriteMangas)
+      // console.log('success', favorateMangaData.favoriteMangas.length)
     }).catch(err => {
       // any exception including data not found
       // goes to catch()
@@ -142,7 +163,7 @@ export function HomeScreen({ route, navigation }: any) {
           {networkError === '' && status === 200 && articleData.length === 0 ? <Text style={styles.text}>No stories for this search</Text> : null}
           {networkError === '' && status === 200 && articleData.length > 0 ? 
             <ScrollView contentContainerStyle={stylesSCrollView.scrollViewContent}>
-            {articleData.map(item => (
+            {markedArticleData.map(item => (
               <View key={item.id} style={stylesSCrollView.itemContainer}>
                 <View style={stylesSCrollView.mainView}>
                   <View>
