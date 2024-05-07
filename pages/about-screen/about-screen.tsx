@@ -1,31 +1,17 @@
-import React, { useState } from 'react';
-import { Pressable, Text } from 'react-native';
+import React from 'react';
+import { Text } from 'react-native';
 import ContentPageFrame from '../../components/content-page-frame';
 import styles from '../../styles/content-page-style';
-import { useLink } from '../../hooks/useLink';
+import PressableLink from '../../components/pressable-link';
 
 function AboutScreen({ route, navigation }: any): JSX.Element {
-    const [activeIndex, setActiveIndex] = useState<string>('');
-    const { linkToURL } = useLink();
-    
-    const chapterPressInHandler = (id: string) => {
-        setActiveIndex(id)
-    }
-  
-    const chapterPressOutHandler = () => {
-        setActiveIndex('')
-    }
-
-    const chapterPressHandler = (url: string) => {
-        linkToURL(url);
-    }
-    
     return (
         <ContentPageFrame>
             <>
                 <Text style={styles.subTitle}>About MangaViewer</Text>
                 <Text style={styles.text}>
-                    Welcome to MangaViewer, your go-to app for accessing free manga pages provided by MangaDex.
+                    Welcome to MangaViewer, your go-to app for accessing free manga pages provided by
+                    <PressableLink url={'https://mangadex.org/'}> MangaDex.</PressableLink> 
                 </Text>
                 <Text style={[styles.subTitle, styles.marginTop]}>About the App:</Text>
                 <Text style={styles.text}>
@@ -34,20 +20,12 @@ function AboutScreen({ route, navigation }: any): JSX.Element {
                 <Text style={[styles.subTitle, styles.marginTop]}>Source Code:</Text>
                 <Text style={styles.text}>
                     Interested in how MangaViewer was built? You can find the complete source code for this application on GitHub. Feel free to explore, contribute, or fork the repository at 
-                    <Text 
-                        onPressIn={() => chapterPressInHandler('github')}  
-                        onPressOut={() => chapterPressOutHandler()}
-                        onPress={() => chapterPressHandler('https://github.com/krasnoff/MangaViewer')}
-                        style={[styles.text, styles.pressableMarginTop, {color: activeIndex === 'github' ? 'red': 'blue'}]}> https://github.com/krasnoff/MangaViewer.</Text>
+                    <PressableLink url={'https://github.com/krasnoff/MangaViewer'}> https://github.com/krasnoff/MangaViewer.</PressableLink>
                 </Text>
                 <Text style={[styles.subTitle, styles.marginTop]}>Developer:</Text>
                 <Text style={styles.text}>
                     MangaViewer was developed by Kobi Krasnoff. You can learn more about me and my other projects on my personal website: 
-                    <Text 
-                        onPressIn={() => chapterPressInHandler('vercel')}  
-                        onPressOut={() => chapterPressOutHandler()}
-                        onPress={() => chapterPressHandler('https://krasnoff-personal-web-app.vercel.app/')}
-                        style={[styles.text, styles.pressableMarginTop, {color: activeIndex === 'vercel' ? 'red': 'blue'}]}>https://krasnoff-personal-web-app.vercel.app/.</Text>
+                    <PressableLink url={'https://krasnoff-personal-web-app.vercel.app/'}> https://krasnoff-personal-web-app.vercel.app/.</PressableLink>
                 </Text>
             </>
         </ContentPageFrame>
