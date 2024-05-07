@@ -87,6 +87,8 @@ export function HomeScreen({ route, navigation }: any) {
       const isFavorite = listFavoriteIds.find(el => el === element.id);
       if (isFavorite) {
         element.isFavorite = true;
+      } else {
+        element.isFavorite = false;
       }
     });
 
