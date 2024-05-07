@@ -19,7 +19,7 @@ export function HomeScreen({ route, navigation }: any) {
   const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
   const favorateMangaData = useSelector(state => (state as unknown as any).FavorateMangaResponse);
       
-  const [status, setStatus] = useState<number>(0);
+  const [status, setStatus] = useState<number>(-1);
   const [networkError, setNetworkError] = useState<string>('');
   const [articleData, setArticleData] = useState<Daum[]>([]);
 
@@ -33,6 +33,7 @@ export function HomeScreen({ route, navigation }: any) {
 
   // start fetch initial call to manga group items
   useEffect(() => {
+    setStatus(-1);
     setShowLoader(true);
     dispatch(getSimpleSearch(theme)); 
   }, [theme]);
@@ -132,7 +133,9 @@ export function HomeScreen({ route, navigation }: any) {
           barStyle="dark-content"
         />
         {/* <Button title='load data' onPress={onPressLearnMore}></Button> */}
+        
         <View style={styles.view}>
+          {status === undefined || showLoader ? <Loader></Loader> : null}
           {status === 500 ? <Text style={styles.text}>There is a malfunction in the main server{'\n'}Please try again later.</Text> : null}
           {status === 503 ? <Text style={styles.text}>Main server is down for maintanence.{'\n'}Please try again later.</Text> : null}
           {networkError !== '' ? <Text style={styles.text}>{networkError}</Text> : null}
@@ -169,9 +172,6 @@ export function HomeScreen({ route, navigation }: any) {
           : null}
         </View>
         
-        {showLoader ?
-          <Loader></Loader>
-        : null}
       </ImageBackground>
     </SafeAreaView>
   );
