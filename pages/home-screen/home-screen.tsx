@@ -81,7 +81,7 @@ export function HomeScreen({ route, navigation }: any) {
   // activates when you have both favorite data and data from API
   useEffect(() => {
     const prevArticleData = JSON.parse(JSON.stringify(articleData)) as Daum[]
-    const listFavoriteIds = favoriteArticleData.map(el => el.id);
+    const listFavoriteIds = favoriteArticleData ? favoriteArticleData.map(el => el.id) : [];
 
     prevArticleData.forEach(element => {
       const isFavorite = listFavoriteIds.find(el => el === element.id);
@@ -104,21 +104,7 @@ export function HomeScreen({ route, navigation }: any) {
       return;
     }
 
-    storeData('favorateMangaData', favorateMangaData.favoriteMangas).then(res => {
-      // console.log('success', favorateMangaData.favoriteMangas.length)
-    }).catch(err => {
-      // any exception including data not found
-      // goes to catch()
-      console.warn(err.message);
-      switch (err.name) {
-        case 'NotFoundError':
-          console.log('NotFoundError')
-          break;
-        case 'ExpiredError':
-          console.log('NotFoundError')
-          break;
-      }
-    });
+    storeData('favorateMangaData', favorateMangaData.favoriteMangas);
     
   }, [favorateMangaData.favoriteMangas]);
 
