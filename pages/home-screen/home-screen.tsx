@@ -47,6 +47,21 @@ export function HomeScreen({ route, navigation }: any) {
     if (data.simpleSearchResponse.status === 200) {
       if (data.simpleSearchResponse.data.result === 'ok') {
         const resData = parseIncomingData(data.simpleSearchResponse.data.data) as Daum[];
+
+        const listFavoriteIds = favoriteArticleData ? favoriteArticleData.map(el => el.id) : [];
+        // console.log('favoriteArticleData', listFavoriteIds);
+
+        resData.forEach(element => {
+          const selectedManga = listFavoriteIds.find(el => el === element.id);
+          if (selectedManga) {
+            if (element.isFavorite === true) {
+              element.isFavorite = false;
+            } else {
+              element.isFavorite = true;
+            }
+          }
+        })
+
         setArticleData(resData);
       } else {
         setArticleData([]);
@@ -77,26 +92,6 @@ export function HomeScreen({ route, navigation }: any) {
       setFavoriteArticleData(d);
     });
   }, []);
-
-  // activates when you have both favorite data and data from API
-  useEffect(() => {
-    const prevArticleData = JSON.parse(JSON.stringify(articleData)) as Daum[]
-    const listFavoriteIds = favoriteArticleData ? favoriteArticleData.map(el => el.id) : [];
-
-    prevArticleData.forEach(element => {
-      const isFavorite = listFavoriteIds.find(el => el === element.id);
-      if (isFavorite) {
-        element.isFavorite = true;
-      } else {
-        element.isFavorite = false;
-      }
-    });
-
-    setMarkedArticleData(prevArticleData);
-
-    // console.log('now we have all data', listFavoriteIds);
-    
-  }, [articleData, favoriteArticleData]);
 
   // here we save to presistant / local when user adds or removes an item from the favorite list
   useEffect(() => {
@@ -151,7 +146,7 @@ export function HomeScreen({ route, navigation }: any) {
           {networkError === '' && status === 200 && articleData.length === 0 ? <Text style={styles.text}>No stories for this search</Text> : null}
           {networkError === '' && status === 200 && articleData.length > 0 ? 
             <ScrollView contentContainerStyle={stylesSCrollView.scrollViewContent}>
-            {markedArticleData.map(item => (
+            {articleData.map(item => (
               <View key={item.id} style={stylesSCrollView.itemContainer}>
                 <View style={stylesSCrollView.mainView}>
                   <View>
