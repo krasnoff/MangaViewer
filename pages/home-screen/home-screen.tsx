@@ -49,8 +49,8 @@ export function HomeScreen({ route, navigation }: any) {
         const resData = parseIncomingData(data.simpleSearchResponse.data.data) as Daum[];
 
         const listFavoriteIds = favoriteArticleData ? favoriteArticleData.map(el => el.id) : [];
-        // console.log('favoriteArticleData', listFavoriteIds);
-
+        console.log('listFavoriteIds on initial', listFavoriteIds);
+        
         resData.forEach(element => {
           const selectedManga = listFavoriteIds.find(el => el === element.id);
           if (selectedManga) {
