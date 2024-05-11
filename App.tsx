@@ -23,7 +23,6 @@ import AboutScreen from './pages/about-screen/about-screen';
 import { BottomSheetItemObj } from './types/bottom-sheet-item-types';
 import SearchForm from './components/searchForm';
 import { ThemeContext } from './contexts/themeContext';
-import { SingletonHooksContainer } from 'react-singleton-hook';
 
 
 const store = configureStore();
@@ -128,7 +127,6 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <SingletonHooksContainer/>
       <ThemeContext.Provider value={searchWord}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <NavigationContainer>

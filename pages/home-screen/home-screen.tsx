@@ -23,8 +23,7 @@ export function HomeScreen({ route, navigation }: any) {
   const [networkError, setNetworkError] = useState<string>('');
   const [articleData, setArticleData] = useState<Daum[]>([]);
   const [favoriteArticleData, setFavoriteArticleData] = useState<Daum[]>([]);
-  const [markedArticleData, setMarkedArticleData] = useState<Daum[]>([]);
-
+  
   const [showLoader, setShowLoader] = useState<boolean>(true);
 
   const {parseIncomingData} = useUtilData();
@@ -48,19 +47,22 @@ export function HomeScreen({ route, navigation }: any) {
       if (data.simpleSearchResponse.data.result === 'ok') {
         const resData = parseIncomingData(data.simpleSearchResponse.data.data) as Daum[];
 
-        const listFavoriteIds = favoriteArticleData ? favoriteArticleData.map(el => el.id) : [];
-        console.log('listFavoriteIds on initial', listFavoriteIds);
-        
-        resData.forEach(element => {
-          const selectedManga = listFavoriteIds.find(el => el === element.id);
-          if (selectedManga) {
-            if (element.isFavorite === true) {
-              element.isFavorite = false;
-            } else {
-              element.isFavorite = true;
+        if (favoriteArticleData && favoriteArticleData.length > 0) {
+          const listFavoriteIds = favoriteArticleData ? favoriteArticleData.map(el => el.id) : [];
+          // console.log('listFavoriteIds on initial', listFavoriteIds);
+          
+          resData.forEach(element => {
+            const selectedManga = listFavoriteIds.find(el => el === element.id);
+            if (selectedManga) {
+              if (element.isFavorite === true) {
+                element.isFavorite = false;
+              } else {
+                element.isFavorite = true;
+              }
             }
-          }
-        })
+          })
+        }
+        
 
         setArticleData(resData);
       } else {
@@ -101,9 +103,33 @@ export function HomeScreen({ route, navigation }: any) {
       return;
     }
 
-    storeData('favorateMangaData', favorateMangaData.favoriteMangas);
+    // console.log('favorateMangaData...', favorateMangaData.length);
+    // console.log('new article favorites...', articleData.filter(el => el.isFavorite === true));
     
-  }, [favorateMangaData.favoriteMangas]);
+    // concat two object arrays
+    const newFavorateMangaData = favorateMangaData.favoriteMangas as never[] as Daum[];
+    
+    // add new items if neccessary
+    const markedArticleData = articleData.filter(el => el.isFavorite === true);
+    markedArticleData.forEach((el: Daum) => {
+      const favorateMangaDataExist = newFavorateMangaData.find((el2: Daum) => el2.id === el.id)
+      if (!favorateMangaDataExist) {
+        newFavorateMangaData.push(el as never);
+      }
+    })
+
+    // if removed item then erase also from favorateMangaData
+    const removedArticleData = articleData.filter(el => el.isFavorite !== true);
+    for (const child of removedArticleData) {
+      const removedArticleDataItem = newFavorateMangaData.find(el2 => el2.id === child.id);
+      if (removedArticleDataItem) {
+        const index = newFavorateMangaData.indexOf(removedArticleDataItem);
+        newFavorateMangaData.splice(index, 1);
+      }
+    }      
+
+    storeData('favorateMangaData', newFavorateMangaData);
+}, [articleData]);
 
   // user sets or remove favorites
   const toggleFavoritesHandler = (item: Daum) => {
