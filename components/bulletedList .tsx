@@ -1,8 +1,10 @@
-import { useNavigation } from '@react-navigation/native';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { BottomSheetItemObj } from '../types/bottom-sheet-item-types';
 import { useStorage } from '../hooks/useStorage';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Daum } from '../types/search-results';
 
 const Bullet = () => {
   return (
@@ -17,9 +19,11 @@ interface Props {
     closeBottomSheetHandler: () => void
 }
 
+type HomeScreenNavigationProp = StackNavigationProp<ParamListBase, 'Home'>;
+
 const BulletedList = (props: Props) => {
   const [activeIndex, setActiveIndex] = useState<number>(-1);
-  const navigation = useNavigation();
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   const {storeData, loadData} = useStorage();
 
   const chapterPressInHandler = (index: number) => {
@@ -41,11 +45,17 @@ const BulletedList = (props: Props) => {
     } else {
       loadData('favorateMangaData').then(data => {
         const d = data != null ? JSON.parse(data) : null;
-        console.log('favorateMangaData', d);
+        // console.log('favorateMangaData', d);
+
+        props.closeBottomSheetHandler();
+        navigateToDetail(d);
       });
     }
-    
   }
+
+  const navigateToDetail = (favorateMangaData: Daum[]) => {
+    navigation.navigate('Home', { takeFromStorage: true, favorateMangaData: favorateMangaData });
+  };
 
   return (
     <View style={styles.container}>

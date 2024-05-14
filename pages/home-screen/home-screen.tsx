@@ -12,6 +12,7 @@ import { ThemeContext } from "../../contexts/themeContext";
 import { mangaToFavorites } from "../../store/actions/favorite-mangas";
 import { ActionTypes } from "../../enums/action-types";
 import { useStorage } from "../../hooks/useStorage";
+import { useFocusEffect } from "@react-navigation/native";
 
 export function HomeScreen({ route, navigation }: any) {
   const dispatch = useDispatch();
@@ -32,11 +33,16 @@ export function HomeScreen({ route, navigation }: any) {
   const {storeData, loadData} = useStorage();
   const isInitialRender = useRef(true);
 
+  useFocusEffect(() => {
+    console.log('useFocusEffect', route);
+  });
+
   // start fetch initial call to manga group items
   useEffect(() => {
     setStatus(-1);
     setShowLoader(true);
     dispatch(getSimpleSearch(theme)); 
+    console.log('useEffect on theme', route);
   }, [theme]);
 
   // recieves initial call of manga groups from mangadex server
