@@ -107,7 +107,11 @@ const App = () => {
   }, {
     title: 'Get Persistent Storage',
     url: 'Get Persistent Storage'
-  }];
+  }, {
+    title: 'Reset Page',
+    url: 'resetPage'
+  },
+];
 
   const closeBottomSheetHandler = () => {
     bottomSheetRef.current!.close();

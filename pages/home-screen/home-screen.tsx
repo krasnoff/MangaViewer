@@ -33,8 +33,24 @@ export function HomeScreen({ route, navigation }: any) {
   const {storeData, loadData} = useStorage();
   const isInitialRender = useRef(true);
 
+  // every time this page is back on focus
   useFocusEffect(() => {
-    console.log('useFocusEffect', route);
+    if (route.params) {
+      console.log('useFocusEffect', route);
+      if (route.params.takeFromStorage == true) {
+        const res = route.params.favorateMangaData as Daum[];
+
+        res.forEach(element => {
+          element.isFavorite = true;
+        })
+
+        setArticleData(route.params.favorateMangaData);
+      } else if (route.params.resetPage == true) {
+        // setStatus(-1);
+        // setShowLoader(true);
+        // dispatch(getSimpleSearch('')); 
+      }
+    }
   });
 
   // start fetch initial call to manga group items
@@ -42,7 +58,7 @@ export function HomeScreen({ route, navigation }: any) {
     setStatus(-1);
     setShowLoader(true);
     dispatch(getSimpleSearch(theme)); 
-    console.log('useEffect on theme', route);
+    console.log('useEffect on theme', route, theme);
   }, [theme]);
 
   // recieves initial call of manga groups from mangadex server
