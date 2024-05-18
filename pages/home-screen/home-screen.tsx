@@ -38,27 +38,26 @@ export function HomeScreen({ route, navigation }: any) {
     if (route.params) {
       console.log('useFocusEffect', route);
       if (route.params.takeFromStorage == true) {
-        const res = route.params.favorateMangaData as Daum[];
-
-        res.forEach(element => {
-          element.isFavorite = true;
-        })
-
-        setArticleData(route.params.favorateMangaData);
+        setArticleData(favorateMangaData.favoriteMangas);
       } else if (route.params.resetPage == true) {
-        // setStatus(-1);
-        // setShowLoader(true);
-        // dispatch(getSimpleSearch('')); 
+        // TODO activste usecontext
       }
     }
   });
+
+  // every time we change favorite manga data
+  useEffect(() => {
+    console.log('favorateMangaData', favorateMangaData.favoriteMangas);
+    const prevArticleData = JSON.parse(JSON.stringify(articleData)) as Daum[];
+    setArticleData(markFavoriteData(prevArticleData));
+  }, [favorateMangaData]);
 
   // start fetch initial call to manga group items
   useEffect(() => {
     setStatus(-1);
     setShowLoader(true);
+    // TODO set useCallback
     dispatch(getSimpleSearch(theme)); 
-    console.log('useEffect on theme', route, theme);
   }, [theme]);
 
   // recieves initial call of manga groups from mangadex server
@@ -67,25 +66,8 @@ export function HomeScreen({ route, navigation }: any) {
     
     if (data.simpleSearchResponse.status === 200) {
       if (data.simpleSearchResponse.data.result === 'ok') {
-        const resData = parseIncomingData(data.simpleSearchResponse.data.data) as Daum[];
-
-        if (favoriteArticleData && favoriteArticleData.length > 0) {
-          const listFavoriteIds = favoriteArticleData ? favoriteArticleData.map(el => el.id) : [];
-          // console.log('listFavoriteIds on initial', listFavoriteIds);
-          
-          resData.forEach(element => {
-            const selectedManga = listFavoriteIds.find(el => el === element.id);
-            if (selectedManga) {
-              if (element.isFavorite === true) {
-                element.isFavorite = false;
-              } else {
-                element.isFavorite = true;
-              }
-            }
-          })
-        }
-        
-
+        let resData = parseIncomingData(data.simpleSearchResponse.data.data) as Daum[];
+        resData = markFavoriteData(resData);        
         setArticleData(resData);
       } else {
         setArticleData([]);
@@ -97,6 +79,27 @@ export function HomeScreen({ route, navigation }: any) {
     setStatus(data.simpleSearchResponse.status);
     setShowLoader(false);
   }, [data]);
+
+  // mark all the favorite data on the screen
+  const markFavoriteData = (resData: Daum[]) => {
+    if (favoriteArticleData && favoriteArticleData.length > 0) {
+      const listFavoriteIds = favoriteArticleData ? favoriteArticleData.map(el => el.id) : [];
+      // console.log('listFavoriteIds on initial', listFavoriteIds);
+      
+      resData.forEach(element => {
+        const selectedManga = listFavoriteIds.find(el => el === element.id);
+        if (selectedManga) {
+          if (element.isFavorite === true) {
+            element.isFavorite = false;
+          } else {
+            element.isFavorite = true;
+          }
+        }
+      })
+    }
+
+    return resData;
+  }
 
   // handle errors from API
   useEffect(() => {
