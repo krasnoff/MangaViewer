@@ -38,9 +38,13 @@ export function HomeScreen({ route, navigation }: any) {
     if (route.params) {
       console.log('useFocusEffect', route);
       if (route.params.takeFromStorage == true) {
+        favorateMangaData.favoriteMangas.forEach((el: Daum) => {
+          el.isFavorite = true
+        })
         setArticleData(favorateMangaData.favoriteMangas);
       } else if (route.params.resetPage == true) {
-        // TODO activste usecontext
+        const prevResData = JSON.parse(JSON.stringify(articleData))
+        setArticleData(prevResData);
       }
     }
   });

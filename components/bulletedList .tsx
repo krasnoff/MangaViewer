@@ -16,7 +16,8 @@ const Bullet = () => {
 
 interface Props {
     items: BottomSheetItemObj[],
-    closeBottomSheetHandler: () => void
+    closeBottomSheetHandler: () => void,
+    searchHandler: () => void
 }
 
 type HomeScreenNavigationProp = StackNavigationProp<ParamListBase, 'Home'>;
@@ -35,10 +36,6 @@ const BulletedList = (props: Props) => {
   }
 
   const chapterPressHandler = (url: never) => {
-    // console.log('chapterPressHandler', item);
-    // navigation.navigate('Pages', {
-    //   itemId: item,
-    // });
     if (url === 'resetPage') {
       props.closeBottomSheetHandler();
       navigateReset();
@@ -61,7 +58,9 @@ const BulletedList = (props: Props) => {
   };
 
   const navigateReset = () => {
-    navigation.navigate('Home', { resetPage: true });
+    //navigation.navigate('Home', { resetPage: true });
+    props.searchHandler();
+    navigation.navigate('Home' as never);
   };
 
   return (

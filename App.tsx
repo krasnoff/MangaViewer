@@ -181,7 +181,7 @@ const App = () => {
             >
               <BottomSheetView style={styles.contentContainer}>
                 <SearchForm searchHandler={(searchWord: string) => searchHandler(searchWord)} />
-                <BulletedList items={bottomSheetItems} closeBottomSheetHandler={() => closeBottomSheetHandler()}></BulletedList>
+                <BulletedList items={bottomSheetItems} closeBottomSheetHandler={() => closeBottomSheetHandler()} searchHandler={() => searchHandler('')}></BulletedList>
               </BottomSheetView>
             </BottomSheet>
           </NavigationContainer>
