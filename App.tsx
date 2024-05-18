@@ -23,6 +23,7 @@ import AboutScreen from './pages/about-screen/about-screen';
 import { BottomSheetItemObj } from './types/bottom-sheet-item-types';
 import SearchForm from './components/searchForm';
 import { ThemeContext } from './contexts/themeContext';
+import { FavoriteScreen } from './pages/favorite-screen/favorite-screen-';
 
 
 const store = configureStore();
@@ -166,6 +167,13 @@ const App = () => {
               <Stack.Screen 
                 name="About" 
                 component={AboutScreen}
+                options={{
+                  headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
+                  headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
+              }} />
+              <Stack.Screen 
+                name="Favorites" 
+                component={FavoriteScreen}
                 options={{
                   headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
                   headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)

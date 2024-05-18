@@ -8,8 +8,6 @@ import { useNavigation } from "@react-navigation/native";
 import { mangaToFavorites } from "../store/actions/favorite-mangas";
 import { ActionTypes } from "../enums/action-types";
 import { DispatchFromPropsItem } from "../types/dispatch-from-props-item";
-import { useEffect } from "react";
-import { useStorage } from "../hooks/useStorage";
 
 interface Props {
     status: number,

@@ -41,11 +41,8 @@ const BulletedList = (props: Props) => {
       navigateReset();
     } else if (url === 'Get Persistent Storage') {
       loadData('favorateMangaData').then(data => {
-        const d = data != null ? JSON.parse(data) : null;
-        // console.log('favorateMangaData', d);
-
         props.closeBottomSheetHandler();
-        navigateToDetail(d);
+        navigateToFavorites();
       });
     } else {
       props.closeBottomSheetHandler();
@@ -53,8 +50,8 @@ const BulletedList = (props: Props) => {
     }
   }
 
-  const navigateToDetail = (favorateMangaData: Daum[]) => {
-    navigation.navigate('Home', { takeFromStorage: true, favorateMangaData: favorateMangaData });
+  const navigateToFavorites = () => {
+    navigation.navigate('Favorites');
   };
 
   const navigateReset = () => {

@@ -10,8 +10,6 @@ const mangaToFavoritesReducer = (state = initialState, action: any) => {
                 favoriteMangas: [...state.favoriteMangas, action.params]
             });
         } else if (action.actionType === ActionTypes.REMOVE) {
-            console.log('remove...', (action.params as Daum).id)
-            console.log('remove array...', state.favoriteMangas.map((el: any) => el.id))
             return Object.assign({}, state, {
                 favoriteMangas: state.favoriteMangas.filter(el => (el as Daum).id !== (action.params as Daum).id)
             });

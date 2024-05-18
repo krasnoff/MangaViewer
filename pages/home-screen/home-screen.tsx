@@ -29,14 +29,9 @@ export function HomeScreen({ route, navigation }: any) {
   const {storeData, loadData} = useStorage();
   const isInitialRender = useRef(true);
 
-  // every time this page is back on focus
-  useFocusEffect(() => {
-    
-  });
-
   // every time we change favorite manga data
   useEffect(() => {
-    console.log('favorateMangaData', favorateMangaData.favoriteMangas);
+    //console.log('favorateMangaData', favorateMangaData.favoriteMangas);
     const prevArticleData = JSON.parse(JSON.stringify(articleData)) as Daum[];
     setArticleData(markFavoriteData(prevArticleData));
   }, [favorateMangaData]);
