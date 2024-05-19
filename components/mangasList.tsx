@@ -15,7 +15,7 @@ interface Props {
     networkError: string,
     articleData: Daum[],
     setArticleData: (prevArticleData: Daum[]) => void,
-    dispatch: (action: DispatchFromPropsItem) => void
+    dispatchMangaToFavorites: (item: Daum, actionTypes: ActionTypes) => void
 }
 
 type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
@@ -30,11 +30,13 @@ export function MangasList(props: Props) {
           
           if (chosenManga.isFavorite === true) {
             chosenManga.isFavorite = false;
-            props.dispatch(mangaToFavorites(item, ActionTypes.REMOVE)); 
+            // TODO - change dispatch props - 2 params item and actiontype
+            props.dispatchMangaToFavorites(item, ActionTypes.REMOVE); 
             ToastAndroid.show('This manga has been removed from your favorites', ToastAndroid.SHORT);
           } else {
             chosenManga.isFavorite = true;
-            props.dispatch(mangaToFavorites(item, ActionTypes.ADD));
+            // TODO - change dispatch props - 2 params item and actiontype
+            props.dispatchMangaToFavorites(item, ActionTypes.ADD);
             ToastAndroid.show('This manga has been added to your favorites', ToastAndroid.SHORT);
           }
         }

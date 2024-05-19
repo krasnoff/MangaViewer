@@ -9,6 +9,8 @@ import { ThemeContext } from "../../contexts/themeContext";
 import { useStorage } from "../../hooks/useStorage";
 import { useFocusEffect } from "@react-navigation/native";
 import { MangasList } from "../../components/mangasList";
+import { ActionTypes } from "../../enums/action-types";
+import { mangaToFavorites } from "../../store/actions/favorite-mangas";
 
 export function HomeScreen({ route, navigation }: any) {
   const dispatch = useDispatch();
@@ -143,8 +145,8 @@ export function HomeScreen({ route, navigation }: any) {
     storeData('favorateMangaData', newFavorateMangaData);
 }, [articleData]);
 
-  const dispatchFromProps = (action: any) => {
-    dispatch(action);
+  const dispatchFromProps = (item: Daum, actionType: ActionTypes) => {
+    dispatch(mangaToFavorites(item, actionType));
   }
 
   return (
@@ -164,7 +166,7 @@ export function HomeScreen({ route, navigation }: any) {
           networkError={networkError}
           articleData={articleData}
           setArticleData={(items: Daum[]) => setArticleData(items)}
-          dispatch={(action) => dispatchFromProps(action)}></MangasList>
+          dispatchMangaToFavorites={(item: Daum, actionType: ActionTypes) => dispatchFromProps(item, actionType)}></MangasList>
         
       </ImageBackground>
     </SafeAreaView>

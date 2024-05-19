@@ -7,6 +7,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useStorage } from "../../hooks/useStorage";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { ActionTypes } from "../../enums/action-types";
+import { mangaToFavorites } from "../../store/actions/favorite-mangas";
 
 export function FavoriteScreen({ route, navigation }: any) {
     const [articleData, setArticleData] = useState<Daum[]>([]);
@@ -53,10 +55,8 @@ export function FavoriteScreen({ route, navigation }: any) {
         // });
     }
 
-    const dispatchFromProps = (action: any) => {
-
-
-        // dispatch(action);
+    const dispatchFromProps = (item: Daum, actionType: ActionTypes) => {
+      dispatch(mangaToFavorites(item, actionType));
     }
 
     return (
@@ -76,7 +76,7 @@ export function FavoriteScreen({ route, navigation }: any) {
               networkError={''}
               articleData={articleData}
               setArticleData={(items: Daum[]) => setArticleData(items)}
-              dispatch={(action) => dispatchFromProps(action)}></MangasList>
+              dispatchMangaToFavorites={(item: Daum, actionType: ActionTypes) => dispatchFromProps(item, actionType)}></MangasList>
             
           </ImageBackground>
         </SafeAreaView>
