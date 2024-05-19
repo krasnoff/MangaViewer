@@ -17,11 +17,7 @@ export function FavoriteScreen({ route, navigation }: any) {
     const favorateMangaData = useSelector(state => (state as unknown as any).FavorateMangaResponse);
     const isFocused = useIsFocused();
 
-    // every time this page is back on focus
-    useFocusEffect(() => {
-    });
-
-    useEffect(() => {
+   useEffect(() => {
         if (isFocused) {
            console.log('In inFocused Block', isFocused);
            loadPersistantData()
@@ -41,18 +37,18 @@ export function FavoriteScreen({ route, navigation }: any) {
     }, [favorateMangaData]);
 
     const loadPersistantData = () => {
-        // loadData('favorateMangaData').then(data => {
+        loadData('favorateMangaData').then(data => {
             
-        //     const d = data != null ? JSON.parse(data) : null;
+            const d = data != null ? JSON.parse(data) : null;
 
-        //     console.log('useFocusEffect - ', d.length);
+            console.log('useFocusEffect - ', d.length);
 
-        //     d.forEach((el: Daum) => {
-        //         el.isFavorite = true;
-        //     })
+            d.forEach((el: Daum) => {
+                el.isFavorite = true;
+            })
 
-        //     setArticleData(d)
-        // });
+            setArticleData(d)
+        });
     }
 
     const dispatchFromProps = (item: Daum, actionType: ActionTypes) => {
