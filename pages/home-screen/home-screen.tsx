@@ -29,6 +29,7 @@ export function HomeScreen({ route, navigation }: any) {
   const theme = useContext(ThemeContext);
 
   const {storeData, loadData} = useStorage();
+  const [favorateMangaDataIDs, setFavorateMangaDataIDs] = useState<string[]>([]);
   const isInitialRender = useRef(true);
 
   // every time we change favorite manga data
@@ -108,6 +109,14 @@ export function HomeScreen({ route, navigation }: any) {
       const d = data != null ? JSON.parse(data) : null;
       setFavoriteArticleData(d);
     });
+
+    loadData('favorateMangaDataIDs').then(data => {
+      console.log('favorateMangaDataIDs', data);
+      if (data) {
+        const dataArr = JSON.parse(data)
+        setFavorateMangaDataIDs(dataArr)
+      }
+    });
   }, []);
 
   /**
@@ -143,10 +152,25 @@ export function HomeScreen({ route, navigation }: any) {
     }      
 
     storeData('favorateMangaData', newFavorateMangaData);
-}, [articleData]);
+  }, [articleData]);
 
+  /**
+   * here we save to presistant / local when user adds or removes an item from the favorite list
+   */
   const dispatchFromProps = (item: Daum, actionType: ActionTypes) => {
     dispatch(mangaToFavorites(item, actionType));
+
+    const favorateMangaDataIDsNew = JSON.parse(JSON.stringify(favorateMangaDataIDs)) as string[];
+    if (actionType === ActionTypes.ADD) {
+      favorateMangaDataIDsNew.push(item.id)
+    } else if (actionType === ActionTypes.REMOVE) {
+      const isLargeNumber = (element: any) => element === item.id;
+      const selectedIndex = favorateMangaDataIDsNew.findIndex(isLargeNumber);
+      favorateMangaDataIDsNew.splice(selectedIndex, 1);
+    }
+
+    storeData('favorateMangaDataIDs', favorateMangaDataIDsNew);
+    setFavorateMangaDataIDs(favorateMangaDataIDsNew)
   }
 
   return (

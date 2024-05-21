@@ -4,7 +4,6 @@ const useStorage = () => {
         
     const storeData = (key: string, data: any) => {
         const jsonData = JSON.stringify(data);
-        // console.log('jsonData', data.length);
         return AsyncStorage.setItem(key, jsonData);
     };
 
