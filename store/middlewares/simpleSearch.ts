@@ -22,11 +22,6 @@ const parseData = (data: any): any => {
     try {
         let array = data.data.data as Daum[];
 
-        // TODO - check if this manga is on favorite
-        array.forEach(el => {
-            el = {...el, isFavorite: false}
-        });
-
         data.data.data = array;
         return data;
     } catch (error) {
