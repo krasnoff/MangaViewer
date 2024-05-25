@@ -5,9 +5,7 @@ import Loader from "./loader";
 import { Daum } from "../types/search-results";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
-import { mangaToFavorites } from "../store/actions/favorite-mangas";
 import { ActionTypes } from "../enums/action-types";
-import { DispatchFromPropsItem } from "../types/dispatch-from-props-item";
 
 interface Props {
     status: number,
@@ -15,7 +13,8 @@ interface Props {
     networkError: string,
     articleData: Daum[],
     setArticleData: (prevArticleData: Daum[]) => void,
-    dispatchMangaToFavorites: (item: Daum, actionTypes: ActionTypes) => void
+    dispatchMangaToFavorites: (item: Daum, actionTypes: ActionTypes) => void,
+    favorateMangaDataIDs: string[]
 }
 
 type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
@@ -27,15 +26,10 @@ export function MangasList(props: Props) {
         const prevArticleData = JSON.parse(JSON.stringify(props.articleData)) as Daum[];
         const chosenManga = prevArticleData.find(el => el.id === item.id);
         if (chosenManga) {
-          
-          if (chosenManga.isFavorite === true) {
-            chosenManga.isFavorite = false;
-            // TODO - change dispatch props - 2 params item and actiontype
+          if (props.favorateMangaDataIDs.indexOf(item.id) > -1) {
             props.dispatchMangaToFavorites(item, ActionTypes.REMOVE); 
             ToastAndroid.show('This manga has been removed from your favorites', ToastAndroid.SHORT);
           } else {
-            chosenManga.isFavorite = true;
-            // TODO - change dispatch props - 2 params item and actiontype
             props.dispatchMangaToFavorites(item, ActionTypes.ADD);
             ToastAndroid.show('This manga has been added to your favorites', ToastAndroid.SHORT);
           }
@@ -59,7 +53,7 @@ export function MangasList(props: Props) {
                     <View>
                     <CustomSizeImage source={{ uri: item.coverImgURL }} />
                     <TouchableOpacity onPress={() => toggleFavoritesHandler(item)} style={styles.favorite}>
-                        <Icon name={item.isFavorite == true ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={item.isFavorite == true ? '#00FF00' : '#FF0000'} />
+                        <Icon name={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? '#00FF00' : '#FF0000'} />
                     </TouchableOpacity>
                     </View>
                     <View style={stylesSCrollView.itemTextContainer}>
