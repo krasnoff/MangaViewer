@@ -7,7 +7,7 @@ import { Daum } from "../../types/search-results";
 import { useUtilData } from "../../hooks/useParseData";
 import { ThemeContext } from "../../contexts/themeContext";
 import { useStorage } from "../../hooks/useStorage";
-import { useFocusEffect } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import { MangasList } from "../../components/mangasList";
 import { ActionTypes } from "../../enums/action-types";
 
@@ -27,6 +27,20 @@ export function HomeScreen({ route, navigation }: any) {
 
   const {storeData, loadData} = useStorage();
   const [favorateMangaDataIDs, setFavorateMangaDataIDs] = useState<string[]>([]);
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      if (route.params?.IDs) {
+        setStatus(-1);
+        setShowLoader(true);
+        dispatch(getSimpleSearch(undefined, route.params.IDs)); 
+      } else {
+        dispatch(getSimpleSearch()); 
+      }
+    }
+  }, [isFocused, route.params]);
   
   /**
    * start fetch initial call to manga group items

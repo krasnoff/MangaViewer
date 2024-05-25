@@ -3,10 +3,11 @@ import { GET_SIMPLE_SEARCH, PARSE_SIMPLE_SEARCH } from "../action-type";
 interface Params {
     "includes[]": string[];
     "contentRating[]": string[];
-    title?: string | undefined
+    title?: string | undefined,
+    'ids[]'?: string[]
 }
 
-export function getSimpleSearch(searchWord?: string) {
+export function getSimpleSearch(searchWord?: string, ids?: string[]) {
     let params: Params = {
         "includes[]": ['author', 'artist', 'cover_art', 'description'],
         "contentRating[]": ['safe']
@@ -14,6 +15,10 @@ export function getSimpleSearch(searchWord?: string) {
 
     if (searchWord) {
         params = {...params, title: searchWord}
+    }
+
+    if (ids) {
+        params = {...params, 'ids[]': ids}
     }
     
     return { type: GET_SIMPLE_SEARCH, url: '/manga', target: PARSE_SIMPLE_SEARCH, params: params };

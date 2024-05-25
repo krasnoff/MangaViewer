@@ -1,10 +1,9 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ToastAndroid } from 'react-native';
 import { BottomSheetItemObj } from '../types/bottom-sheet-item-types';
 import { useStorage } from '../hooks/useStorage';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Daum } from '../types/search-results';
 
 const Bullet = () => {
   return (
@@ -40,9 +39,9 @@ const BulletedList = (props: Props) => {
       props.closeBottomSheetHandler();
       navigateReset();
     } else if (url === 'Get Persistent Storage') {
-      loadData('favorateMangaData').then(data => {
+      loadData('favorateMangaDataIDs').then(data => {
         props.closeBottomSheetHandler();
-        navigateToFavorites();
+        navigateToFavorites(data);
       });
     } else {
       props.closeBottomSheetHandler();
@@ -50,8 +49,13 @@ const BulletedList = (props: Props) => {
     }
   }
 
-  const navigateToFavorites = () => {
-    navigation.navigate('Favorites');
+  const navigateToFavorites = (data: string | null) => {
+    if (data && JSON.parse(data).length > 0) {
+      navigation.navigate('Home', { IDs: JSON.parse(data) });
+    } else {
+      ToastAndroid.show('There no favorite mangas stored in this phone', ToastAndroid.SHORT);
+    }
+    
   };
 
   const navigateReset = () => {
