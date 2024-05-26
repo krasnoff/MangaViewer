@@ -92,7 +92,7 @@ export function HomeScreen({ route, navigation }: any) {
       if (data) {
         const dataArr = JSON.parse(data)
         setFavorateMangaDataIDs(dataArr)
-        console.log('favorateMangaDataIDs on load', dataArr)
+        //console.log('favorateMangaDataIDs on load', dataArr)
       }
     });
   }, []);

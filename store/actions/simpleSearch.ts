@@ -4,7 +4,8 @@ interface Params {
     "includes[]": string[];
     "contentRating[]": string[];
     title?: string | undefined,
-    'ids[]'?: string[]
+    'ids[]'?: string[],
+    limit?: number
 }
 
 export function getSimpleSearch(searchWord?: string, ids?: string[]) {
@@ -18,7 +19,7 @@ export function getSimpleSearch(searchWord?: string, ids?: string[]) {
     }
 
     if (ids) {
-        params = {...params, 'ids[]': ids}
+        params = {...params, 'ids[]': ids, limit: 100}
     }
     
     return { type: GET_SIMPLE_SEARCH, url: '/manga', target: PARSE_SIMPLE_SEARCH, params: params };

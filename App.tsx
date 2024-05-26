@@ -104,10 +104,10 @@ const App = () => {
     title: 'About',
     url: 'About'
   }, {
-    title: 'Get Persistent Storage',
-    url: 'Get Persistent Storage'
+    title: 'Show Favorite Mangas',
+    url: 'Get_Persistent_Storage'
   }, {
-    title: 'Reset Page',
+    title: 'Return to Homepage',
     url: 'resetPage'
   },
 ];

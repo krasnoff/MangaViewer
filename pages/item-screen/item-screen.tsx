@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { BACKGROUND_IMAGE } from '../../assets/images';
 import { Daum } from '../../types/search-results';
 import CustomSizeImage from '../../components/customSizeImage';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFeed } from '../../store/actions/feed';
+import Icon from "../../assets/icons/icon";
+import { ActionTypes } from '../../enums/action-types';
+import { useIsFocused } from '@react-navigation/native';
+import { useStorage } from '../../hooks/useStorage';
 
 function ItemScreen({ route, navigation }: any): JSX.Element {
     const dispatch = useDispatch();
@@ -16,8 +20,24 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
     const [chapters, setChapters] = useState<Daum[]>([]);
 
     const [activeIndex, setActiveIndex] = useState<number>(-1);
-
     const [networkError, setNetworkError] = useState<string>('');
+    const isFocused = useIsFocused();
+    const {storeData, loadData} = useStorage();
+    const [favorateMangaDataIDs, setFavorateMangaDataIDs] = useState<string[]>([]);
+
+    useEffect(() => {
+      if (isFocused) {
+        loadData('favorateMangaDataIDs').then(data => {
+          // console.log('favorateMangaDataIDs', data);
+          if (data) {
+            const dataArr = JSON.parse(data)
+            setFavorateMangaDataIDs(dataArr)
+          } else {
+            setFavorateMangaDataIDs([])
+          }
+        });
+      }
+    }, [isFocused]);
 
     useEffect(() => {
       setItem(itemId);
@@ -60,6 +80,38 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
       });
     }
 
+    const toggleFavoritesHandler = (item: Daum) => {
+      if (favorateMangaDataIDs.indexOf(itemId) > -1) {
+        dispatchFromProps(itemId, ActionTypes.REMOVE); 
+        ToastAndroid.show('This manga has been removed from your favorites', ToastAndroid.SHORT);
+      } else {
+        dispatchFromProps(itemId, ActionTypes.ADD);
+        ToastAndroid.show('This manga has been added to your favorites', ToastAndroid.SHORT);
+      }
+    }
+
+    /**
+     * here we save to presistant / local when user adds or removes an item from the favorite list
+     */
+    const dispatchFromProps = (item: Daum, actionType: ActionTypes) => {
+      const favorateMangaDataIDsNew = JSON.parse(JSON.stringify(favorateMangaDataIDs)) as string[];
+      const isLargeNumber = (element: any) => element === item.id;
+      const selectedIndex = favorateMangaDataIDsNew.findIndex(isLargeNumber);
+      if (actionType === ActionTypes.ADD) {
+        if (selectedIndex === -1) {
+          favorateMangaDataIDsNew.push(item.id)
+        }
+      } else if (actionType === ActionTypes.REMOVE) {
+        if (selectedIndex > -1) {
+          favorateMangaDataIDsNew.splice(selectedIndex, 1);
+        }
+      }
+
+      storeData('favorateMangaDataIDs', favorateMangaDataIDsNew);
+      setFavorateMangaDataIDs(favorateMangaDataIDsNew);
+      console.log(favorateMangaDataIDsNew);
+    }
+
     return (
       <ImageBackground source={BACKGROUND_IMAGE} resizeMode="cover" style={styles.image}>
         {networkError !== '' ? <Text style={styles.text}>{networkError}</Text> : null}
@@ -74,6 +126,11 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
                 <Text style={[styles.itemDescription, styles.marginBottom5]}>{item?.relationships.find(el => el.type === 'author')?.attributes?.name}</Text>
                 <Text style={[styles.itemTitle, styles.marginBottomNone]}>Artist</Text>
                 <Text style={[styles.itemDescription, styles.marginBottom5]}>{item?.relationships.find(el => el.type === 'artist')?.attributes?.name}</Text>
+                {/* <View style={[styles.marginBottom5]}> */}
+                  <TouchableOpacity onPress={() => toggleFavoritesHandler(itemId)} style={[styles.favorite]}>
+                    <Icon name={favorateMangaDataIDs.indexOf((item as Daum)?.id) > -1 ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={favorateMangaDataIDs.indexOf((item as Daum)?.id) > -1 ? '#00FF00' : '#FF0000'} />
+                  </TouchableOpacity>
+                {/* </View> */}
               </View>
             </View>
             <View style={styles.row2}>
@@ -164,6 +221,10 @@ const styles = StyleSheet.create({
   },
   marginBottom5: {
     marginBottom: 5
+  },
+  favorite: {
+    paddingLeft: 0,
+    paddingTop: 5
   }
 });
 

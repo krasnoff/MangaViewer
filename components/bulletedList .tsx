@@ -38,7 +38,7 @@ const BulletedList = (props: Props) => {
     if (url === 'resetPage') {
       props.closeBottomSheetHandler();
       navigateReset();
-    } else if (url === 'Get Persistent Storage') {
+    } else if (url === 'Get_Persistent_Storage') {
       loadData('favorateMangaDataIDs').then(data => {
         props.closeBottomSheetHandler();
         navigateToFavorites(data);
