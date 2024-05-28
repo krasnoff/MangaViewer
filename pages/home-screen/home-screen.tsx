@@ -25,7 +25,7 @@ export function HomeScreen({ route, navigation }: any) {
   const {parseIncomingData} = useUtilData();
   const theme = useContext(ThemeContext);
 
-  const {storeData, loadData} = useStorage();
+  const {storeData, loadData, dispatchFromPropsFunc} = useStorage();
   const [favorateMangaDataIDs, setFavorateMangaDataIDs] = useState<string[]>([]);
 
   const isFocused = useIsFocused();
@@ -101,22 +101,11 @@ export function HomeScreen({ route, navigation }: any) {
    * here we save to presistant / local when user adds or removes an item from the favorite list
    */
   const dispatchFromProps = (item: Daum, actionType: ActionTypes) => {
-    const favorateMangaDataIDsNew = JSON.parse(JSON.stringify(favorateMangaDataIDs)) as string[];
-    const isLargeNumber = (element: any) => element === item.id;
-    const selectedIndex = favorateMangaDataIDsNew.findIndex(isLargeNumber);
-    if (actionType === ActionTypes.ADD) {
-      if (selectedIndex === -1) {
-        favorateMangaDataIDsNew.push(item.id)
-      }
-    } else if (actionType === ActionTypes.REMOVE) {
-      if (selectedIndex > -1) {
-        favorateMangaDataIDsNew.splice(selectedIndex, 1);
-      }
-    }
+    const favorateMangaDataIDsNew = dispatchFromPropsFunc(item, actionType, favorateMangaDataIDs);
 
     storeData('favorateMangaDataIDs', favorateMangaDataIDsNew);
     setFavorateMangaDataIDs(favorateMangaDataIDsNew);
-    console.log(favorateMangaDataIDsNew);
+    // console.log(favorateMangaDataIDsNew);
   }
 
   return (
