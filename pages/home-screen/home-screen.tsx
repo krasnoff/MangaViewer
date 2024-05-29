@@ -41,6 +41,23 @@ export function HomeScreen({ route, navigation }: any) {
       }
     }
   }, [isFocused, route.params]);
+
+  /**
+   * start fetch favorite manga list from presistant / local storage on startup or every time this page is focused
+   */
+  useEffect(() => {
+    if (isFocused) {
+      loadData('favorateMangaDataIDs').then(data => {
+        console.log('favorateMangaDataIDs', data);
+        if (data) {
+          const dataArr = JSON.parse(data)
+          setFavorateMangaDataIDs(dataArr)
+          //console.log('favorateMangaDataIDs on load', dataArr)
+        }
+      });
+
+    }
+  }, [isFocused]);
   
   /**
    * start fetch initial call to manga group items
@@ -82,20 +99,6 @@ export function HomeScreen({ route, navigation }: any) {
     }
     
   }, [errorData]);
-
-  /**
-   * start fetch favorite manga list from presistant / local storage on startup
-   */
-  useEffect(() => {
-    loadData('favorateMangaDataIDs').then(data => {
-      console.log('favorateMangaDataIDs', data);
-      if (data) {
-        const dataArr = JSON.parse(data)
-        setFavorateMangaDataIDs(dataArr)
-        //console.log('favorateMangaDataIDs on load', dataArr)
-      }
-    });
-  }, []);
 
   /**
    * here we save to presistant / local when user adds or removes an item from the favorite list
