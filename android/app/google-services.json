@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "186809998624",
+    "project_id": "react-native-manga-viewer",
+    "storage_bucket": "react-native-manga-viewer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:186809998624:android:2623f98bb8681f6c770b45",
+        "android_client_info": {
+          "package_name": "com.mangaviewer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzzB652ZYfB4gaxayCBwTzz0ArrwhII7o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
