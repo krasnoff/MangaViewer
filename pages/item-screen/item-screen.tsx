@@ -9,6 +9,8 @@ import Icon from "../../assets/icons/icon";
 import { ActionTypes } from '../../enums/action-types';
 import { useIsFocused } from '@react-navigation/native';
 import { useStorage } from '../../hooks/useStorage';
+import { LogEventTypes } from "../../enums/log-events-types";
+import analytics from '@react-native-firebase/analytics';
 
 function ItemScreen({ route, navigation }: any): JSX.Element {
     const dispatch = useDispatch();
@@ -83,11 +85,17 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
     const toggleFavoritesHandler = (item: Daum) => {
       if (favorateMangaDataIDs.indexOf(item.id) > -1) {
         dispatchFromProps(itemId, ActionTypes.REMOVE); 
+        logEvent(item, LogEventTypes.TOGGLE_FAVORITE_OFF_ITEM);
         ToastAndroid.show('This manga has been removed from your favorites', ToastAndroid.SHORT);
       } else {
         dispatchFromProps(itemId, ActionTypes.ADD);
+        logEvent(item, LogEventTypes.TOGGLE_FAVORITE_ON_ITEM);
         ToastAndroid.show('This manga has been added to your favorites', ToastAndroid.SHORT);
       }
+    }
+
+    const logEvent = async (item: Daum, logEventType: LogEventTypes) => {
+      await analytics().logEvent(logEventType, item)
     }
 
     /**

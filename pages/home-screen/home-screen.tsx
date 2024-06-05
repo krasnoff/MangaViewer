@@ -10,6 +10,7 @@ import { useStorage } from "../../hooks/useStorage";
 import { useIsFocused } from "@react-navigation/native";
 import { MangasList } from "../../components/mangasList";
 import { ActionTypes } from "../../enums/action-types";
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export function HomeScreen({ route, navigation }: any) {
   const dispatch = useDispatch();
@@ -95,10 +96,18 @@ export function HomeScreen({ route, navigation }: any) {
     if (errorData.error) {
       if (errorData.error.message === 'Network Error') {
         setNetworkError('There has been a network problem' + '\n' + 'Please try again later');
+        reportError(errorData);
       }
     }
     
   }, [errorData]);
+
+  async function reportError(errorData: any) {
+    crashlytics().log('User signed in.');
+    await Promise.all([
+      crashlytics().setAttributes({'error_message_send_api': errorData}),
+    ]);
+  }
 
   /**
    * here we save to presistant / local when user adds or removes an item from the favorite list

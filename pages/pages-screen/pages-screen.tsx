@@ -7,7 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Carousel from 'react-native-reanimated-carousel';
 import { ChapterObj } from '../../types/chapters';
 import CustomSizePage from '../../components/customSizePage';
-
+import { LogEventTypes } from "../../enums/log-events-types";
+import analytics from '@react-native-firebase/analytics';
 
 
 function PagesScreen({ route, navigation }: any): JSX.Element {
@@ -52,6 +53,11 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
 
     const snapToItemHandler = (index: number) => {
       setCurrentIndex(index);
+      logEvent(index, LogEventTypes.NEW_PAGE_INDEX)
+    }
+
+    const logEvent = async (index: number, logEventType: LogEventTypes) => {
+      await analytics().logEvent(logEventType, {pageNumber: index})
     }
 
     const fadeOut = () => {

@@ -6,6 +6,8 @@ import { Daum } from "../types/search-results";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { ActionTypes } from "../enums/action-types";
+import { LogEventTypes } from "../enums/log-events-types";
+import analytics from '@react-native-firebase/analytics';
 
 interface Props {
     status: number,
@@ -28,14 +30,20 @@ export function MangasList(props: Props) {
         if (chosenManga) {
           if (props.favorateMangaDataIDs.indexOf(item.id) > -1) {
             props.dispatchMangaToFavorites(item, ActionTypes.REMOVE); 
+            logEvent(item, LogEventTypes.TOGGLE_FAVORITE_OFF);
             ToastAndroid.show('This manga has been removed from your favorites', ToastAndroid.SHORT);
           } else {
             props.dispatchMangaToFavorites(item, ActionTypes.ADD);
+            logEvent(item, LogEventTypes.TOGGLE_FAVORITE_ON);
             ToastAndroid.show('This manga has been added to your favorites', ToastAndroid.SHORT);
           }
         }
     
         props.setArticleData(prevArticleData);
+    }
+
+    const logEvent = async (item: Daum, logEventType: LogEventTypes) => {
+      await analytics().logEvent(logEventType, item)
     }
     
     return (
