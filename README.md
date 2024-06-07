@@ -1,22 +1,15 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# React Native Mange Viewer
 
-# Getting Started
+## About
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+Welcome to MangaViewer, your go-to app for accessing free manga pages provided by [MangaDex](https://mangadex.org/).
 
-## Step 1: Start the Metro Server
+MangaViewer is a mobile application built using React Native, designed to provide users with a seamless experience for reading manga on the go.
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+Interested in how MangaViewer was built? You can find the complete source code for this application on GitHub. Feel free to explore, contribute, or fork the repository at [https://github.com/krasnoff/MangaViewer/](https://github.com/krasnoff/MangaViewer/).
 
-To start Metro, run the following command from the _root_ of your React Native project:
+MangaViewer was developed by Kobi Krasnoff. You can learn more about me and my other projects on my personal website: [https://krasnoff-personal-web-app.vercel.app/](https://krasnoff-personal-web-app.vercel.app/).
 
-```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
-```
 
 ## Step 2: Start your Application
 
