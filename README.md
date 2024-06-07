@@ -24,12 +24,21 @@ The logo graphic file of the header and the app icon files are distributed under
 
 ### Application header credit for special fonts
 
-This is a ["Bangers"](https://fonts.google.com/specimen/Bangers/about?query=Bangers) font. Designed by Vernon Adams. This font is distributed under [OFL](https://openfontlicense.org/open-font-license-official-text/) license.
+This is a [Bangers](https://fonts.google.com/specimen/Bangers/about?query=Bangers) font. Designed by Vernon Adams. This font is distributed under [OFL](https://openfontlicense.org/open-font-license-official-text/) license.
 
 ### Icons used in this app
 
-The icons used in this app are part of ["Material Symbols"](https://fonts.google.com/icons?icon.platform=web) icons and are distributed under [Apache license](https://www.apache.org/licenses/LICENSE-2.0.html).
+The icons used in this app are part of [Material Symbols](https://fonts.google.com/icons?icon.platform=web) icons and are distributed under [Apache license](https://www.apache.org/licenses/LICENSE-2.0.html).
 
 ### Background Image
 
-The background image in this app is provided by ["Freepic"](https://www.freepik.com/free-vector/zoom-effect-background_32375309.htm#query=manga%20background&position=1&from_view=keyword&track=ais&uuid=1aff79b9-19e9-46df-a555-608f0d7b3406)
+The background image in this app is provided by [Freepic](https://www.freepik.com/free-vector/zoom-effect-background_32375309.htm#query=manga%20background&position=1&from_view=keyword&track=ais&uuid=1aff79b9-19e9-46df-a555-608f0d7b3406)
+
+
+## Disclaimer
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see [<https://www.gnu.org/licenses/>](https://www.gnu.org/licenses/)
