@@ -12,3 +12,4 @@ We collect various types of information in connection with the services we provi
 
 1. Information You Provide to Us
 
+   - Account Information: If you create an account, we may collect your name, email address, and other information you provide.
