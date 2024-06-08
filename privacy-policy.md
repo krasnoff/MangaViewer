@@ -10,5 +10,5 @@ Welcome to Manga Viewer (the "App"). We value your privacy and are committed to 
 
 We collect various types of information in connection with the services we provide, including:
 
-    1.1. Information You Provide to Us
+1. Information You Provide to Us
 
