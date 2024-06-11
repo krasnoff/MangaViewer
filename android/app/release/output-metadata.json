@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.mangaviewer",
+  "applicationId": "com.krasnoffkobi.mangaviewer",
   "variantName": "release",
   "elements": [
     {
