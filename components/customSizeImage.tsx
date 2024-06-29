@@ -14,7 +14,7 @@ export default function CustomSizeImage(props: any) {
   }, []);
 
   return (
-    <View style={{width: width, height: height, marginRight: 10}}>
+    <View style={{width: width, height: height, marginRight: 10, marginLeft: 10, marginTop: 10}}>
       <Image
         source={props.source}
         style={ styles.thumbnail }
@@ -26,8 +26,6 @@ export default function CustomSizeImage(props: any) {
 const styles = StyleSheet.create({
     thumbnail: {
         borderRadius: 8,
-        marginTop: 10,
-        marginLeft: 10,
         width: '100%',
         height: '100%'
     },
