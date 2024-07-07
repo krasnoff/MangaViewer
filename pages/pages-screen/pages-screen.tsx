@@ -9,6 +9,8 @@ import { ChapterObj } from '../../types/chapters';
 import CustomSizePage from '../../components/customSizePage';
 import { LogEventTypes } from "../../enums/log-events-types";
 import analytics from '@react-native-firebase/analytics';
+import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { Gesture } from 'react-native-gesture-handler';
 
 
 function PagesScreen({ route, navigation }: any): JSX.Element {
@@ -29,6 +31,9 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
     const height = Dimensions.get('window').height; 
 
     const fadeAnim = useRef(new Animated.Value(0.7)).current;
+
+    const scale = useSharedValue(1);
+    const savedScale = useSharedValue(1);
 
     useEffect(() => {
       setItem(itemId);
@@ -73,6 +78,18 @@ function PagesScreen({ route, navigation }: any): JSX.Element {
         }).start();
       });
     };
+
+    const pinchGesture = Gesture.Pinch()
+    .onUpdate((e) => {
+      scale.value = savedScale.value * e.scale;
+    })
+    .onEnd(() => {
+      savedScale.value = scale.value;
+    });
+
+    const animatedStyle = useAnimatedStyle(() => ({
+      transform: [{ scale: scale.value }],
+    }));
 
     return (
       <ImageBackground source={BACKGROUND_IMAGE} resizeMode="cover" style={styles.image}>
