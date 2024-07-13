@@ -1,11 +1,11 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { NativeStackNavigationOptions, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from './pages/home-screen/home-screen';
 import { useCallback, useEffect, useMemo, useRef, useState, type PropsWithChildren } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, LogBox, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { ANIME_STUB_IMAGE } from './assets/images';
 import configureStore from './store/store';
@@ -75,6 +75,9 @@ const customHeaderDesign: NativeStackNavigationOptions = {
 }
 
 const Stack = createNativeStackNavigator();
+
+// Ignore specific warnings
+LogBox.ignoreAllLogs(true);
 
 const App = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
