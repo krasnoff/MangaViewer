@@ -1,11 +1,12 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { API_ERRORED, GET_CHAPTERS, GET_FEED, GET_SIMPLE_SEARCH } from "../action-type";
+import { API_ERRORED, GET_CHAPTERS, GET_FEED, GET_SIMPLE_SEARCH, GET_TAGS_LIST } from "../action-type";
 import axios from "axios";
 
 export default function* watcherSaga() {
     yield takeEvery(GET_SIMPLE_SEARCH, workerSaga);
     yield takeEvery(GET_FEED, workerSaga);
     yield takeEvery(GET_CHAPTERS, workerSaga);
+    yield takeEvery(GET_TAGS_LIST, workerSaga);
 }
 
 /**

@@ -13,6 +13,10 @@ const initialState = {
     chaptersResponse: {
         error: null,
         result: []
+    },
+    tagsResponse: {
+        error: null,
+        result: []
     }
 };
 

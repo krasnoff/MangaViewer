@@ -9,4 +9,8 @@ export const FEED_LOADED = "FEED_LOADED";
 export const GET_CHAPTERS = "GET_CHAPTERS";
 export const CHAPTERS_LOADED = "CHAPTERS_LOADED";
 
+export const GET_TAGS_LIST = "GET_TAGS_LIST";
+export const TAGS_LIST_LOADED = "TAGS_LIST_LOADED";
+export const TAGS_LIST_PARSED = "TAGS_LIST_PARSED";
+
 export const API_ERRORED = "API_ERRORED";

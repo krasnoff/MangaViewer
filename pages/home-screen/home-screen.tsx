@@ -11,11 +11,14 @@ import { useIsFocused } from "@react-navigation/native";
 import { MangasList } from "../../components/mangasList";
 import { ActionTypes } from "../../enums/action-types";
 import crashlytics from '@react-native-firebase/crashlytics';
+import { getTagsList } from "../../store/actions/tags-list";
+import { TagsList } from "../../types/tags";
 
 export function HomeScreen({ route, navigation }: any) {
   const dispatch = useDispatch();
   const data = useSelector(state => (state as unknown as any).SimpleSearchResponse);
   const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
+  const tagsData = useSelector(state => (state as unknown as any).TagsListResponse);
         
   const [status, setStatus] = useState<number>(-1);
   const [networkError, setNetworkError] = useState<string>('');
@@ -40,6 +43,8 @@ export function HomeScreen({ route, navigation }: any) {
       } else {
         dispatch(getSimpleSearch()); 
       }
+
+      dispatch(getTagsList());
     }
   }, [isFocused, route.params]);
 
@@ -49,7 +54,7 @@ export function HomeScreen({ route, navigation }: any) {
   useEffect(() => {
     if (isFocused) {
       loadData('favorateMangaDataIDs').then(data => {
-        console.log('favorateMangaDataIDs', data);
+        //console.log('favorateMangaDataIDs', data);
         if (data) {
           const dataArr = JSON.parse(data)
           setFavorateMangaDataIDs(dataArr)
@@ -68,6 +73,15 @@ export function HomeScreen({ route, navigation }: any) {
     setShowLoader(true);
     dispatch(getSimpleSearch(theme)); 
   }, [theme]);
+
+  /**
+   * gets tags list from server
+   */
+  useEffect(() => {
+    const tagsResponse: TagsList = tagsData.tagsResponse;
+    
+    console.log('tagsData', JSON.stringify(tagsResponse.data));
+  }, [tagsData]);
 
   /**
    * recieves initial call of manga groups from mangadex server
