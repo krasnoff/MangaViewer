@@ -12,7 +12,7 @@ import { MangasList } from "../../components/mangasList";
 import { ActionTypes } from "../../enums/action-types";
 import crashlytics from '@react-native-firebase/crashlytics';
 import { getTagsList } from "../../store/actions/tags-list";
-import { TagsList } from "../../types/tags";
+import { Daum2, TagsList } from "../../types/tags";
 
 export function HomeScreen({ route, navigation }: any) {
   const dispatch = useDispatch();
@@ -36,13 +36,7 @@ export function HomeScreen({ route, navigation }: any) {
 
   useEffect(() => {
     if (isFocused) {
-      if (route.params?.IDs) {
-        setStatus(-1);
-        setShowLoader(true);
-        dispatch(getSimpleSearch(undefined, route.params.IDs)); 
-      } else {
-        dispatch(getSimpleSearch()); 
-      }
+      
 
       dispatch(getTagsList());
     }
@@ -78,9 +72,30 @@ export function HomeScreen({ route, navigation }: any) {
    * gets tags list from server
    */
   useEffect(() => {
-    const tagsResponse: TagsList = tagsData.tagsResponse;
-    
-    console.log('tagsData', JSON.stringify(tagsResponse.data));
+    const tagsResponse: any = tagsData.tagsResponse;
+    //console.log('tagsData tagsResponse 2', JSON.stringify(tagsResponse.data.data));
+
+    let excluded_tag_name: Daum2[] = tagsResponse.data?.data; 
+    if (excluded_tag_name) {
+      excluded_tag_name = Object.values(excluded_tag_name).filter((el: Daum2) => 
+        {
+          return el.attributes && ["Long Strip"].includes(el.attributes.name.en)
+        });
+      let excluded_tag_ids;
+      if (excluded_tag_name && excluded_tag_name.length > 0) {
+        excluded_tag_ids = excluded_tag_name.map(el => el.id);
+      }
+      
+      console.log('tagsData 3c', excluded_tag_ids);
+      if (route.params?.IDs) {
+        setStatus(-1);
+        setShowLoader(true);
+        dispatch(getSimpleSearch(undefined, route.params.IDs, excluded_tag_ids)); 
+      } else {
+        dispatch(getSimpleSearch()); 
+      }
+    }
+
   }, [tagsData]);
 
   /**
