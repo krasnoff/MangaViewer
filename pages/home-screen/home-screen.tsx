@@ -77,10 +77,7 @@ export function HomeScreen({ route, navigation }: any) {
 
     let excluded_tag_name: Daum2[] = tagsResponse.data?.data; 
     if (excluded_tag_name) {
-      excluded_tag_name = Object.values(excluded_tag_name).filter((el: Daum2) => 
-        {
-          return el.attributes && ["Long Strip"].includes(el.attributes.name.en)
-        });
+      excluded_tag_name = Object.values(excluded_tag_name).filter((el: Daum2) => el.attributes && ["Long Strip"].includes(el.attributes.name.en));
       let excluded_tag_ids;
       if (excluded_tag_name && excluded_tag_name.length > 0) {
         excluded_tag_ids = excluded_tag_name.map(el => el.id);
