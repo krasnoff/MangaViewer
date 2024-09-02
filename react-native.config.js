@@ -1,7 +1,9 @@
 module.exports = {
     project: {
         ios:{},
-        android:{}
+        android:{
+            packageName: 'com.krasnoffkobi.mangaviewer',
+        }
     },
     assets:['./assets/fonts/'],
 }
