@@ -55,7 +55,9 @@ function MenuButton(props: MenuProps) {
   }
 
   return (
-    <TouchableOpacity onPress={() => menuButtonHandler(props.bottomSheetRef) }>
+    <TouchableOpacity onPressIn={() => {
+        menuButtonHandler(props.bottomSheetRef);
+    }} style={{position: 'static'}}>
       <Icon name="Menu" height="35" width="35" fill="#000000" />
     </TouchableOpacity>
   );
@@ -139,7 +141,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <ThemeContext.Provider value={searchWord}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureHandlerRootView style={{ flex: 1, zIndex: 0 }}>
           <NavigationContainer
             ref={navigationRef}
             onReady={() => {

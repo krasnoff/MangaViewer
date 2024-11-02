@@ -27,7 +27,7 @@ function* workerSaga(args: any): any {
 function getDataSaga(args: any): Promise<any> {
     let url = args.url;
     let params = args.params;
-    console.log('url: ', `${process.env.REACT_APP_BASE_URL}${url}`);
+    //console.log('url: ', `${process.env.REACT_APP_BASE_URL}${url}`);
     return axios({
         method: 'GET',
         url: `${process.env.REACT_APP_BASE_URL}${url}`,
