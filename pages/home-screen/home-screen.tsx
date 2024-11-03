@@ -83,7 +83,6 @@ export function HomeScreen({ route, navigation }: any) {
         excluded_tag_ids = excluded_tag_name.map(el => el.id);
       }
       
-      console.log('tagsData 3c', excluded_tag_ids);
       if (route.params?.IDs) {
         setStatus(-1);
         setShowLoader(true);

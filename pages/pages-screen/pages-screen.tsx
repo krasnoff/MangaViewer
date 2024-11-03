@@ -9,9 +9,14 @@ import { ChapterObj } from '../../types/chapters';
 import CustomSizePage from '../../components/customSizePage';
 import { LogEventTypes } from "../../enums/log-events-types";
 import analytics from '@react-native-firebase/analytics';
-import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { useAnimatedStyle, useSharedValue, configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
 import { Gesture } from 'react-native-gesture-handler';
 
+// This is the default configuration
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false, // Reanimated runs in strict mode by default
+});
 
 function PagesScreen({ route, navigation }: any): JSX.Element {
     const [networkError, setNetworkError] = useState<string>('');
