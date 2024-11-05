@@ -1,6 +1,7 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { API_ERRORED, GET_CHAPTERS, GET_FEED, GET_SIMPLE_SEARCH, GET_TAGS_LIST } from "../action-type";
 import axios from "axios";
+import { APIParams } from "../../types/api-params";
 
 export default function* watcherSaga() {
     yield takeEvery(GET_SIMPLE_SEARCH, workerSaga);
@@ -27,10 +28,16 @@ function* workerSaga(args: any): any {
 function getDataSaga(args: any): Promise<any> {
     let url = args.url;
     let params = args.params;
-    //console.log('url: ', `${process.env.REACT_APP_BASE_URL}${url}`);
-    return axios({
-        method: 'GET',
-        url: `${process.env.REACT_APP_BASE_URL}${url}`,
+    
+    const apiParams: APIParams = {
+        method: args.method || 'GET',
+        url: url.startsWith('https://') ? url : `${process.env.REACT_APP_BASE_URL}${url}`,
         params: params
-    });
+    }
+
+    if (args.method === 'POST' && args.data) {
+        apiParams['data'] = args.data;
+    }
+
+    return axios(apiParams);
 }
