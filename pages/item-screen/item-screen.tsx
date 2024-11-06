@@ -94,6 +94,10 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
       }
     }
 
+    const toggleBookmarksHandler = (item: Daum) => {
+
+    }
+
     const logEvent = async (item: Daum, logEventType: LogEventTypes) => {
       await analytics().logEvent(logEventType, item)
     }
@@ -123,11 +127,14 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
                 <Text style={[styles.itemDescription, styles.marginBottom5]}>{item?.relationships.find(el => el.type === 'author')?.attributes?.name}</Text>
                 <Text style={[styles.itemTitle, styles.marginBottomNone]}>Artist</Text>
                 <Text style={[styles.itemDescription, styles.marginBottom5]}>{item?.relationships.find(el => el.type === 'artist')?.attributes?.name}</Text>
-                {/* <View style={[styles.marginBottom5]}> */}
+                <View style={stylesItemContainer.iconsArr}>
                   <TouchableOpacity onPress={() => toggleFavoritesHandler(itemId)} style={[styles.favorite]}>
                     <Icon name={favorateMangaDataIDs.indexOf((item as Daum)?.id) > -1 ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={favorateMangaDataIDs.indexOf((item as Daum)?.id) > -1 ? '#00FF00' : '#FF0000'} />
                   </TouchableOpacity>
-                {/* </View> */}
+                  <TouchableOpacity onPress={() => toggleBookmarksHandler(itemId)} style={styles.favorite}>
+                    <Icon name={false ? 'BookMarkMarked' : 'BookMark'} height="20" width="20" fill={false ? '#00FF00' : '#FF0000'} />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
             <View style={styles.row2}>
@@ -152,6 +159,12 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
       </ImageBackground>
     );
 }
+
+const stylesItemContainer = StyleSheet.create({
+  iconsArr: {
+    flexDirection: 'row'
+  }
+});
 
 const styles = StyleSheet.create({
   image: {
@@ -221,7 +234,8 @@ const styles = StyleSheet.create({
   },
   favorite: {
     paddingLeft: 0,
-    paddingTop: 5
+    paddingTop: 5,
+    paddingRight: 15
   }
 });
 

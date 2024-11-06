@@ -42,6 +42,10 @@ export function MangasList(props: Props) {
         props.setArticleData(prevArticleData);
     }
 
+    const toggleBookmarksHandler = (item: Daum) => {
+
+    }
+
     const logEvent = async (item: Daum, logEventType: LogEventTypes) => {
       await analytics().logEvent(logEventType, item)
     }
@@ -57,17 +61,22 @@ export function MangasList(props: Props) {
             <ScrollView contentContainerStyle={stylesSCrollView.scrollViewContent}>
             {props.articleData.map(item => (
                 <View key={item.id} style={stylesSCrollView.itemContainer}>
-                <View style={stylesSCrollView.mainView}>
+                  <View style={stylesSCrollView.mainView}>
                     <View>
-                    <CustomSizeImage source={{ uri: item.coverImgURL }} />
-                    <TouchableOpacity onPress={() => toggleFavoritesHandler(item)} style={styles.favorite}>
-                        <Icon name={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? '#00FF00' : '#FF0000'} />
-                    </TouchableOpacity>
+                      <CustomSizeImage source={{ uri: item.coverImgURL }} />
+                      <View style={stylesItemContainer.iconsArr}>
+                        <TouchableOpacity onPress={() => toggleFavoritesHandler(item)} style={styles.favorite}>
+                          <Icon name={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? '#00FF00' : '#FF0000'} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => toggleBookmarksHandler(item)} style={styles.favorite}>
+                          <Icon name={false ? 'BookMarkMarked' : 'BookMark'} height="20" width="20" fill={false ? '#00FF00' : '#FF0000'} />
+                        </TouchableOpacity>
+                      </View>
                     </View>
                     <View style={stylesSCrollView.itemTextContainer}>
                     <Text style={stylesSCrollView.itemTitle}>{item.attributes.title.en}</Text>
                     <Text style={stylesSCrollView.itemDescription} numberOfLines={10}>{item.attributes.description.en}</Text>
-                    </View>
+                  </View>
                 </View>
                 <View style={stylesSCrollView.forwardIcon}>
                     <TouchableOpacity onPress={() => {
@@ -105,7 +114,14 @@ const styles = StyleSheet.create({
     },
     favorite: {
       paddingLeft: 10,
-      paddingTop: 15
+      paddingTop: 15,
+      paddingRight: 15
+    }
+  });
+
+  const stylesItemContainer = StyleSheet.create({
+    iconsArr: {
+      flexDirection: 'row'
     }
   });
   
