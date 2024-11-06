@@ -43,7 +43,7 @@ export function MangasList(props: Props) {
     }
 
     const toggleBookmarksHandler = (item: Daum) => {
-
+      navigation.navigate('Login', {});
     }
 
     const logEvent = async (item: Daum, logEventType: LogEventTypes) => {

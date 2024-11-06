@@ -95,7 +95,7 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
     }
 
     const toggleBookmarksHandler = (item: Daum) => {
-
+      navigation.navigate('Login', {});
     }
 
     const logEvent = async (item: Daum, logEventType: LogEventTypes) => {
