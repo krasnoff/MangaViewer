@@ -5,8 +5,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { LoginFormData } from '../../types/login-form-data';
 import PressableLink from '../../components/pressable-link';
 import CustomCheckbox from '../../components/custom-checkbox';
+import { useDispatch } from 'react-redux';
+import { getLogin } from '../../store/actions/login';
 
 function LoginScreen({ route, navigation }: any): JSX.Element {
+    const dispatch = useDispatch();
+    
     const {
         control,
         handleSubmit,
@@ -20,7 +24,12 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
     })
 
     const submitHandler = (data: LoginFormData) => {
-        console.log('submit handler', data)
+        console.log('submit handler', data);
+        dispatch(getLogin({
+            email: data.email,
+            password: data.password,
+            rememberMe: data.rememberMe
+        }))
     }
 
     return (

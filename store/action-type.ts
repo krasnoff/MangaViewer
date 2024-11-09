@@ -13,4 +13,7 @@ export const GET_TAGS_LIST = "GET_TAGS_LIST";
 export const TAGS_LIST_LOADED = "TAGS_LIST_LOADED";
 export const TAGS_LIST_PARSED = "TAGS_LIST_PARSED";
 
+export const POST_LOGIN = "POST_LOGIN";
+export const LOGIN_LOADED = "LOGIN_LOADED";
+
 export const API_ERRORED = "API_ERRORED";

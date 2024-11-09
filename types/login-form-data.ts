@@ -3,3 +3,7 @@ export type LoginFormData = {
     password: string
     rememberMe: boolean
 }
+
+export type RefreshTokenData = {
+    refreshToken: string
+}
