@@ -1,9 +1,10 @@
-import React from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import ContentPageFrame from '../../components/content-page-frame';
 import styles from '../../styles/content-page-style';
 import { Controller, useForm } from 'react-hook-form';
 import { LoginFormData } from '../../types/login-form-data';
+import PressableLink from '../../components/pressable-link';
+import CustomCheckbox from '../../components/custom-checkbox';
 
 function LoginScreen({ route, navigation }: any): JSX.Element {
     const {
@@ -14,9 +15,10 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
         defaultValues: {
             email: "",
             password: "",
+            rememberMe: false
         },
     })
-    
+
     const submitHandler = (data: LoginFormData) => {
         console.log('submit handler', data)
     }
@@ -29,17 +31,17 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
                 <Controller
                     control={control}
                     rules={{
-                        required: 'Email is required',
+                        required: 'Email is required'/*,
                         pattern: {
                             value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
                             message: 'Invalid email address',
-                        },
+                        },*/
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
                         <TextInput
                             style={stylesForms.input}
-                            placeholder='Email'
-                            inputMode='email'
+                            placeholder='Username or Email'
+                            inputMode='text'
                             onBlur={onBlur}
                             onChangeText={onChange}
                             value={value}
@@ -70,9 +72,25 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
                     name="password"
                 />
                 {errors.password && <Text style={stylesForms.errorMessage}>Password is required</Text>}
+                    
+                <Controller
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <CustomCheckbox
+                            label="Remember me"
+                            checked={value}
+                            onChange={onChange}
+                        />
+                    )}
+                    name="rememberMe"
+                />
 
                 <View style={stylesForms.buttonWrap}>
                     <Button title="Login" onPress={handleSubmit(submitHandler)}/>
+                </View>
+
+                <View style={stylesForms.buttonWrap}>
+                    <Text>Not a member yet?<PressableLink url={'https://mangadex.org/'}> Click here </PressableLink>to register</Text>
                 </View>
             </>
         </ContentPageFrame>
@@ -92,10 +110,14 @@ const stylesForms = StyleSheet.create({
     buttonWrap: {
         marginTop: 12,
         marginBottom: 12,
-        width: 70
+        alignSelf: 'flex-start'
     },
     errorMessage: {
         color: 'red'
+    },
+    checkbox: {
+        width: 64,
+        height: 64
     }
 });
 
