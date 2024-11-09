@@ -27,12 +27,14 @@ function* workerSaga(args: any): any {
 
 function getDataSaga(args: any): Promise<any> {
     let url = args.url;
-    let params = args.params;
     
     const apiParams: APIParams = {
         method: args.method || 'GET',
-        url: url.startsWith('https://') ? url : `${process.env.REACT_APP_BASE_URL}${url}`,
-        params: params
+        url: url.startsWith('https://') ? url : `${process.env.REACT_APP_BASE_URL}${url}`
+    }
+
+    if (args.method !== 'POST' && args.params) {
+        apiParams['params'] = args.params;
     }
 
     if (args.method === 'POST' && args.data) {
