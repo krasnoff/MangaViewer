@@ -5,11 +5,16 @@ import { Controller, useForm } from 'react-hook-form';
 import { LoginFormData } from '../../types/login-form-data';
 import PressableLink from '../../components/pressable-link';
 import CustomCheckbox from '../../components/custom-checkbox';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getLogin } from '../../store/actions/login';
+import { useIsFocused } from '@react-navigation/native';
+import { useEffect } from 'react';
 
 function LoginScreen({ route, navigation }: any): JSX.Element {
     const dispatch = useDispatch();
+    const data = useSelector(state => (state as unknown as any).LoginResponse);
+    const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
+    const isFocused = useIsFocused();
     
     const {
         control,
@@ -24,13 +29,23 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
     })
 
     const submitHandler = (data: LoginFormData) => {
-        console.log('submit handler', data);
+        // console.log('submit handler', data);
         dispatch(getLogin({
             email: data.email,
             password: data.password,
             rememberMe: data.rememberMe
         }))
     }
+
+    useEffect(() => {
+        if (data.simpleSearchResponse.status === 200) {
+            console.log('data response', data.loginResponse);     
+        }
+    }, [data]);
+
+    useEffect(() => {
+        console.log('error response', errorData.error);             
+    }, [errorData]);
 
     return (
         <ContentPageFrame>

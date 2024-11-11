@@ -17,6 +17,10 @@ const initialState = {
     tagsResponse: {
         error: null,
         result: []
+    },
+    loginResponse: {
+        error: null,
+        result: []
     }
 };
 

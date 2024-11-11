@@ -1,13 +1,15 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { API_ERRORED, GET_CHAPTERS, GET_FEED, GET_SIMPLE_SEARCH, GET_TAGS_LIST } from "../action-type";
+import { API_ERRORED, GET_CHAPTERS, GET_FEED, GET_SIMPLE_SEARCH, GET_TAGS_LIST, POST_LOGIN } from "../action-type";
 import axios from "axios";
 import { APIParams } from "../../types/api-params";
+import { Method } from "../../enums/method";
 
 export default function* watcherSaga() {
     yield takeEvery(GET_SIMPLE_SEARCH, workerSaga);
     yield takeEvery(GET_FEED, workerSaga);
     yield takeEvery(GET_CHAPTERS, workerSaga);
     yield takeEvery(GET_TAGS_LIST, workerSaga);
+    yield takeEvery(POST_LOGIN, workerSaga);
 }
 
 /**
@@ -33,13 +35,19 @@ function getDataSaga(args: any): Promise<any> {
         url: url.startsWith('https://') ? url : `${process.env.REACT_APP_BASE_URL}${url}`
     }
 
-    if (args.method !== 'POST' && args.params) {
+    if (args.method !== Method.POST && args.params) {
         apiParams['params'] = args.params;
     }
 
-    if (args.method === 'POST' && args.data) {
+    if (args.method === Method.POST && args.data) {
         apiParams['data'] = args.data;
+        apiParams['headers'] = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        };
     }
+
+    // console.log('args', args);
+    console.log('api params', apiParams);
 
     return axios(apiParams);
 }
