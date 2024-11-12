@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getLogin } from '../../store/actions/login';
 import { useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
+import { AxiosError, AxiosResponse } from 'axios';
 
 function LoginScreen({ route, navigation }: any): JSX.Element {
     const dispatch = useDispatch();
@@ -37,14 +38,30 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
         }))
     }
 
+    /**
+     * handling successful request
+     */
     useEffect(() => {
-        if (data.simpleSearchResponse.status === 200) {
-            console.log('data response', data.loginResponse);     
+        const response: AxiosResponse = data.loginResponse
+        
+        if (response.status === 200) {
+            console.log('data response', response.data);     
         }
     }, [data]);
 
+    /**
+     * error handling in send request
+     */
     useEffect(() => {
-        console.log('error response', errorData.error);             
+        const error: AxiosError = errorData.error;
+        
+        // console.log('error response data', error.response?.data);  
+        // console.log('error response status', error.response?.status);
+        // console.log('error response headers', error.response?.headers);           
+
+        if (error.response?.status === 401 && (error.response?.data as any).error === 'invalid_grant') {
+            console.log('handle error for wrong credentials'); 
+        }
     }, [errorData]);
 
     return (

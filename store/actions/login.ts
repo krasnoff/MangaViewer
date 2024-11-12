@@ -11,7 +11,7 @@ export function getLogin(loginFormData: LoginFormData) {
         username: loginFormData.email,
         password: loginFormData.password,
         client_id: process.env.REACT_APP_CLIENT_ID,
-        client_secret: process.env.REACT_APP_SECRET2
+        client_secret: process.env.REACT_APP_SECRET
     }
 
     return { type: POST_LOGIN, url: process.env.REACT_APP_AUTH_URL, target: LOGIN_LOADED, params: params, data: data, method: Method.POST };
