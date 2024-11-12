@@ -42,7 +42,7 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
      * handling successful request
      */
     useEffect(() => {
-        const response: AxiosResponse = data.loginResponse
+        const response: AxiosResponse = data.loginResponse;
         
         if (response.status === 200) {
             console.log('data response', response.data);     
