@@ -7,15 +7,20 @@ import PressableLink from '../../components/pressable-link';
 import CustomCheckbox from '../../components/custom-checkbox';
 import { useDispatch, useSelector } from 'react-redux';
 import { getLogin } from '../../store/actions/login';
-import { useIsFocused } from '@react-navigation/native';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { AxiosError, AxiosResponse } from 'axios';
+import Loader from '../../components/loader';
+import { useIsFocused } from '@react-navigation/native';
 
 function LoginScreen({ route, navigation }: any): JSX.Element {
     const dispatch = useDispatch();
     const data = useSelector(state => (state as unknown as any).LoginResponse);
     const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
+    const [wrongCredentialsErr, setWrongCredentialsErr] = useState<boolean>(false);
+    const [generalErr, setGeneralErr] = useState<boolean>(false);
+    const [isLogging, setIsLogging] = useState<boolean>(false);
     const isFocused = useIsFocused();
+    const [isSubmit, setIsSubmit] = useState<boolean>(false);
     
     const {
         control,
@@ -30,7 +35,10 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
     })
 
     const submitHandler = (data: LoginFormData) => {
-        // console.log('submit handler', data);
+        setIsLogging(true);
+        setIsSubmit(true);
+        setWrongCredentialsErr(false);
+        setGeneralErr(false);
         dispatch(getLogin({
             email: data.email,
             password: data.password,
@@ -38,14 +46,26 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
         }))
     }
 
+    // activates when this page is focused
+    useEffect(() => {
+        if (isFocused) {
+            setWrongCredentialsErr(false);
+            setGeneralErr(false);
+            setIsSubmit(false);
+        }
+    }, [isFocused]);
+
     /**
      * handling successful request
      */
     useEffect(() => {
         const response: AxiosResponse = data.loginResponse;
+        setIsLogging(false);
         
         if (response.status === 200) {
-            console.log('data response', response.data);     
+            setWrongCredentialsErr(false);
+            setGeneralErr(false);
+            // TODO now make API to favorites
         }
     }, [data]);
 
@@ -54,87 +74,98 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
      */
     useEffect(() => {
         const error: AxiosError = errorData.error;
-        
+        setIsLogging(false);
+                
         // console.log('error response data', error.response?.data);  
         // console.log('error response status', error.response?.status);
         // console.log('error response headers', error.response?.headers);           
 
         if (error.response?.status === 401 && (error.response?.data as any).error === 'invalid_grant') {
-            console.log('handle error for wrong credentials'); 
+            setWrongCredentialsErr(true);
+        } else if (error.response && error.response?.status) {
+            setGeneralErr(true);
         }
     }, [errorData]);
 
     return (
-        <ContentPageFrame>
-            <>
-                <Text style={styles.subTitle}>Login</Text>
+        <>
+            <ContentPageFrame>
+                <>
+                
+                    <Text style={styles.subTitle}>Login</Text>
 
-                <Controller
-                    control={control}
-                    rules={{
-                        required: 'Email is required'/*,
-                        pattern: {
-                            value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                            message: 'Invalid email address',
-                        },*/
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={stylesForms.input}
-                            placeholder='Username or Email'
-                            inputMode='text'
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            maxLength={50}
-                        />
-                    )}
-                    name="email"
-                />
-                {errors.email && <Text style={stylesForms.errorMessage}>{errors.email.message}</Text>}
+                    {isSubmit && wrongCredentialsErr === true && <Text style={stylesForms.errorMessage}>Wrong credentials error. Please fix your credentials and try again</Text>}
+                    {isSubmit && generalErr === true && <Text style={stylesForms.errorMessage}>General error. please try again later</Text>}
 
-                <Controller
-                    control={control}
-                    rules={{
-                        maxLength: 50,
-                        required: true,
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={stylesForms.input}
-                            placeholder='Password'
-                            secureTextEntry={true}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            maxLength={50}
-                        />
-                    )}
-                    name="password"
-                />
-                {errors.password && <Text style={stylesForms.errorMessage}>Password is required</Text>}
-                    
-                <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <CustomCheckbox
-                            label="Remember me"
-                            checked={value}
-                            onChange={onChange}
-                        />
-                    )}
-                    name="rememberMe"
-                />
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: 'Email is required'/*,
+                            pattern: {
+                                value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                                message: 'Invalid email address',
+                            },*/
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={stylesForms.input}
+                                placeholder='Username or Email'
+                                inputMode='text'
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                maxLength={50}
+                            />
+                        )}
+                        name="email"
+                    />
+                    {errors.email && <Text style={stylesForms.errorMessage}>{errors.email.message}</Text>}
 
-                <View style={stylesForms.buttonWrap}>
-                    <Button title="Login" onPress={handleSubmit(submitHandler)}/>
-                </View>
+                    <Controller
+                        control={control}
+                        rules={{
+                            maxLength: 50,
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={stylesForms.input}
+                                placeholder='Password'
+                                secureTextEntry={true}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                maxLength={50}
+                            />
+                        )}
+                        name="password"
+                    />
+                    {errors.password && <Text style={stylesForms.errorMessage}>Password is required</Text>}
+                        
+                    <Controller
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <CustomCheckbox
+                                label="Remember me"
+                                checked={value}
+                                onChange={onChange}
+                            />
+                        )}
+                        name="rememberMe"
+                    />
 
-                <View style={stylesForms.buttonWrap}>
-                    <Text>Not a member yet?<PressableLink url={'https://mangadex.org/'}> Click here </PressableLink>to register</Text>
-                </View>
-            </>
-        </ContentPageFrame>
+                    <View style={stylesForms.buttonWrap}>
+                        <Button title="Login" onPress={handleSubmit(submitHandler)}/>
+                    </View>
+
+                    <View style={stylesForms.buttonWrap}>
+                        <Text>Not a member yet?<PressableLink url={'https://mangadex.org/'}> Click here </PressableLink>to register</Text>
+                    </View>
+            
+                </>
+            </ContentPageFrame>
+            {isLogging ? <Loader></Loader> : null}
+        </>
     );
 }
 
