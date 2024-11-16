@@ -3,6 +3,7 @@ import { API_ERRORED, GET_CHAPTERS, GET_FEED, GET_SIMPLE_SEARCH, GET_TAGS_LIST, 
 import axios from "axios";
 import { APIParams } from "../../types/api-params";
 import { Method } from "../../enums/method";
+import { ContentType } from "../../enums/content-types";
 
 export default function* watcherSaga() {
     yield takeEvery(GET_SIMPLE_SEARCH, workerSaga);
@@ -42,12 +43,13 @@ function getDataSaga(args: any): Promise<any> {
     if (args.method === Method.POST && args.data) {
         apiParams['data'] = args.data;
         apiParams['headers'] = {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': args.contentType || ContentType.JSON,
+            'Authorization': args.authorization || null
         };
     }
 
-    // console.log('args', args);
-    console.log('api params', apiParams);
+    // console.log('api params args', args)
+    // console.log('api params apiParams', apiParams)
 
     return axios(apiParams);
 }
