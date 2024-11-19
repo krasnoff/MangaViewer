@@ -68,6 +68,7 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
         if (response.status === 200) {
             setWrongCredentialsErr(false);
             setGeneralErr(false);
+            navigation.goBack();
         }
     }, [data]);
 

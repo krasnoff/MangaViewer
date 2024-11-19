@@ -8,6 +8,8 @@ import { useNavigation } from "@react-navigation/native";
 import { ActionTypes } from "../enums/action-types";
 import { LogEventTypes } from "../enums/log-events-types";
 import analytics from '@react-native-firebase/analytics';
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 interface Props {
     status: number,
@@ -23,6 +25,9 @@ type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
 
 export function MangasList(props: Props) {
     const navigation = useNavigation<ItemScreenNavigationProp>();
+    const data = useSelector(state => (state as unknown as any).LoginResponse);
+    let routes: any = [];
+    let target = '';
     
     const toggleFavoritesHandler = (item: Daum) => {
         const prevArticleData = JSON.parse(JSON.stringify(props.articleData)) as Daum[];
@@ -43,8 +48,37 @@ export function MangasList(props: Props) {
     }
 
     const toggleBookmarksHandler = (item: Daum) => {
+      
+
       navigation.navigate('Login', {});
     }
+
+    useEffect(() => {
+      const unsubscribeBState = navigation.addListener("state", (e) => {
+        routes = e.data.state.routes;
+      });
+
+      const unsubscribeBeforeRemove = navigation.addListener("focus", (e) => {
+        target = e.target || '';
+        const index = routes.findIndex((element: any) => element.key === target);
+
+        if (index >= 0) {
+          if (routes[index + 1] && routes[index + 1].name === 'Login') {
+            // TODO handle something here
+            console.log('defenitally came back from index');
+          }
+        }
+      });
+
+      return () => {
+        unsubscribeBState();
+        unsubscribeBeforeRemove();
+      };
+    }, [navigation]);
+
+    useEffect(() => {
+      console.log('this is the login data:', data.loginResponse);
+  }, [data]);
 
     const logEvent = async (item: Daum, logEventType: LogEventTypes) => {
       await analytics().logEvent(logEventType, item)
