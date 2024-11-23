@@ -8,6 +8,7 @@ import ChaptersReducer from './reducers/chapters';
 import simpleSearchMiddleware from './middlewares/simpleSearch';
 import TagsListReducer from './reducers/tags-list';
 import LoginReducer from './reducers/login';
+import AddToReadListReducer from './reducers/add-to-read-list';
 
 //const storeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const initialiseSagaMiddleware = createSagaMiddleware();
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   ErrorResponse: ErrorSummeryReducer,
   ChaptersResponse: ChaptersReducer,
   TagsListResponse: TagsListReducer,
-  LoginResponse: LoginReducer
+  LoginResponse: LoginReducer,
+  AddToReadListResponse: AddToReadListReducer
 });
   
 const configureStore = () => {

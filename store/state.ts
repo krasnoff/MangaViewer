@@ -21,6 +21,10 @@ const initialState = {
     loginResponse: {
         error: null,
         result: []
+    },
+    addToReadListResponse: {
+        error: null,
+        result: []
     }
 };
 

@@ -48,9 +48,6 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
 
     // activates when this page is focused
     useEffect(() => {
-        console.log('on focus event - route', route);
-        // console.log('on focus event - navigation', navigation);
-        
         if (isFocused) {
             setWrongCredentialsErr(false);
             setGeneralErr(false);

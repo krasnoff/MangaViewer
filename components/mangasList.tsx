@@ -8,8 +8,10 @@ import { useNavigation } from "@react-navigation/native";
 import { ActionTypes } from "../enums/action-types";
 import { LogEventTypes } from "../enums/log-events-types";
 import analytics from '@react-native-firebase/analytics';
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { LoginData } from "../interfaces/login-data";
+import { addToReadList } from "../store/actions/add-to-read-list";
 
 interface Props {
     status: number,
@@ -24,10 +26,16 @@ interface Props {
 type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
 
 export function MangasList(props: Props) {
+    const [mangaId, setMangaId] = useState<Daum>();
     const navigation = useNavigation<ItemScreenNavigationProp>();
     const data = useSelector(state => (state as unknown as any).LoginResponse);
+    const dispatch = useDispatch();
+    const addToReadListData = useSelector(state => (state as unknown as any).AddToReadListResponse);
+    const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
     let routes: any = [];
     let target = '';
+    
+    let loginData: LoginData;
     
     const toggleFavoritesHandler = (item: Daum) => {
         const prevArticleData = JSON.parse(JSON.stringify(props.articleData)) as Daum[];
@@ -48,9 +56,17 @@ export function MangasList(props: Props) {
     }
 
     const toggleBookmarksHandler = (item: Daum) => {
+      if (!data.loginResponse.data) {
+        setMangaId(item);
+        navigation.navigate('Login', {});
+      } else {
+        dispatch(addToReadList(
+          'reading',
+          data.loginResponse.data.token_type + ' ' + data.loginResponse.data.access_token,
+          `${process.env.REACT_APP_BASE_URL}/manga/${mangaId?.id}/status`
+        ));
+      }
       
-
-      navigation.navigate('Login', {});
     }
 
     useEffect(() => {
@@ -64,8 +80,9 @@ export function MangasList(props: Props) {
 
         if (index >= 0) {
           if (routes[index + 1] && routes[index + 1].name === 'Login') {
-            // TODO handle something here
-            console.log('defenitally came back from index');
+            if (data.loginResponse.data) {
+              ToastAndroid.show('Now you can choose what to send to the reading list', ToastAndroid.SHORT);
+            }
           }
         }
       });
@@ -77,8 +94,23 @@ export function MangasList(props: Props) {
     }, [navigation]);
 
     useEffect(() => {
-      console.log('this is the login data:', data.loginResponse);
-  }, [data]);
+      loginData = data.loginResponse.data;
+    }, [data]);
+
+    /**
+     * handling successful request
+     */
+    useEffect(() => {
+      // console.log('addToReadListData', addToReadListData.addToReadListResponse);
+      ToastAndroid.show('Adding success', ToastAndroid.SHORT);
+    }, [addToReadListData]);
+
+    /**
+     * error handling in send request
+     */
+    useEffect(() => {
+      console.log('errorData', errorData)
+    }, [errorData]);
 
     const logEvent = async (item: Daum, logEventType: LogEventTypes) => {
       await analytics().logEvent(logEventType, item)
@@ -208,3 +240,4 @@ const styles = StyleSheet.create({
       paddingBottom: 8
     }
   });
+
