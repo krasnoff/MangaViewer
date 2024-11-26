@@ -4,13 +4,12 @@ import Icon from "../assets/icons/icon";
 import Loader from "./loader";
 import { Daum } from "../types/search-results";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { ActionTypes } from "../enums/action-types";
 import { LogEventTypes } from "../enums/log-events-types";
 import analytics from '@react-native-firebase/analytics';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { LoginData } from "../interfaces/login-data";
 import { addToReadList } from "../store/actions/add-to-read-list";
 
 interface Props {
@@ -32,10 +31,9 @@ export function MangasList(props: Props) {
     const dispatch = useDispatch();
     const addToReadListData = useSelector(state => (state as unknown as any).AddToReadListResponse);
     const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
+    const route = useRoute();
     let routes: any = [];
     let target = '';
-    
-    let loginData: LoginData;
     
     const toggleFavoritesHandler = (item: Daum) => {
         const prevArticleData = JSON.parse(JSON.stringify(props.articleData)) as Daum[];
@@ -58,7 +56,7 @@ export function MangasList(props: Props) {
     const toggleBookmarksHandler = (item: Daum) => {
       if (!data.loginResponse.data) {
         setMangaId(item);
-        navigation.navigate('Login', {});
+        navigation.navigate('Login', {item: item, sourcePage: route.name});
       } else {
         dispatch(addToReadList(
           'reading',
@@ -68,6 +66,13 @@ export function MangasList(props: Props) {
       }
       
     }
+
+    // gets answer from ligin screen
+    useEffect(() => {
+      if (route.params) {
+        console.log('route.params', route.params);
+      }
+    }, [route.params]);
 
     useEffect(() => {
       const unsubscribeBState = navigation.addListener("state", (e) => {
@@ -93,16 +98,14 @@ export function MangasList(props: Props) {
       };
     }, [navigation]);
 
-    useEffect(() => {
-      loginData = data.loginResponse.data;
-    }, [data]);
-
     /**
      * handling successful request
      */
     useEffect(() => {
       // console.log('addToReadListData', addToReadListData.addToReadListResponse);
       ToastAndroid.show('Adding success', ToastAndroid.SHORT);
+
+      // TODO add method to refresh page
     }, [addToReadListData]);
 
     /**

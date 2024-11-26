@@ -10,12 +10,13 @@ import { getLogin } from '../../store/actions/login';
 import { useEffect, useState } from 'react';
 import { AxiosError, AxiosResponse } from 'axios';
 import Loader from '../../components/loader';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 
-function LoginScreen({ route, navigation }: any): JSX.Element {
+function LoginScreen({ route }: any): JSX.Element {
     const dispatch = useDispatch();
     const data = useSelector(state => (state as unknown as any).LoginResponse);
     const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
+    const navigation = useNavigation<any>();
     const [wrongCredentialsErr, setWrongCredentialsErr] = useState<boolean>(false);
     const [generalErr, setGeneralErr] = useState<boolean>(false);
     const [isLogging, setIsLogging] = useState<boolean>(false);
@@ -46,6 +47,13 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
         }))
     }
 
+    // Use an effect to monitor the update to params
+    useEffect(() => {
+        if (route.params) {
+            console.log('item', route.params);
+        }
+    }, [route.params]);
+
     // activates when this page is focused
     useEffect(() => {
         if (isFocused) {
@@ -65,7 +73,13 @@ function LoginScreen({ route, navigation }: any): JSX.Element {
         if (response.status === 200) {
             setWrongCredentialsErr(false);
             setGeneralErr(false);
-            navigation.goBack();
+            
+            // Pass and merge params back to home screen
+            navigation.navigate({
+                name: route.params?.sourcePage,
+                params: { item: route.params?.item },
+                merge: true,
+            });
         }
     }, [data]);
 
