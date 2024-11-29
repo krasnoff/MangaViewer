@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { AxiosError, AxiosResponse } from 'axios';
 import Loader from '../../components/loader';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { DirectionType } from '../../enums/direction-type';
 
 function LoginScreen({ route }: any): JSX.Element {
     const dispatch = useDispatch();
@@ -75,11 +76,19 @@ function LoginScreen({ route }: any): JSX.Element {
             setGeneralErr(false);
             
             // Pass and merge params back to home screen
-            navigation.navigate({
-                name: route.params?.sourcePage,
-                params: { item: route.params?.item },
-                merge: true,
-            });
+            if (route.params?.direction === DirectionType.BACK) {
+                navigation.navigate({
+                    name: route.params?.sourcePage,
+                    params: { item: route.params?.item, response: response.data },
+                    merge: true,
+                });
+            } else {
+                navigation.navigate({
+                    name: route.params?.sourcePage,
+                    params: { item: route.params?.item, response: response.data },
+                });
+            }
+            
         }
     }, [data]);
 

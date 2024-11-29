@@ -11,6 +11,7 @@ import analytics from '@react-native-firebase/analytics';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToReadList } from "../store/actions/add-to-read-list";
+import { DirectionType } from "../enums/direction-type";
 
 interface Props {
     status: number,
@@ -32,9 +33,7 @@ export function MangasList(props: Props) {
     const addToReadListData = useSelector(state => (state as unknown as any).AddToReadListResponse);
     const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
     const route = useRoute();
-    let routes: any = [];
-    let target = '';
-    
+        
     const toggleFavoritesHandler = (item: Daum) => {
         const prevArticleData = JSON.parse(JSON.stringify(props.articleData)) as Daum[];
         const chosenManga = prevArticleData.find(el => el.id === item.id);
@@ -56,7 +55,7 @@ export function MangasList(props: Props) {
     const toggleBookmarksHandler = (item: Daum) => {
       if (!data.loginResponse.data) {
         setMangaId(item);
-        navigation.navigate('Login', {item: item, sourcePage: route.name});
+        navigation.navigate('Login', {item: item, sourcePage: route.name, direction: DirectionType.BACK});
       } else {
         dispatch(addToReadList(
           'reading',
@@ -67,36 +66,22 @@ export function MangasList(props: Props) {
       
     }
 
-    // gets answer from ligin screen
+    // gets answer from login screen
     useEffect(() => {
       if (route.params) {
         console.log('route.params', route.params);
+
+        if ((route.params as any).response && (route.params as any).item) {
+          const response = (route.params as any).response;
+          const item = (route.params as any).item;
+          dispatch(addToReadList(
+            'reading',
+            response.token_type + ' ' + response.access_token,
+            `${process.env.REACT_APP_BASE_URL}/manga/${item?.id}/status`
+          ));
+        }
       }
     }, [route.params]);
-
-    useEffect(() => {
-      const unsubscribeBState = navigation.addListener("state", (e) => {
-        routes = e.data.state.routes;
-      });
-
-      const unsubscribeBeforeRemove = navigation.addListener("focus", (e) => {
-        target = e.target || '';
-        const index = routes.findIndex((element: any) => element.key === target);
-
-        if (index >= 0) {
-          if (routes[index + 1] && routes[index + 1].name === 'Login') {
-            if (data.loginResponse.data) {
-              ToastAndroid.show('Now you can choose what to send to the reading list', ToastAndroid.SHORT);
-            }
-          }
-        }
-      });
-
-      return () => {
-        unsubscribeBState();
-        unsubscribeBeforeRemove();
-      };
-    }, [navigation]);
 
     /**
      * handling successful request
@@ -104,7 +89,7 @@ export function MangasList(props: Props) {
     useEffect(() => {
       // console.log('addToReadListData', addToReadListData.addToReadListResponse);
       ToastAndroid.show('Adding success', ToastAndroid.SHORT);
-
+      console.log('Adding success');
       // TODO add method to refresh page
     }, [addToReadListData]);
 
