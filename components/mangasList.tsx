@@ -57,6 +57,12 @@ export function MangasList(props: Props) {
         setMangaId(item);
         navigation.navigate('Login', {item: item, sourcePage: route.name, direction: DirectionType.BACK});
       } else {
+        const temp = addToReadList(
+          'reading',
+          data.loginResponse.data.token_type + ' ' + data.loginResponse.data.access_token,
+          `${process.env.REACT_APP_BASE_URL}/manga/${mangaId?.id}/status`
+        );
+        
         dispatch(addToReadList(
           'reading',
           data.loginResponse.data.token_type + ' ' + data.loginResponse.data.access_token,
