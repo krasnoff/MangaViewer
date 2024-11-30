@@ -12,6 +12,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import Loader from '../../components/loader';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { DirectionType } from '../../enums/direction-type';
+import { useStorage } from '../../hooks/useStorage';
 
 function LoginScreen({ route }: any): JSX.Element {
     const dispatch = useDispatch();
@@ -23,6 +24,7 @@ function LoginScreen({ route }: any): JSX.Element {
     const [isLogging, setIsLogging] = useState<boolean>(false);
     const isFocused = useIsFocused();
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
+    const {storeData, loadData, dispatchFromPropsFunc} = useStorage();
     
     const {
         control,
@@ -41,6 +43,7 @@ function LoginScreen({ route }: any): JSX.Element {
         setIsSubmit(true);
         setWrongCredentialsErr(false);
         setGeneralErr(false);
+
         dispatch(getLogin({
             email: data.email,
             password: data.password,
@@ -74,6 +77,10 @@ function LoginScreen({ route }: any): JSX.Element {
         if (response.status === 200) {
             setWrongCredentialsErr(false);
             setGeneralErr(false);
+
+            if (control._formValues.rememberMe) {
+                storeData('userCredentials', data.loginResponse);
+            }
             
             // Pass and merge params back to home screen
             if (route.params?.direction === DirectionType.BACK) {

@@ -14,6 +14,7 @@ export const TAGS_LIST_LOADED = "TAGS_LIST_LOADED";
 export const TAGS_LIST_PARSED = "TAGS_LIST_PARSED";
 
 export const POST_LOGIN = "POST_LOGIN";
+export const POST_LOGIN_CACHE = "POST_LOGIN_CACHE";
 export const LOGIN_LOADED = "LOGIN_LOADED";
 
 export const POST_ADD_TO_READ_LIST = "POST_ADD_TO_READ_LIST";

@@ -1,4 +1,4 @@
-import { ParamListBase, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";

@@ -1,7 +1,7 @@
-import { ImageBackground, SafeAreaView, StatusBar, StyleSheet, ToastAndroid } from "react-native";
+import { ImageBackground, SafeAreaView, StatusBar, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getSimpleSearch } from "../../store/actions/simpleSearch";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BACKGROUND_IMAGE } from "../../assets/images";
 import { Daum } from "../../types/search-results";
 import { useUtilData } from "../../hooks/useParseData";
@@ -12,7 +12,8 @@ import { MangasList } from "../../components/mangasList";
 import { ActionTypes } from "../../enums/action-types";
 import crashlytics from '@react-native-firebase/crashlytics';
 import { getTagsList } from "../../store/actions/tags-list";
-import { Daum2, TagsList } from "../../types/tags";
+import { Daum2 } from "../../types/tags";
+import { getLoginFromCache } from "../../store/actions/login-from-cache";
 
 export function HomeScreen({ route, navigation }: any) {
   const dispatch = useDispatch();
@@ -34,10 +35,18 @@ export function HomeScreen({ route, navigation }: any) {
 
   const isFocused = useIsFocused();
 
+  // initial load
+  useEffect(() => {
+    loadData('userCredentials').then((userCredentialData) => {
+      if (userCredentialData) {
+        dispatch(getLoginFromCache(JSON.parse(userCredentialData as string)))
+      }
+    });
+    
+  }, [])
+
   useEffect(() => {
     if (isFocused) {
-      
-
       dispatch(getTagsList());
     }
   }, [isFocused, route.params]);
