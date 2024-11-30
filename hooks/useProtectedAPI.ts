@@ -15,22 +15,13 @@ const useProtectedAPI = () => {
     const navigation = useNavigation<ItemScreenNavigationProp>();
     const route = useRoute();
 
-    let accessToken: string;
-    let refreshToken: string;
-    let tokenType: string;
-
-    /**
-     * get tokens
-     */
-    useEffect(() => {
-        accessToken = loginResponseData.loginResponse?.data ? loginResponseData.loginResponse.data.access_token : '';
-        refreshToken = loginResponseData.loginResponse?.data ? loginResponseData.loginResponse.data.refresh_token : '';
-        tokenType = loginResponseData.loginResponse?.data ? loginResponseData.loginResponse.data.token_type : '';
-    }, [loginResponseData]);
-
     // checks if have token - if not then goto login screen
     const dispatchAction = (action: UnknownAction, item: Daum, direction: DirectionType) => {
-        if (accessToken && refreshToken && tokenType) {
+        if (loginResponseData.loginResponse?.data?.access_token && 
+            loginResponseData.loginResponse?.data?.refresh_token && 
+            loginResponseData.loginResponse?.data?.token_type) {
+            action.authorization = loginResponseData.loginResponse?.data?.token_type + ' ' + loginResponseData.loginResponse?.data?.access_token;
+            action.url = `${process.env.REACT_APP_BASE_URL}/manga/${item?.id}/status`;
             dispatch(action);
         } else {
             navigation.navigate('Login', {item: item, sourcePage: route.name, direction: direction, action: action});
@@ -56,7 +47,7 @@ const useProtectedAPI = () => {
      * error handling in send request
      */
     useEffect(() => {
-        console.log('errorData', errorData)
+        console.log('errorData from hook', errorData.error)
     }, [errorData]);
 
     return { dispatchAction };
