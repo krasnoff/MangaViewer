@@ -8,10 +8,11 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { ActionTypes } from "../enums/action-types";
 import { LogEventTypes } from "../enums/log-events-types";
 import analytics from '@react-native-firebase/analytics';
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { addToReadList } from "../store/actions/add-to-read-list";
 import { DirectionType } from "../enums/direction-type";
+import { useProtectedAPI } from "../hooks/useProtectedAPI";
 
 interface Props {
     status: number,
@@ -26,13 +27,11 @@ interface Props {
 type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
 
 export function MangasList(props: Props) {
-    const [mangaId, setMangaId] = useState<Daum>();
     const navigation = useNavigation<ItemScreenNavigationProp>();
-    const data = useSelector(state => (state as unknown as any).LoginResponse);
-    const dispatch = useDispatch();
     const addToReadListData = useSelector(state => (state as unknown as any).AddToReadListResponse);
     const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
-    const route = useRoute();
+    
+    const protectedAPI = useProtectedAPI();
         
     const toggleFavoritesHandler = (item: Daum) => {
         const prevArticleData = JSON.parse(JSON.stringify(props.articleData)) as Daum[];
@@ -52,42 +51,18 @@ export function MangasList(props: Props) {
         props.setArticleData(prevArticleData);
     }
 
+    /**
+     * initiate add to bookmark call to API
+     * @param item item id to bookmark
+     */
     const toggleBookmarksHandler = (item: Daum) => {
-      if (!data.loginResponse.data) {
-        setMangaId(item);
-        navigation.navigate('Login', {item: item, sourcePage: route.name, direction: DirectionType.BACK});
-      } else {
-        const temp = addToReadList(
-          'reading',
-          data.loginResponse.data.token_type + ' ' + data.loginResponse.data.access_token,
-          `${process.env.REACT_APP_BASE_URL}/manga/${mangaId?.id}/status`
-        );
-        
-        dispatch(addToReadList(
-          'reading',
-          data.loginResponse.data.token_type + ' ' + data.loginResponse.data.access_token,
-          `${process.env.REACT_APP_BASE_URL}/manga/${mangaId?.id}/status`
-        ));
-      }
-      
+      const action = addToReadList(
+        'reading',
+        '',
+        `${process.env.REACT_APP_BASE_URL}/manga//status`
+      )
+      protectedAPI.dispatchAction(action, item, DirectionType.BACK);
     }
-
-    // gets answer from login screen
-    useEffect(() => {
-      if (route.params) {
-        console.log('route.params', route.params);
-
-        if ((route.params as any).response && (route.params as any).item) {
-          const response = (route.params as any).response;
-          const item = (route.params as any).item;
-          dispatch(addToReadList(
-            'reading',
-            response.token_type + ' ' + response.access_token,
-            `${process.env.REACT_APP_BASE_URL}/manga/${item?.id}/status`
-          ));
-        }
-      }
-    }, [route.params]);
 
     /**
      * handling successful request
@@ -106,6 +81,11 @@ export function MangasList(props: Props) {
       console.log('errorData', errorData)
     }, [errorData]);
 
+    /**
+     * trigger log event
+     * @param item 
+     * @param logEventType 
+     */
     const logEvent = async (item: Daum, logEventType: LogEventTypes) => {
       await analytics().logEvent(logEventType, item)
     }

@@ -19,14 +19,16 @@ const useProtectedAPI = () => {
     let refreshToken: string;
     let tokenType: string;
 
-
-
+    /**
+     * get tokens
+     */
     useEffect(() => {
-        accessToken = loginResponseData.access_token;
-        refreshToken = loginResponseData.refresh_token;
-        tokenType = loginResponseData.token_type;
+        accessToken = loginResponseData.loginResponse?.data ? loginResponseData.loginResponse.data.access_token : '';
+        refreshToken = loginResponseData.loginResponse?.data ? loginResponseData.loginResponse.data.refresh_token : '';
+        tokenType = loginResponseData.loginResponse?.data ? loginResponseData.loginResponse.data.token_type : '';
     }, [loginResponseData]);
 
+    // checks if have token - if not then goto login screen
     const dispatchAction = (action: UnknownAction, item: Daum, direction: DirectionType) => {
         if (accessToken && refreshToken && tokenType) {
             dispatch(action);
@@ -38,8 +40,6 @@ const useProtectedAPI = () => {
     // gets answer from login screen
     useEffect(() => {
         if (route.params) {
-          console.log('route.params', route.params);
-  
           if ((route.params as any).response && (route.params as any).item && (route.params as any).action) {
             const response = (route.params as any).response;
             const item = (route.params as any).item;
@@ -51,6 +51,13 @@ const useProtectedAPI = () => {
           }
         }
     }, [route.params]);
+
+    /**
+     * error handling in send request
+     */
+    useEffect(() => {
+        console.log('errorData', errorData)
+    }, [errorData]);
 
     return { dispatchAction };
 }
