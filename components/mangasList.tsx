@@ -68,6 +68,7 @@ export function MangasList(props: Props) {
      * handling successful request
      */
     useEffect(() => {
+      // TODO check first if really add somthing
       // console.log('addToReadListData', addToReadListData.addToReadListResponse);
       ToastAndroid.show('Adding success', ToastAndroid.SHORT);
       // console.log('Adding success', addToReadListData);
