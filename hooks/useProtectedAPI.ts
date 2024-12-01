@@ -47,8 +47,16 @@ const useProtectedAPI = () => {
      * error handling in send request
      */
     useEffect(() => {
-        console.log('errorData from hook', errorData.error)
-    }, [errorData]);
+        const errorMsg = errorData.error;
+        if (errorMsg instanceof Error) {
+            const error: Error = errorMsg;
+            if (error.name === 'AxiosError' && error.message === 'Request failed with status code 401') {
+
+            }
+        } else {
+            console.error('Invalid error object:', errorMsg);
+        }
+    }, [errorData.error]);
 
     return { dispatchAction };
 }

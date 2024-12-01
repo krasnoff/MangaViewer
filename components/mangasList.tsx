@@ -78,7 +78,7 @@ export function MangasList(props: Props) {
      * error handling in send request
      */
     useEffect(() => {
-      console.log('errorData from manga component', errorData.error)
+      //console.log('errorData from manga component', errorData.error)
     }, [errorData]);
 
     /**

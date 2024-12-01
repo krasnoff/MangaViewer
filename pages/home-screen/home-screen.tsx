@@ -35,7 +35,7 @@ export function HomeScreen({ route, navigation }: any) {
 
   const isFocused = useIsFocused();
 
-  // initial load
+  // initial load - load data from persistrant storage regarding login data
   useEffect(() => {
     loadData('userCredentials').then((userCredentialData) => {
       if (userCredentialData) {
