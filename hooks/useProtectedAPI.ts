@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { UnknownAction } from "redux";
 import { Daum } from "../types/search-results";
 import { DirectionType } from "../enums/direction-type";
+import { getRefreshToken } from "../store/actions/refreshTokenLogin";
 
 type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
 
@@ -51,12 +52,24 @@ const useProtectedAPI = () => {
         if (errorMsg instanceof Error) {
             const error: Error = errorMsg;
             if (error.name === 'AxiosError' && error.message === 'Request failed with status code 401') {
-
+                if (loginResponseData.loginResponse?.data?.refresh_token) {
+                    const action = {
+                        refreshToken: loginResponseData.loginResponse?.data?.refresh_token
+                    }
+                    dispatch(getRefreshToken(action));
+                }
             }
         } else {
             console.error('Invalid error object:', errorMsg);
         }
     }, [errorData.error]);
+
+    /**
+     * success refresh login call 
+     */
+    useEffect(() => {
+        console.log('success refresh login call', loginResponseData);
+    }, [loginResponseData]);
 
     return { dispatchAction };
 }
