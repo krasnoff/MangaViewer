@@ -70,7 +70,7 @@ export function MangasList(props: Props) {
     useEffect(() => {
       // console.log('addToReadListData', addToReadListData.addToReadListResponse);
       ToastAndroid.show('Adding success', ToastAndroid.SHORT);
-      console.log('Adding success');
+      // console.log('Adding success', addToReadListData);
       // TODO add method to refresh page
     }, [addToReadListData]);
 

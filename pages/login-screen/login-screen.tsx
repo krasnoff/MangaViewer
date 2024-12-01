@@ -44,6 +44,7 @@ function LoginScreen({ route }: any): JSX.Element {
         setWrongCredentialsErr(false);
         setGeneralErr(false);
 
+        // console.log('getlogin...', data)
         dispatch(getLogin({
             email: data.email,
             password: data.password,

@@ -39,6 +39,7 @@ export function HomeScreen({ route, navigation }: any) {
   useEffect(() => {
     loadData('userCredentials').then((userCredentialData) => {
       if (userCredentialData) {
+        // console.log('now loading from cache...', userCredentialData)
         dispatch(getLoginFromCache(JSON.parse(userCredentialData as string)))
       }
     });

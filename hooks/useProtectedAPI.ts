@@ -56,8 +56,11 @@ const useProtectedAPI = () => {
                     const action = {
                         refreshToken: loginResponseData.loginResponse?.data?.refresh_token
                     }
+                    // console.log('call refresh...', action);
                     dispatch(getRefreshToken(action));
                 }
+            } else {
+                console.log('other error:', error.name, error.message);
             }
         } else {
             console.error('Invalid error object:', errorMsg);
@@ -68,8 +71,9 @@ const useProtectedAPI = () => {
      * success refresh login call 
      */
     useEffect(() => {
-        console.log('success refresh login call', loginResponseData);
-    }, [loginResponseData]);
+        console.log('success refresh login call', loginResponseData.loginResponse);
+        // TODO - verify that the source is really from refresh
+    }, [loginResponseData.loginResponse]);
 
     return { dispatchAction };
 }
