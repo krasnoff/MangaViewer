@@ -71,8 +71,10 @@ const useProtectedAPI = () => {
      * success refresh login call 
      */
     useEffect(() => {
-        console.log('success refresh login call', loginResponseData.loginResponse);
-        // TODO - verify that the source is really from refresh
+        
+        if (loginResponseData.loginResponse.config?.data.toString().indexOf('refresh_token') > 0) {
+            console.log('success refresh login call', loginResponseData.loginResponse);
+        }
     }, [loginResponseData.loginResponse]);
 
     return { dispatchAction };
