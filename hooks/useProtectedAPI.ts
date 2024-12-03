@@ -17,15 +17,16 @@ const useProtectedAPI = () => {
     const route = useRoute();
 
     // checks if have token - if not then goto login screen
-    const dispatchAction = (action: UnknownAction, item: Daum, direction: DirectionType) => {
+    const dispatchAction = (action: UnknownAction, item: Daum, direction: DirectionType, urlAddr: string) => {
         if (loginResponseData.loginResponse?.data?.access_token && 
             loginResponseData.loginResponse?.data?.refresh_token && 
             loginResponseData.loginResponse?.data?.token_type) {
             action.authorization = loginResponseData.loginResponse?.data?.token_type + ' ' + loginResponseData.loginResponse?.data?.access_token;
-            action.url = `${process.env.REACT_APP_BASE_URL}/manga/${item?.id}/status`;
+            urlAddr = urlAddr.replace('<id>', item?.id);
+            action.url = `${process.env.REACT_APP_BASE_URL}${urlAddr}`;
             dispatch(action);
         } else {
-            navigation.navigate('Login', {item: item, sourcePage: route.name, direction: direction, action: action});
+            navigation.navigate('Login', {item: item, sourcePage: route.name, direction: direction, action: action, urlAddr: urlAddr});
         }
     };
 
@@ -34,11 +35,11 @@ const useProtectedAPI = () => {
         if (route.params) {
           if ((route.params as any).response && (route.params as any).item && (route.params as any).action) {
             const response = (route.params as any).response;
-            const item = (route.params as any).item;
             const action = (route.params as any).action;
+            const urlAddr = (route.params as any).urlAddr;
 
             action.authorization = response.token_type + ' ' + response.access_token;
-            action.url = `${process.env.REACT_APP_BASE_URL}/manga/${item?.id}/status`;
+            action.url = `${process.env.REACT_APP_BASE_URL}${urlAddr}`;
             dispatch(action);
           }
         }
@@ -63,7 +64,10 @@ const useProtectedAPI = () => {
                 console.log('other error:', error.name, error.message);
             }
         } else {
-            console.error('Invalid error object:', errorMsg);
+            if (errorMsg?.error) {
+                console.error('Invalid error object:', errorMsg?.error);
+            }
+            
         }
     }, [errorData.error]);
 
@@ -75,6 +79,7 @@ const useProtectedAPI = () => {
         if (loginResponseData.loginResponse.config?.data.toString().indexOf('refresh_token') > 0) {
             console.log('success refresh login call', loginResponseData.loginResponse);
             // TODO - now redispatch the API defined
+
         }
     }, [loginResponseData.loginResponse]);
 

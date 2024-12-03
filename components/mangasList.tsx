@@ -61,16 +61,17 @@ export function MangasList(props: Props) {
         '',
         `${process.env.REACT_APP_BASE_URL}/manga//status`
       )
-      protectedAPI.dispatchAction(action, item, DirectionType.BACK);
+      protectedAPI.dispatchAction(action, item, DirectionType.BACK, '/manga/<id>/status');
     }
 
     /**
      * handling successful request
      */
     useEffect(() => {
-      if (addToReadListData.addToReadListResponse && addToReadListData.addToReadListResponse?.result.length > 0) {
+      if (addToReadListData.addToReadListResponse) {
         ToastAndroid.show('Adding success', ToastAndroid.SHORT);
         console.log('Adding success', addToReadListData);
+        // TODO - now get the list of saved items
       }
     }, [addToReadListData]);
 

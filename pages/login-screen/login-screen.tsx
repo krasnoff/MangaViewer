@@ -87,7 +87,7 @@ function LoginScreen({ route }: any): JSX.Element {
             if (route.params?.direction === DirectionType.BACK) {
                 navigation.navigate({
                     name: route.params?.sourcePage,
-                    params: { item: route.params?.item, response: response.data, action: route.params?.action },
+                    params: { item: route.params?.item, response: response.data, action: route.params?.action, urlAddr: route.params?.urlAddr },
                     merge: true,
                 });
             } else {
