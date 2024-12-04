@@ -70,7 +70,7 @@ export function MangasList(props: Props) {
     useEffect(() => {
       if (addToReadListData.addToReadListResponse) {
         ToastAndroid.show('Adding success', ToastAndroid.SHORT);
-        console.log('Adding success', addToReadListData);
+        console.log('Adding success', addToReadListData.addToReadListResponse);
         // TODO - now get the list of saved items
       }
     }, [addToReadListData]);

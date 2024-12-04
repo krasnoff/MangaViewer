@@ -25,6 +25,10 @@ const initialState = {
     addToReadListResponse: {
         error: null,
         result: []
+    },
+    getReadListResponse: {
+        error: null,
+        result: []
     }
 };
 
