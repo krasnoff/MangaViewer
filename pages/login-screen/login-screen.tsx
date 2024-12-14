@@ -84,13 +84,17 @@ function LoginScreen({ route }: any): JSX.Element {
             }
             
             // Pass and merge params back to home screen
-            if (route.params?.direction === DirectionType.BACK) {
+            // TODO - add clear form fields when login success
+            if (route.params?.direction === DirectionType.BACK && 
+                control._formValues.email !== '' && 
+                control._formValues.password !== ''
+            ) {
                 navigation.navigate({
                     name: route.params?.sourcePage,
                     params: { item: route.params?.item, response: response.data, action: route.params?.action, urlAddr: route.params?.urlAddr },
                     merge: true,
                 });
-            } else {
+            } else if (control._formValues.email !== '' && control._formValues.password !== '') {
                 navigation.navigate({
                     name: route.params?.sourcePage,
                     params: { item: route.params?.item, response: response.data },

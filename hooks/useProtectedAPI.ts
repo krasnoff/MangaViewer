@@ -6,8 +6,15 @@ import { UnknownAction } from "redux";
 import { Daum } from "../types/search-results";
 import { DirectionType } from "../enums/direction-type";
 import { getRefreshToken } from "../store/actions/refreshTokenLogin";
+import { resetLoginThunk } from "../store/middlewares/resetLoginThunk";
+import { resetLogin } from "../store/actions/reset-login";
 
 type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
+
+let globalAction: UnknownAction;
+let globalItem: Daum;
+let globalDirection: DirectionType;
+let globalUrlAddr: string;
 
 const useProtectedAPI = () => {
     const loginResponseData = useSelector(state => (state as unknown as any).LoginResponse);
@@ -17,7 +24,12 @@ const useProtectedAPI = () => {
     const route = useRoute();
 
     // checks if have token - if not then goto login screen
-    const dispatchAction = (action: UnknownAction, item: Daum, direction: DirectionType, urlAddr: string) => {
+    const dispatchAction = async (action: UnknownAction, item: Daum, direction: DirectionType, urlAddr: string) => {
+        globalAction = action;
+        globalItem = item;
+        globalDirection = direction;
+        globalUrlAddr = urlAddr;
+
         if (loginResponseData.loginResponse?.data?.access_token && 
             loginResponseData.loginResponse?.data?.refresh_token && 
             loginResponseData.loginResponse?.data?.token_type) {
@@ -26,6 +38,8 @@ const useProtectedAPI = () => {
             action.url = `${process.env.REACT_APP_BASE_URL}${urlAddr}`;
             dispatch(action);
         } else {
+            // TODO - clear login data and only then login
+            const updatedData = await dispatch(resetLogin());
             navigation.navigate('Login', {item: item, sourcePage: route.name, direction: direction, action: action, urlAddr: urlAddr});
         }
     };
@@ -60,6 +74,8 @@ const useProtectedAPI = () => {
                     // console.log('call refresh...', action);
                     dispatch(getRefreshToken(action));
                 }
+            } else if (error.name === 'AxiosError' && error.message === 'Request failed with status code 400') {
+                navigation.navigate('Login', {item: globalItem, sourcePage: route.name, direction: globalDirection, action: globalAction, urlAddr: globalUrlAddr});
             } else {
                 console.log('other error:', error.name, error.message);
             }

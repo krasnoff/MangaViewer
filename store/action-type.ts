@@ -17,6 +17,8 @@ export const POST_LOGIN = "POST_LOGIN";
 export const POST_LOGIN_CACHE = "POST_LOGIN_CACHE";
 export const LOGIN_LOADED = "LOGIN_LOADED";
 
+export const RESET_LOGIN = "RESET_LOGIN";
+
 export const POST_ADD_TO_READ_LIST = "POST_ADD_TO_READ_LIST";
 export const ADD_TO_READ_LIST_LOADED = "ADD_TO_READ_LIST_LOADED";
 
