@@ -85,6 +85,7 @@ function LoginScreen({ route }: any): JSX.Element {
             
             // Pass and merge params back to home screen
             // TODO - add clear form fields when login success
+            // TODO - remove thunk
             if (route.params?.direction === DirectionType.BACK && 
                 control._formValues.email !== '' && 
                 control._formValues.password !== ''

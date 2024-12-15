@@ -10,7 +10,6 @@ import TagsListReducer from './reducers/tags-list';
 import LoginReducer from './reducers/login';
 import AddToReadListReducer from './reducers/add-to-read-list';
 import GetReadListReducer from './reducers/get-read-list';
-import { thunk } from 'redux-thunk';
 
 //const storeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const initialiseSagaMiddleware = createSagaMiddleware();
@@ -29,7 +28,7 @@ const rootReducer = combineReducers({
 const configureStore = () => {
     return { ...createStore(
       rootReducer,
-      applyMiddleware(initialiseSagaMiddleware, feedMiddleware, simpleSearchMiddleware, thunk)), 
+      applyMiddleware(initialiseSagaMiddleware, feedMiddleware, simpleSearchMiddleware)), 
       runSaga: initialiseSagaMiddleware.run
     }
 }

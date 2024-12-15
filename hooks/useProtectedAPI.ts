@@ -6,8 +6,6 @@ import { UnknownAction } from "redux";
 import { Daum } from "../types/search-results";
 import { DirectionType } from "../enums/direction-type";
 import { getRefreshToken } from "../store/actions/refreshTokenLogin";
-import { resetLoginThunk } from "../store/middlewares/resetLoginThunk";
-import { resetLogin } from "../store/actions/reset-login";
 
 type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
 
@@ -38,8 +36,6 @@ const useProtectedAPI = () => {
             action.url = `${process.env.REACT_APP_BASE_URL}${urlAddr}`;
             dispatch(action);
         } else {
-            // TODO - clear login data and only then login
-            const updatedData = await dispatch(resetLogin());
             navigation.navigate('Login', {item: item, sourcePage: route.name, direction: direction, action: action, urlAddr: urlAddr});
         }
     };
