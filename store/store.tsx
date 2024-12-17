@@ -10,6 +10,7 @@ import TagsListReducer from './reducers/tags-list';
 import LoginReducer from './reducers/login';
 import AddToReadListReducer from './reducers/add-to-read-list';
 import GetReadListReducer from './reducers/get-read-list';
+import GetReadListStoreReducer from './reducers/get-read-list-store';
 
 //const storeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const initialiseSagaMiddleware = createSagaMiddleware();
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
   TagsListResponse: TagsListReducer,
   LoginResponse: LoginReducer,
   AddToReadListResponse: AddToReadListReducer,
-  GetReadListReducerResponse: GetReadListReducer
+  GetReadListReducerResponse: GetReadListReducer,
+  GetReadListStoreResponse: GetReadListStoreReducer,
 });
   
 const configureStore = () => {
