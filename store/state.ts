@@ -29,6 +29,10 @@ const initialState = {
     getReadListResponse: {
         error: null,
         result: []
+    },
+    readListStoredResponse: {
+        error: null,
+        result: []
     }
 };
 
