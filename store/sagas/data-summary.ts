@@ -12,6 +12,7 @@ export default function* watcherSaga() {
     yield takeEvery(GET_TAGS_LIST, workerSaga);
     yield takeEvery(POST_LOGIN, workerSaga);
     yield takeEvery(POST_ADD_TO_READ_LIST, workerSaga);
+    yield takeEvery(GET_READ_LIST_STORED, workerSaga);
 }
 
 /**
