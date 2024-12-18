@@ -29,6 +29,7 @@ type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
 export function MangasList(props: Props) {
     const navigation = useNavigation<ItemScreenNavigationProp>();
     const addToReadListData = useSelector(state => (state as unknown as any).AddToReadListResponse);
+    const getReadListStoreResponse = useSelector(state => (state as unknown as any).GetReadListStoreResponse);
     const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
     
     const protectedAPI = useProtectedAPI();
@@ -83,6 +84,15 @@ export function MangasList(props: Props) {
         const action = getReadListStore();
         protectedAPI.dispatchAction(action, null, DirectionType.BACK, '/manga/status');
     }
+
+    /**
+     * handling successful request - list
+     */
+    useEffect(() => {
+      if (getReadListStoreResponse.addToReadListResponse) {
+        console.log('get list success', getReadListStoreResponse.addToReadListResponse);
+      }
+    }, [getReadListStoreResponse]);
 
     /**
      * error handling in send request
