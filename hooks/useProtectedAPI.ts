@@ -21,7 +21,13 @@ const useProtectedAPI = () => {
     const navigation = useNavigation<ItemScreenNavigationProp>();
     const route = useRoute();
 
-    // checks if have token - if not then goto login screen
+    /**
+     * checks if have token - if not then goto login screen
+     * @param action - redux action to be dispatch
+     * @param item - parameters for the disaptch action
+     * @param direction - defines where will you go after successful login: backword of forward
+     * @param urlAddr - URL API to be send after successful request
+     */
     const dispatchAction = async (action: UnknownAction, item: Daum, direction: DirectionType, urlAddr: string) => {
         globalAction = action;
         globalItem = item;
