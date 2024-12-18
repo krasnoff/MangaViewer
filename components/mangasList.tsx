@@ -77,6 +77,7 @@ export function MangasList(props: Props) {
 
     const getReadListStore = () => {
         const action = getReadListStore();
+        protectedAPI.dispatchAction(action, null, DirectionType.BACK, '/manga/status');
     }
 
     /**
