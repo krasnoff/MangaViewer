@@ -75,6 +75,10 @@ export function MangasList(props: Props) {
       }
     }, [addToReadListData]);
 
+    const getReadListStore = () => {
+        const action = getReadListStore();
+    }
+
     /**
      * error handling in send request
      */
