@@ -72,9 +72,13 @@ export function MangasList(props: Props) {
         ToastAndroid.show('Adding success', ToastAndroid.SHORT);
         // console.log('Adding success', addToReadListData.addToReadListResponse);
         // TODO - now get the list of saved items
+        getReadListStore();
       }
     }, [addToReadListData]);
 
+    /**
+     * get the list of saved items
+     */
     const getReadListStore = () => {
         const action = getReadListStore();
         protectedAPI.dispatchAction(action, null, DirectionType.BACK, '/manga/status');
