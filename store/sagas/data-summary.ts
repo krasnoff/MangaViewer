@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { API_ERRORED, GET_CHAPTERS, GET_FEED, GET_SIMPLE_SEARCH, GET_TAGS_LIST, POST_ADD_TO_READ_LIST, POST_LOGIN } from "../action-type";
+import { API_ERRORED, GET_CHAPTERS, GET_FEED, GET_READ_LIST_STORED, GET_SIMPLE_SEARCH, GET_TAGS_LIST, POST_ADD_TO_READ_LIST, POST_LOGIN } from "../action-type";
 import axios from "axios";
 import { APIParams } from "../../types/api-params";
 import { Method } from "../../enums/method";
@@ -47,6 +47,12 @@ function getDataSaga(args: any): Promise<any> {
         apiParams['headers'] = {
             'Content-Type': args.contentType || ContentType.JSON,
             'Authorization': args.authorization || null
+        };
+    }
+
+    if (args.method === Method.GET && args.authorization) {
+        apiParams['headers'] = {
+            'Authorization': args.authorization
         };
     }
 
