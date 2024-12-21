@@ -55,7 +55,7 @@ function LoginScreen({ route }: any): JSX.Element {
     // Use an effect to monitor the update to params
     useEffect(() => {
         if (route.params) {
-            console.log('item', route.params);
+            // console.log('item', route.params);
         }
     }, [route.params]);
 
@@ -82,19 +82,12 @@ function LoginScreen({ route }: any): JSX.Element {
             if (control._formValues.rememberMe) {
                 storeData('userCredentials', data.loginResponse);
             }
-            
-            // Pass and merge params back to home screen
-            // TODO - add clear form fields when login success
-            // TODO - remove thunk
+        
             if (route.params?.direction === DirectionType.BACK && 
                 control._formValues.email !== '' && 
                 control._formValues.password !== ''
             ) {
-                navigation.navigate({
-                    name: route.params?.sourcePage,
-                    params: { item: route.params?.item, response: response.data, action: route.params?.action, urlAddr: route.params?.urlAddr },
-                    merge: true,
-                });
+                navigation.popTo(route.params?.sourcePage, { item: route.params?.item, response: response.data, action: route.params?.action, urlAddr: route.params?.urlAddr });
             } else if (control._formValues.email !== '' && control._formValues.password !== '') {
                 navigation.navigate({
                     name: route.params?.sourcePage,

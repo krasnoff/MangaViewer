@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { addToReadList } from "../store/actions/add-to-read-list";
 import { DirectionType } from "../enums/direction-type";
 import { useProtectedAPI } from "../hooks/useProtectedAPI";
+import { getReadListStore } from "../store/actions/get-read-list-store";
 
 interface Props {
     status: number,
@@ -69,19 +70,20 @@ export function MangasList(props: Props) {
      * handling successful request
      */
     useEffect(() => {
-      if (addToReadListData.addToReadListResponse) {
+      if (addToReadListData.addToReadListResponse &&
+        !(addToReadListData.addToReadListResponse.error === null && addToReadListData.addToReadListResponse.result.length === 0)
+      ) {
         ToastAndroid.show('Adding success', ToastAndroid.SHORT);
         // console.log('Adding success', addToReadListData.addToReadListResponse);
-        // TODO - now get the list of saved items
-        getReadListStore();
+        getReadListStoreAction();
       }
-    }, [addToReadListData]);
+    }, [addToReadListData.addToReadListResponse]);
 
     /**
      * get the list of saved items
      */
-    const getReadListStore = () => {
-        const action = getReadListStore();
+    const getReadListStoreAction = () => {
+        const action = getReadListStore('');
         protectedAPI.dispatchAction(action, null, DirectionType.BACK, '/manga/status');
     }
 
@@ -89,8 +91,8 @@ export function MangasList(props: Props) {
      * handling successful request - list
      */
     useEffect(() => {
-      if (getReadListStoreResponse.addToReadListResponse) {
-        console.log('get list success', getReadListStoreResponse.addToReadListResponse);
+      if (getReadListStoreResponse.readListStoredResponse) {
+        // console.log('get list success', getReadListStoreResponse.readListStoredResponse);
       }
     }, [getReadListStoreResponse]);
 

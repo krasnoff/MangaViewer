@@ -10,7 +10,7 @@ import { getRefreshToken } from "../store/actions/refreshTokenLogin";
 type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
 
 let globalAction: UnknownAction;
-let globalItem: Daum;
+let globalItem: Daum | null;
 let globalDirection: DirectionType;
 let globalUrlAddr: string;
 
@@ -28,7 +28,7 @@ const useProtectedAPI = () => {
      * @param direction - defines where will you go after successful login: backword of forward
      * @param urlAddr - URL API to be send after successful request
      */
-    const dispatchAction = async (action: UnknownAction, item: Daum, direction: DirectionType, urlAddr: string) => {
+    const dispatchAction = async (action: UnknownAction, item: Daum | null, direction: DirectionType, urlAddr: string) => {
         globalAction = action;
         globalItem = item;
         globalDirection = direction;
@@ -38,7 +38,10 @@ const useProtectedAPI = () => {
             loginResponseData.loginResponse?.data?.refresh_token && 
             loginResponseData.loginResponse?.data?.token_type) {
             action.authorization = loginResponseData.loginResponse?.data?.token_type + ' ' + loginResponseData.loginResponse?.data?.access_token;
-            urlAddr = urlAddr.replace('<id>', item?.id);
+            if (item) {
+                urlAddr = urlAddr.replace('<id>', item?.id);
+            }
+            
             action.url = `${process.env.REACT_APP_BASE_URL}${urlAddr}`;
             dispatch(action);
         } else {
@@ -79,7 +82,7 @@ const useProtectedAPI = () => {
             } else if (error.name === 'AxiosError' && error.message === 'Request failed with status code 400') {
                 navigation.navigate('Login', {item: globalItem, sourcePage: route.name, direction: globalDirection, action: globalAction, urlAddr: globalUrlAddr});
             } else {
-                console.log('other error:', error.name, error.message);
+                // console.log('other error:', error.name, error.message);
             }
         } else {
             if (errorMsg?.error) {
