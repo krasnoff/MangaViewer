@@ -120,6 +120,9 @@ const App = () => {
   }, {
     title: 'Return to Homepage',
     url: 'resetPage'
+  },{
+    title: 'Login Page',
+    url: 'Login'
   },
 ];
 

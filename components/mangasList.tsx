@@ -130,9 +130,9 @@ export function MangasList(props: Props) {
                         <TouchableOpacity onPress={() => toggleFavoritesHandler(item)} style={styles.favorite}>
                           <Icon name={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? '#00FF00' : '#FF0000'} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => toggleBookmarksHandler(item)} style={styles.favorite}>
+                        {/* <TouchableOpacity onPress={() => toggleBookmarksHandler(item)} style={styles.favorite}>
                           <Icon name={false ? 'BookMarkMarked' : 'BookMark'} height="20" width="20" fill={false ? '#00FF00' : '#FF0000'} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                       </View>
                     </View>
                     <View style={stylesSCrollView.itemTextContainer}>
