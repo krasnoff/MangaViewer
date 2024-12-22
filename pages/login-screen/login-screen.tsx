@@ -87,7 +87,7 @@ function LoginScreen({ route }: any): JSX.Element {
                 control._formValues.email !== '' && 
                 control._formValues.password !== ''
             ) {
-                navigation.popTo(route.params?.sourcePage, { item: route.params?.item, response: response.data, action: route.params?.action, urlAddr: route.params?.urlAddr });
+                navigation.popTo(route.params?.sourcePage);
             } else if (control._formValues.email !== '' && control._formValues.password !== '') {
                 navigation.navigate({
                     name: route.params?.sourcePage,

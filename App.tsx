@@ -17,7 +17,7 @@ import Icon from './assets/icons/icon';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import BulletedList from './components/bulletedList ';
+import BulletedList from './components/bulletedList';
 import CreditsScreen from './pages/credits-screen/credits-screen';
 import AboutScreen from './pages/about-screen/about-screen';
 import { BottomSheetItemObj } from './types/bottom-sheet-item-types';
@@ -26,6 +26,7 @@ import { ThemeContext } from './contexts/themeContext';
 
 import analytics from '@react-native-firebase/analytics';
 import LoginScreen from './pages/login-screen/login-screen';
+import { DirectionType } from './enums/direction-type';
 
 const store = configureStore();
 store.runSaga(watcherSaga);
@@ -122,7 +123,8 @@ const App = () => {
     url: 'resetPage'
   },{
     title: 'Login Page',
-    url: 'Login'
+    url: 'Login',
+    params: {direction: DirectionType.BACK}
   },
 ];
 

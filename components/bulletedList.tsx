@@ -1,4 +1,4 @@
-import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { ParamListBase, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, ToastAndroid } from 'react-native';
 import { BottomSheetItemObj } from '../types/bottom-sheet-item-types';
@@ -25,6 +25,7 @@ const BulletedList = (props: Props) => {
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const {storeData, loadData} = useStorage();
+  // const route = useRoute();
 
   const chapterPressInHandler = (index: number) => {
     setActiveIndex(index)
@@ -34,7 +35,7 @@ const BulletedList = (props: Props) => {
     setActiveIndex(-1)
   }
 
-  const chapterPressHandler = (url: never) => {
+  const chapterPressHandler = (url: never, params: any) => {
     if (url === 'resetPage') {
       props.closeBottomSheetHandler();
       navigateReset();
@@ -43,13 +44,17 @@ const BulletedList = (props: Props) => {
         props.closeBottomSheetHandler();
         navigateToFavorites(data);
       });
+    } else if (url === 'Login') {
+      props.closeBottomSheetHandler();
+      params.sourcePage = 'Home';
+      navigation.navigate(url, params);
     } else {
       props.closeBottomSheetHandler();
       navigation.navigate(url) 
     }
   }
 
-  const navigateToFavorites = (data: string | null) => {
+  const navigateToFavorites = (data: string | null): void => {
     if (data && JSON.parse(data).length > 0) {
       navigation.navigate('Home', { IDs: JSON.parse(data) });
     } else {
@@ -71,7 +76,7 @@ const BulletedList = (props: Props) => {
                   key={index}
                   onPressIn={() => chapterPressInHandler(index)}  
                   onPressOut={() => chapterPressOutHandler()}
-                  onPress={() => chapterPressHandler(item.url as never)}
+                  onPress={() => chapterPressHandler(item.url as never, item.params as any)}
                   style={styles.item}>
           <Bullet />
           <Text style={[styles.itemText, {color: activeIndex === index ? 'red': 'black'}]}>{item.title}</Text>
