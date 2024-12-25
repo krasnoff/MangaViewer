@@ -45,7 +45,8 @@ const useProtectedAPI = () => {
             action.url = `${process.env.REACT_APP_BASE_URL}${urlAddr}`;
             dispatch(action);
         } else {
-            navigation.navigate('Login', {item: item, sourcePage: route.name, direction: direction, action: action, urlAddr: urlAddr});
+            // navigation.navigate('Login', {item: item, sourcePage: route.name, direction: direction, action: action, urlAddr: urlAddr});
+            // TODO - here open modal window
         }
     };
 
