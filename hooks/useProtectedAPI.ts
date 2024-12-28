@@ -1,11 +1,12 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { UnknownAction } from "redux";
 import { Daum } from "../types/search-results";
 import { DirectionType } from "../enums/direction-type";
 import { getRefreshToken } from "../store/actions/refreshTokenLogin";
+import { Alert } from "react-native";
 
 type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
 
@@ -20,6 +21,7 @@ const useProtectedAPI = () => {
     const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
     const navigation = useNavigation<ItemScreenNavigationProp>();
     const route = useRoute();
+    const [modalOn, setModalOn] = useState<boolean>(false);
 
     /**
      * checks if have token - if not then goto login screen
@@ -45,8 +47,7 @@ const useProtectedAPI = () => {
             action.url = `${process.env.REACT_APP_BASE_URL}${urlAddr}`;
             dispatch(action);
         } else {
-            // navigation.navigate('Login', {item: item, sourcePage: route.name, direction: direction, action: action, urlAddr: urlAddr});
-            // TODO - here open modal window
+            setModalOn(true);
         }
     };
 
@@ -105,7 +106,7 @@ const useProtectedAPI = () => {
         }
     }, [loginResponseData.loginResponse]);
 
-    return { dispatchAction };
+    return { dispatchAction, modalOn, setModalOn };
 }
 
 export { useProtectedAPI };

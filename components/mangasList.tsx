@@ -8,12 +8,13 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { ActionTypes } from "../enums/action-types";
 import { LogEventTypes } from "../enums/log-events-types";
 import analytics from '@react-native-firebase/analytics';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { addToReadList } from "../store/actions/add-to-read-list";
 import { DirectionType } from "../enums/direction-type";
 import { useProtectedAPI } from "../hooks/useProtectedAPI";
 import { getReadListStore } from "../store/actions/get-read-list-store";
+import ModalToLoginAlert from "./modal-to-login-alert";
 
 interface Props {
     status: number,
@@ -33,7 +34,7 @@ export function MangasList(props: Props) {
     const getReadListStoreResponse = useSelector(state => (state as unknown as any).GetReadListStoreResponse);
     const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
     
-    const protectedAPI = useProtectedAPI();
+    const {dispatchAction, modalOn, setModalOn} = useProtectedAPI();
         
     const toggleFavoritesHandler = (item: Daum) => {
         const prevArticleData = JSON.parse(JSON.stringify(props.articleData)) as Daum[];
@@ -63,7 +64,7 @@ export function MangasList(props: Props) {
         '',
         `${process.env.REACT_APP_BASE_URL}/manga//status`
       )
-      protectedAPI.dispatchAction(action, item, DirectionType.BACK, '/manga/<id>/status');
+      dispatchAction(action, item, DirectionType.BACK, '/manga/<id>/status');
     }
 
     /**
@@ -84,7 +85,7 @@ export function MangasList(props: Props) {
      */
     const getReadListStoreAction = () => {
         const action = getReadListStore('');
-        protectedAPI.dispatchAction(action, null, DirectionType.BACK, '/manga/status');
+        dispatchAction(action, null, DirectionType.BACK, '/manga/status');
     }
 
     /**
@@ -154,6 +155,7 @@ export function MangasList(props: Props) {
             
             </ScrollView>
             : null}
+            <ModalToLoginAlert isVisible={modalOn} cancelHandler={() => { setModalOn(false) }}></ModalToLoginAlert>
         </View>
     );
 }
