@@ -4,11 +4,11 @@ import Icon from "../assets/icons/icon";
 import Loader from "./loader";
 import { Daum } from "../types/search-results";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { ActionTypes } from "../enums/action-types";
 import { LogEventTypes } from "../enums/log-events-types";
 import analytics from '@react-native-firebase/analytics';
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { addToReadList } from "../store/actions/add-to-read-list";
 import { DirectionType } from "../enums/direction-type";
@@ -28,11 +28,19 @@ interface Props {
 
 type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
 
+// Define type for previous screen info
+interface PreviousScreenInfo {
+  index: number;
+  routeName: string;
+}
+
 export function MangasList(props: Props) {
     const navigation = useNavigation<ItemScreenNavigationProp>();
     const addToReadListData = useSelector(state => (state as unknown as any).AddToReadListResponse);
     const getReadListStoreResponse = useSelector(state => (state as unknown as any).GetReadListStoreResponse);
     const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
+    const previousScreen = useRef<PreviousScreenInfo | null>(null);
+    const route = useRoute();
     
     const {dispatchAction, modalOn, setModalOn} = useProtectedAPI();
         
@@ -101,7 +109,8 @@ export function MangasList(props: Props) {
      * error handling in send request
      */
     useEffect(() => {
-      console.log('errorData from manga component', errorData.error)
+      console.log('errorData from manga component', errorData.error);
+      // setModalOn(true);
     }, [errorData]);
 
     /**
@@ -112,6 +121,50 @@ export function MangasList(props: Props) {
     const logEvent = async (item: Daum, logEventType: LogEventTypes) => {
       await analytics().logEvent(logEventType, item)
     }
+
+    /**
+     * navigate to login page
+     */
+    const navigateToLogin = () => {
+      setModalOn(false);
+      navigation.navigate('Login', { direction: DirectionType.BACK, sourcePage: route.name, params: route.params });
+    };
+    
+    useFocusEffect(
+      useCallback(() => {
+        // This code runs when the screen comes into focus
+        console.log('Screen is focused');
+        
+        // Get the navigation state
+        const navigationState = navigation.getState();
+        const currentRouteIndex = navigationState.index;
+
+        if (currentRouteIndex > 0) {
+          const prevRoute = navigationState.routes[currentRouteIndex - 1];
+          
+          if (prevRoute.name === 'Login') {
+            // Handle your logic here
+            console.log('Navigated back from Login screen');
+          }
+        }
+
+        // if (isNavigatingBack && previousRouteName === 'Login') {
+        //   // Handle your logic here
+        //   console.log('Navigated back from Login screen');
+        // }
+
+        
+
+        // return () => {
+        //   // This code runs when the screen goes out of focus
+        //   // Store current screen info for next comparison
+        //   previousScreen.current = {
+        //     index: currentRouteIndex,
+        //     routeName: navigationState.routes[currentRouteIndex].name
+        //   };
+        // };
+      }, [])
+    );
     
     return (
         <View style={styles.view}>
@@ -155,7 +208,11 @@ export function MangasList(props: Props) {
             
             </ScrollView>
             : null}
-            <ModalToLoginAlert isVisible={modalOn} cancelHandler={() => { setModalOn(false) }}></ModalToLoginAlert>
+            <ModalToLoginAlert 
+              isVisible={modalOn} 
+              cancelHandler={() => { setModalOn(false) }} 
+              loginHandler={() => { navigateToLogin() }}>
+            </ModalToLoginAlert>
         </View>
     );
 }

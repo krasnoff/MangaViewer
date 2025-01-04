@@ -2,7 +2,8 @@ import { Button, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-n
 
 interface Props {
     isVisible: boolean
-    cancelHandler: (arg: boolean) => void
+    cancelHandler: () => void
+    loginHandler: () => void
 }
 
 const ModalToLoginAlert = (props: Props) => {
@@ -25,14 +26,14 @@ const ModalToLoginAlert = (props: Props) => {
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         style={[styles.button, styles.cancelButton]}
-                        onPress={() => props.cancelHandler(true)}
+                        onPress={() => props.cancelHandler()}
                     >
                         <Text style={styles.cancelButtonText}>Cancel</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         style={[styles.button, styles.loginButton]}
-                        onPress={() => props.cancelHandler(false)}
+                        onPress={() => props.loginHandler()}
                     >
                         <Text style={styles.loginButtonText}>Go to login page</Text>
                     </TouchableOpacity>

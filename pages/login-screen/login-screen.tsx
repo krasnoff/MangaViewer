@@ -83,12 +83,9 @@ function LoginScreen({ route }: any): JSX.Element {
                 storeData('userCredentials', data.loginResponse);
             }
         
-            if (route.params?.direction === DirectionType.BACK && 
-                control._formValues.email !== '' && 
+            if (control._formValues.email !== '' && 
                 control._formValues.password !== ''
             ) {
-                navigation.pop();
-            } else if (control._formValues.email !== '' && control._formValues.password !== '') {
                 navigation.navigate({
                     name: route.params?.sourcePage,
                     params: { item: route.params?.item, response: response.data },
