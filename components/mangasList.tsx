@@ -4,17 +4,12 @@ import Icon from "../assets/icons/icon";
 import Loader from "./loader";
 import { Daum } from "../types/search-results";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { ActionTypes } from "../enums/action-types";
 import { LogEventTypes } from "../enums/log-events-types";
 import analytics from '@react-native-firebase/analytics';
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, } from "react";
 import { useSelector } from "react-redux";
-import { addToReadList } from "../store/actions/add-to-read-list";
-import { DirectionType } from "../enums/direction-type";
-import { useProtectedAPI } from "../hooks/useProtectedAPI";
-import { getReadListStore } from "../store/actions/get-read-list-store";
-import ModalToLoginAlert from "./modal-to-login-alert";
 
 interface Props {
     status: number,
@@ -28,22 +23,10 @@ interface Props {
 
 type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
 
-// Define type for previous screen info
-interface PreviousScreenInfo {
-  index: number;
-  routeName: string;
-}
-
 export function MangasList(props: Props) {
     const navigation = useNavigation<ItemScreenNavigationProp>();
-    const addToReadListData = useSelector(state => (state as unknown as any).AddToReadListResponse);
-    const getReadListStoreResponse = useSelector(state => (state as unknown as any).GetReadListStoreResponse);
     const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
-    const previousScreen = useRef<PreviousScreenInfo | null>(null);
-    const route = useRoute();
-    
-    const {dispatchAction, modalOn, setModalOn} = useProtectedAPI();
-        
+            
     const toggleFavoritesHandler = (item: Daum) => {
         const prevArticleData = JSON.parse(JSON.stringify(props.articleData)) as Daum[];
         const chosenManga = prevArticleData.find(el => el.id === item.id);
@@ -63,49 +46,6 @@ export function MangasList(props: Props) {
     }
 
     /**
-     * initiate add to bookmark call to API
-     * @param item item id to bookmark
-     */
-    const toggleBookmarksHandler = (item: Daum) => {
-      const action = addToReadList(
-        'reading',
-        '',
-        `${process.env.REACT_APP_BASE_URL}/manga//status`
-      )
-      dispatchAction(action, item, DirectionType.BACK, '/manga/<id>/status');
-    }
-
-    /**
-     * handling successful request
-     */
-    useEffect(() => {
-      if (addToReadListData.addToReadListResponse &&
-        !(addToReadListData.addToReadListResponse.error === null && addToReadListData.addToReadListResponse.result.length === 0)
-      ) {
-        ToastAndroid.show('Adding success', ToastAndroid.SHORT);
-        // console.log('Adding success', addToReadListData.addToReadListResponse);
-        getReadListStoreAction();
-      }
-    }, [addToReadListData.addToReadListResponse]);
-
-    /**
-     * get the list of saved items
-     */
-    const getReadListStoreAction = () => {
-        const action = getReadListStore('');
-        dispatchAction(action, null, DirectionType.BACK, '/manga/status');
-    }
-
-    /**
-     * handling successful request - list
-     */
-    useEffect(() => {
-      if (getReadListStoreResponse.readListStoredResponse) {
-        // console.log('get list success', getReadListStoreResponse.readListStoredResponse);
-      }
-    }, [getReadListStoreResponse]);
-
-    /**
      * error handling in send request
      */
     useEffect(() => {
@@ -121,50 +61,6 @@ export function MangasList(props: Props) {
     const logEvent = async (item: Daum, logEventType: LogEventTypes) => {
       await analytics().logEvent(logEventType, item)
     }
-
-    /**
-     * navigate to login page
-     */
-    const navigateToLogin = () => {
-      setModalOn(false);
-      navigation.navigate('Login', { direction: DirectionType.BACK, sourcePage: route.name, params: route.params });
-    };
-    
-    useFocusEffect(
-      useCallback(() => {
-        // This code runs when the screen comes into focus
-        console.log('Screen is focused');
-        
-        // Get the navigation state
-        const navigationState = navigation.getState();
-        const currentRouteIndex = navigationState.index;
-
-        if (currentRouteIndex > 0) {
-          const prevRoute = navigationState.routes[currentRouteIndex - 1];
-          
-          if (prevRoute.name === 'Login') {
-            // Handle your logic here
-            console.log('Navigated back from Login screen');
-          }
-        }
-
-        // if (isNavigatingBack && previousRouteName === 'Login') {
-        //   // Handle your logic here
-        //   console.log('Navigated back from Login screen');
-        // }
-
-        
-
-        // return () => {
-        //   // This code runs when the screen goes out of focus
-        //   // Store current screen info for next comparison
-        //   previousScreen.current = {
-        //     index: currentRouteIndex,
-        //     routeName: navigationState.routes[currentRouteIndex].name
-        //   };
-        // };
-      }, [])
-    );
     
     return (
         <View style={styles.view}>
@@ -183,9 +79,6 @@ export function MangasList(props: Props) {
                       <View style={stylesItemContainer.iconsArr}>
                         <TouchableOpacity onPress={() => toggleFavoritesHandler(item)} style={styles.favorite}>
                           <Icon name={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? '#00FF00' : '#FF0000'} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => toggleBookmarksHandler(item)} style={styles.favorite}>
-                          <Icon name={false ? 'BookMarkMarked' : 'BookMark'} height="20" width="20" fill={false ? '#00FF00' : '#FF0000'} />
                         </TouchableOpacity>
                       </View>
                     </View>
@@ -208,11 +101,6 @@ export function MangasList(props: Props) {
             
             </ScrollView>
             : null}
-            <ModalToLoginAlert 
-              isVisible={modalOn} 
-              cancelHandler={() => { setModalOn(false) }} 
-              loginHandler={() => { navigateToLogin() }}>
-            </ModalToLoginAlert>
         </View>
     );
 }

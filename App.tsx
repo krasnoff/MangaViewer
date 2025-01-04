@@ -25,8 +25,6 @@ import SearchForm from './components/searchForm';
 import { ThemeContext } from './contexts/themeContext';
 
 import analytics from '@react-native-firebase/analytics';
-import LoginScreen from './pages/login-screen/login-screen';
-import { DirectionType } from './enums/direction-type';
 
 const store = configureStore();
 store.runSaga(watcherSaga);
@@ -121,11 +119,7 @@ const App = () => {
   }, {
     title: 'Return to Homepage',
     url: 'resetPage'
-  },{
-    title: 'Login Page',
-    url: 'Login',
-    params: {direction: DirectionType.BACK}
-  },
+  }
 ];
 
   const closeBottomSheetHandler = () => {
@@ -198,13 +192,6 @@ const App = () => {
               <Stack.Screen 
                 name="About" 
                 component={AboutScreen}
-                options={{
-                  headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
-                  headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
-              }} />
-              <Stack.Screen 
-                name="Login" 
-                component={LoginScreen}
                 options={{
                   headerTitle: (() => <LogoTitle title={'Manga Viewer'} />),
                   headerRight: (() => <MenuButton bottomSheetRef={bottomSheetRef} />)
