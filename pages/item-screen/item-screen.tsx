@@ -94,10 +94,6 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
       }
     }
 
-    const toggleBookmarksHandler = (item: Daum) => {
-      navigation.navigate('Login', {});
-    }
-
     const logEvent = async (item: Daum, logEventType: LogEventTypes) => {
       await analytics().logEvent(logEventType, item)
     }
@@ -130,9 +126,6 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
                 <View style={stylesItemContainer.iconsArr}>
                   <TouchableOpacity onPress={() => toggleFavoritesHandler(itemId)} style={[styles.favorite]}>
                     <Icon name={favorateMangaDataIDs.indexOf((item as Daum)?.id) > -1 ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={favorateMangaDataIDs.indexOf((item as Daum)?.id) > -1 ? '#00FF00' : '#FF0000'} />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => toggleBookmarksHandler(itemId)} style={styles.favorite}>
-                    <Icon name={false ? 'BookMarkMarked' : 'BookMark'} height="20" width="20" fill={false ? '#00FF00' : '#FF0000'} />
                   </TouchableOpacity>
                 </View>
               </View>
