@@ -25,6 +25,7 @@ import SearchForm from './components/searchForm';
 import { ThemeContext } from './contexts/themeContext';
 
 import analytics from '@react-native-firebase/analytics';
+import { useInitialUrl } from './hooks/useInitialUrl';
 
 const store = configureStore();
 store.runSaga(watcherSaga);
@@ -87,6 +88,8 @@ const App = () => {
 
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef<any>();
+
+  useInitialUrl();
   
   const handleSheetChanges = useCallback((index: number) => {
     if (index === 0) {
