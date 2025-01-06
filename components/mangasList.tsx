@@ -61,6 +61,10 @@ export function MangasList(props: Props) {
     const logEvent = async (item: Daum, logEventType: LogEventTypes) => {
       await analytics().logEvent(logEventType, item)
     }
+
+    const copyEventHandler = () => {
+        console.log('copied')
+    }
     
     return (
         <View style={styles.view}>
@@ -79,6 +83,9 @@ export function MangasList(props: Props) {
                       <View style={stylesItemContainer.iconsArr}>
                         <TouchableOpacity onPress={() => toggleFavoritesHandler(item)} style={styles.favorite}>
                           <Icon name={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? '#00FF00' : '#FF0000'} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => copyEventHandler()} style={styles.favorite}>
+                          <Icon name='Copy' height="20" width="20" fill='#00FF00' />
                         </TouchableOpacity>
                       </View>
                     </View>
