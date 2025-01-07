@@ -89,7 +89,7 @@ const App = () => {
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef<any>();
 
-  useInitialUrl();
+  useInitialUrl(navigationRef);
   
   const handleSheetChanges = useCallback((index: number) => {
     if (index === 0) {

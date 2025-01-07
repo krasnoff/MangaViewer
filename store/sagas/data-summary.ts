@@ -64,8 +64,8 @@ function getDataSaga(args: any): Promise<any> {
         };
     }
 
-    console.log('api params args', args)
-    console.log('api params apiParams', apiParams)
+    // console.log('api params args', args)
+    // console.log('api params apiParams', apiParams)
 
     return axios(apiParams);
 }

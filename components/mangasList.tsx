@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
+import { Clipboard, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import CustomSizeImage from "./customSizeImage";
 import Icon from "../assets/icons/icon";
 import Loader from "./loader";
@@ -10,6 +10,7 @@ import { LogEventTypes } from "../enums/log-events-types";
 import analytics from '@react-native-firebase/analytics';
 import { useEffect, } from "react";
 import { useSelector } from "react-redux";
+
 
 interface Props {
     status: number,
@@ -62,8 +63,8 @@ export function MangasList(props: Props) {
       await analytics().logEvent(logEventType, item)
     }
 
-    const copyEventHandler = () => {
-        console.log('copied')
+    const copyEventHandler = (itemId: string) => {
+        Clipboard.setString(`mangaViewer://item/${itemId}`);
     }
     
     return (
@@ -84,8 +85,8 @@ export function MangasList(props: Props) {
                         <TouchableOpacity onPress={() => toggleFavoritesHandler(item)} style={styles.favorite}>
                           <Icon name={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={props.favorateMangaDataIDs.indexOf(item.id) > -1 ? '#00FF00' : '#FF0000'} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => copyEventHandler()} style={styles.favorite}>
-                          <Icon name='Copy' height="20" width="20" fill='#00FF00' />
+                        <TouchableOpacity onPress={() => copyEventHandler(item.id)} style={styles.favorite}>
+                          <Icon name='Copy' height="20" width="20" fill='#FF0000' />
                         </TouchableOpacity>
                       </View>
                     </View>
