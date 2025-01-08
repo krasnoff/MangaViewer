@@ -10,6 +10,7 @@ import { LogEventTypes } from "../enums/log-events-types";
 import analytics from '@react-native-firebase/analytics';
 import { useEffect, } from "react";
 import { useSelector } from "react-redux";
+import ModalToLoginAlert from "./modal-to-login-alert";
 
 
 interface Props {
@@ -109,7 +110,14 @@ export function MangasList(props: Props) {
             
             </ScrollView>
             : null}
+            <ModalToLoginAlert 
+              isVisible={modalOn} 
+              cancelHandler={() => { setModalOn(false) }} 
+              loginHandler={() => { navigateToLogin() }}>
+            </ModalToLoginAlert>
         </View>
+        
+
     );
 }
 
