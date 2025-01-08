@@ -2,7 +2,6 @@ import { Button, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-n
 
 interface Props {
     isVisible: boolean
-    cancelHandler: () => void
     loginHandler: () => void
 }
 
@@ -13,29 +12,22 @@ const ModalToLoginAlert = (props: Props) => {
         <View style={styles.centeredView}>
             <View style={styles.modalView}>
                 {/* Title Section */}
-                <Text style={styles.titleText}>Restricted Action</Text>
+                <Text style={styles.titleText}>Notification</Text>
 
                 {/* Content Section */}
                 <View style={styles.contentContainer}>
                     <Text style={styles.contentText}>
-                        Only registered users can add manga to favorites
+                        You have just copied the URL that triggers the app and shows the desired Manga. You can send this URL to your friend so they can see it two.
                     </Text>
                 </View>
 
                 {/* Buttons Container */}
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
-                        style={[styles.button, styles.cancelButton]}
-                        onPress={() => props.cancelHandler()}
-                    >
-                        <Text style={styles.cancelButtonText}>Cancel</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
                         style={[styles.button, styles.loginButton]}
                         onPress={() => props.loginHandler()}
                     >
-                        <Text style={styles.loginButtonText}>Go to login page</Text>
+                        <Text style={styles.loginButtonText}>Close this window</Text>
                     </TouchableOpacity>
                 </View>
             </View>

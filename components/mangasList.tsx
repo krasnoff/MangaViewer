@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { ActionTypes } from "../enums/action-types";
 import { LogEventTypes } from "../enums/log-events-types";
 import analytics from '@react-native-firebase/analytics';
-import { useEffect, } from "react";
+import { useEffect, useState, } from "react";
 import { useSelector } from "react-redux";
 import ModalToLoginAlert from "./modal-to-login-alert";
 
@@ -28,6 +28,7 @@ type ItemScreenNavigationProp = StackNavigationProp<any, 'Item'>;
 export function MangasList(props: Props) {
     const navigation = useNavigation<ItemScreenNavigationProp>();
     const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
+    const [modalOn, setModalOn] = useState<boolean>(false);
             
     const toggleFavoritesHandler = (item: Daum) => {
         const prevArticleData = JSON.parse(JSON.stringify(props.articleData)) as Daum[];
@@ -112,8 +113,7 @@ export function MangasList(props: Props) {
             : null}
             <ModalToLoginAlert 
               isVisible={modalOn} 
-              cancelHandler={() => { setModalOn(false) }} 
-              loginHandler={() => { navigateToLogin() }}>
+              loginHandler={() => { setModalOn(false) }}>
             </ModalToLoginAlert>
         </View>
         
