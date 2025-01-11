@@ -42,6 +42,10 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
     }, [isFocused]);
 
     useEffect(() => {
+      console.log('item parameter', itemId, typeof itemId);
+
+      // TODO - if itemId is a string then we will have to fetch the whole item from the server: 
+
       setItem(itemId);
     }, []);
 
@@ -115,14 +119,14 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
         {networkError === '' ? 
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <View style={ styles.itemContainer }>
-            <Text style={styles.text}>{item?.attributes.title.en}</Text>
+            <Text style={styles.text}>{item?.attributes?.title?.en}</Text>
             <View style={styles.row1}>
               <View>{item ? <CustomSizeImage source={{ uri: item?.coverImgURL }} /> : null }</View>
               <View style={styles.subtites}>
                 <Text style={[styles.itemTitle, styles.marginBottomNone]}>Authur</Text>
-                <Text style={[styles.itemDescription, styles.marginBottom5]}>{item?.relationships.find(el => el.type === 'author')?.attributes?.name}</Text>
+                <Text style={[styles.itemDescription, styles.marginBottom5]}>{item?.relationships?.find(el => el.type === 'author')?.attributes?.name}</Text>
                 <Text style={[styles.itemTitle, styles.marginBottomNone]}>Artist</Text>
-                <Text style={[styles.itemDescription, styles.marginBottom5]}>{item?.relationships.find(el => el.type === 'artist')?.attributes?.name}</Text>
+                <Text style={[styles.itemDescription, styles.marginBottom5]}>{item?.relationships?.find(el => el.type === 'artist')?.attributes?.name}</Text>
                 <View style={stylesItemContainer.iconsArr}>
                   <TouchableOpacity onPress={() => toggleFavoritesHandler(itemId)} style={[styles.favorite]}>
                     <Icon name={favorateMangaDataIDs.indexOf((item as Daum)?.id) > -1 ? 'FavoriteMarked' : 'Favorite'} height="20" width="20" fill={favorateMangaDataIDs.indexOf((item as Daum)?.id) > -1 ? '#00FF00' : '#FF0000'} />
@@ -131,7 +135,7 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
               </View>
             </View>
             <View style={styles.row2}>
-              <Text style={styles?.itemDescription}>{item?.attributes.description.en}</Text>
+              <Text style={styles?.itemDescription}>{item?.attributes?.description?.en}</Text>
             </View>
 
             <View style={styles.row3}>

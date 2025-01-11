@@ -66,7 +66,7 @@ export function MangasList(props: Props) {
     }
 
     const copyEventHandler = (itemId: string) => {
-        Clipboard.setString(`mangaViewer://item/${itemId}`);
+        Clipboard.setString(`mangaviewer://item/${itemId}`);
     }
     
     return (
