@@ -10,7 +10,7 @@ export function useInitialUrl(navigation: React.MutableRefObject<any>) {
     const handleDeepLink = (initialUrl: string) => {
         console.log('handleDeepLink', initialUrl);
 
-        // TODO - sample deep link URL: mangaViewer://item/b227745e-ffbc-4e23-88d0-5f92a538fea1
+        // sample deep link URL: mangaViewer://item/b227745e-ffbc-4e23-88d0-5f92a538fea1
         
         navigation.current.navigate('Item', {
             itemId: extractGuid(initialUrl),
