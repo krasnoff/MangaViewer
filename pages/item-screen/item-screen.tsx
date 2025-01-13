@@ -11,11 +11,15 @@ import { useIsFocused } from '@react-navigation/native';
 import { useStorage } from '../../hooks/useStorage';
 import { LogEventTypes } from "../../enums/log-events-types";
 import analytics from '@react-native-firebase/analytics';
+import { getSimpleSearch } from '../../store/actions/simpleSearch';
+import { useUtilData } from '../../hooks/useParseData';
 
 function ItemScreen({ route, navigation }: any): JSX.Element {
     const dispatch = useDispatch();
     const data = useSelector(state => (state as unknown as any).FeedResponse);
     const errorData = useSelector(state => (state as unknown as any).ErrorResponse);
+    const simpleSearchData = useSelector(state => (state as unknown as any).SimpleSearchResponse);
+    const {parseIncomingData} = useUtilData();
 
     const { itemId } = route.params;
     const [item, setItem] = useState<Daum>();
@@ -45,9 +49,25 @@ function ItemScreen({ route, navigation }: any): JSX.Element {
       console.log('item parameter', itemId, typeof itemId);
 
       // TODO - if itemId is a string then we will have to fetch the whole item from the server: 
-
-      setItem(itemId);
+      if (typeof itemId === 'string') {
+        dispatch(getSimpleSearch(undefined, [itemId], undefined));
+      } else {
+        setItem(itemId);
+      }     
     }, []);
+
+    useEffect(() => {
+      console.log('simpleSearchData - response', simpleSearchData);
+      if (data.simpleSearchResponse.status === 200) {
+        if (data.simpleSearchResponse.data.result === 'ok') {
+          let resData = parseIncomingData(data.simpleSearchResponse.data.data) as Daum[];
+          // TODO handle whole item to setItem(itemId);
+        } else {
+          // TODO handle error
+        }
+        // TODO - check regular navigation to this page first
+      }
+    }, [simpleSearchData]);
 
     useEffect(() => {
       if (item) {
